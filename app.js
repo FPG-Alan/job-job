@@ -9,7 +9,7 @@ require('dotenv').config();
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false})); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/phoenix-order");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/job-job");
 
 // Import routers
 var userRouter = require("./server/routers/userRouter");
