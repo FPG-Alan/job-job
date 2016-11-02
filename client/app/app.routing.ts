@@ -2,7 +2,9 @@ import {Routes, RouterModule} from "@angular/router";
 import {AuthGuard} from "./services/auth.guard";
 
 export const routes: Routes = [
-    {path: '', redirectTo: 'login', pathMatch: 'full'}
+    {path: '', redirectTo: 'home', pathMatch: 'full'},
+    {path: '**', redirectTo: 'home'}
+
 ];
 
 export const appRoutingProviders: any[] = [
