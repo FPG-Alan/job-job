@@ -3,6 +3,7 @@ import {NgModule} from "@angular/core";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {NgSemanticModule} from "ng-semantic";
+import {AUTH_PROVIDERS} from "angular2-jwt";
 import {AppComponent} from "./app.component";
 import {LoginModule} from "./modules/login/login.module";
 import {HomeModule} from "./modules/home/home.module";
@@ -21,7 +22,7 @@ import {routing} from "./app.routing";
         HomeModule,
         routing
     ],
-    providers: [],
+    providers: [AUTH_PROVIDERS],
     bootstrap: [AppComponent]
 })
 export class AppModule {
