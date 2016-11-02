@@ -15,6 +15,8 @@ export class AppComponent {
     }
 
     toggleSidebar() {
-        $(".ui.sidebar").sidebar("toggle");
+        $(".ui.sidebar")
+            .sidebar('setting', 'transition', 'overlay')
+            .sidebar("toggle");
     }
 }
