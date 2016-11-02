@@ -1,7 +1,15 @@
-<h1>
-    {{title}}
-</h1>
-<nav>
-    <a routerLink="/home" routerLinkActive="active">Home</a>
+<nav class="ui fixed inverted menu" id="main-menu">
+    <div id="main-menu-items">
+        <a routerLink="/home" routerLinkActive="active" class="item">Home</a>
+
+    </div>
+    <a (click)="toggleSidebar()" class="item" id="sidebar-toggle"><i class="large content icon"></i></a>
 </nav>
-<router-outlet></router-outlet>
+
+<div class="ui right sidebar inverted vertical menu">
+    <a routerLink="/home" routerLinkActive="active" class="item">Home</a>
+</div>
+
+<div class="pusher">
+    <router-outlet></router-outlet>
+</div>

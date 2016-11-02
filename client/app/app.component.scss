@@ -1,0 +1,25 @@
+#main-menu {
+    font-size: 1.1rem;
+    border-radius: 0;
+
+    #main-menu-items {
+        display: block;
+        position: absolute;
+        right: 0;
+    }
+    #sidebar-toggle {
+        display: none !important;
+        position: absolute;
+        right: 0;
+        padding-top: 0.8rem;
+        padding-bottom: 0.8rem;
+        i { margin: 0 !important; }
+    }
+    @media screen and (max-width: 768px) {
+        #main-menu-items { display: none !important; }
+        #sidebar-toggle { display: block !important; }
+    }
+}
+
+// move below menu
+.pusher { padding-top: 52px; }

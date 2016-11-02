@@ -1,6 +1,9 @@
 import {NgModule} from "@angular/core";
-import {HttpModule} from "@angular/http";
 import {CommonModule} from "@angular/common";
+import {HttpModule} from "@angular/http";
+import {SharedModule} from "../shared/shared.module";
+import {NgSemanticModule} from "ng-semantic";
+
 import {HomeComponent} from "./home.component";
 import {routing} from "./home.routing";
 
@@ -8,6 +11,8 @@ import {routing} from "./home.routing";
     imports: [
         CommonModule,
         HttpModule,
+        SharedModule.forRoot(),
+        NgSemanticModule,
         routing
     ],
     declarations: [HomeComponent]

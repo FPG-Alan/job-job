@@ -1,10 +1,16 @@
-import { Component } from '@angular/core';
+import {Component} from "@angular/core";
+
+declare var $;
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app works!';
+    title = 'app works!';
+
+    toggleSidebar() {
+        $(".ui.sidebar").sidebar("toggle");
+    }
 }
