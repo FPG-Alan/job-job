@@ -1,7 +1,7 @@
 import {NgModule, ModuleWithProviders} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {AuthService} from "../../services/auth.service";
-import {BoxService} from "../../services/box.service";
+import {TenKFtService} from "../../services/ten-k-ft.service";
 
 @NgModule({
     imports: [CommonModule],
@@ -15,7 +15,7 @@ export class SharedModule {
             ngModule: SharedModule,
             providers: [
                 AuthService,
-                BoxService
+                TenKFtService
             ]
         };
     }
