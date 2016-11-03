@@ -1,5 +1,4 @@
 import {Component, OnInit} from "@angular/core";
-import {TenKFtService} from "../../services/ten-k-ft.service";
 
 @Component({
     selector: 'app-home',
@@ -8,14 +7,11 @@ import {TenKFtService} from "../../services/ten-k-ft.service";
 })
 export class HomeComponent implements OnInit {
 
-    constructor(private tenKFtService:TenKFtService) {
+    activeMenuTab = "jobs";
+
+    constructor() {
     }
 
     ngOnInit() {
-    }
-
-    getAllUsers(){
-        this.tenKFtService.getAllUsers()
-            .subscribe(res => console.log(res))
     }
 }

@@ -9,6 +9,12 @@ export class TenKFtService {
     constructor(private authHttp: AuthHttp) {
     }
 
+    getAllJobs() {
+        return this.authHttp.get("/job/all")
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
     getAllUsers() {
         return this.authHttp.get("/user/all")
             .map(res => res.json())

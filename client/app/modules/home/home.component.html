@@ -1,1 +1,15 @@
-<button (click)="getAllUsers()">Test</button>
+<div class="ui two item pointing menu">
+    <a class="item"
+       (click)="activeMenuTab='jobs'"
+       [class.active]="activeMenuTab=='jobs'">
+        Jobs
+    </a>
+    <a class="item"
+       (click)="activeMenuTab='people'"
+       [class.active]="activeMenuTab=='people'">
+        Users
+    </a>
+</div>
+
+<app-display-jobs *ngIf="activeMenuTab=='jobs'"></app-display-jobs>
+<app-display-users *ngIf="activeMenuTab=='people'"></app-display-users>

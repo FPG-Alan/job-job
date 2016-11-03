@@ -1,7 +1,6 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
-var ClientSchema = require("./client");
 var PhaseSchema = new Schema({
     name: {type: String, required: true},
     startDate: {type: String, required: true},
@@ -12,7 +11,7 @@ var PhaseSchema = new Schema({
 
 var JobSchema = new Schema({
     name: {type: String, required: true},
-    client: ClientSchema,
+    clientCodeName: {type: String, required: true},
     brand: String,
     jobNumber: Number,
     projType: String,
