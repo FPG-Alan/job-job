@@ -3,22 +3,22 @@ var Schema = mongoose.Schema;
 
 var ClientSchema = require("./client");
 var PhaseSchema = new Schema({
-    name: String,
-    startDate: Date,
-    endDate: Date
-},{
+    name: {type: String, required: true},
+    startDate: {type: String, required: true},
+    endDate: {type: String, required: true}
+}, {
     timestamps: true
 });
 
 var JobSchema = new Schema({
-    name: String,
+    name: {type: String, required: true},
     client: ClientSchema,
     brand: String,
     jobNumber: Number,
     projType: String,
     projTags: [String],
-    startDate: Date,
-    endDate: Date,
+    startDate: {type: Date, required: true},
+    endDate: {type: Date, required: true},
     phases: [PhaseSchema]
 }, {
     timestamps: true

@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var ClientSchema = new Schema({
-    name: String,
+    name: {type: String, required: true},
     codeName: String,
     brands: [String]
 },{
