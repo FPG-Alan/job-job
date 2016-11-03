@@ -13,6 +13,7 @@ var PhaseSchema = new Schema({
 var JobSchema = new Schema({
     name: String,
     client: ClientSchema,
+    brand: String,
     jobNumber: Number,
     projType: String,
     projTags: [String],
