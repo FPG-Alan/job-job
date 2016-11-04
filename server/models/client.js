@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var ClientSchema = new Schema({
     name: {type: String, required: true},
-    codeName: String,
+    codeName: {type: String, required: true},
     brands: [String]
 },{
     timestamps: true

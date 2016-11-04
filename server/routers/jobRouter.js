@@ -2,8 +2,6 @@ var express = require('express');
 var unirest = require('unirest');
 var jobRouter = express.Router();
 
-var job = require("../models/job");
-
 var apiKeys = {
     "dev": {
         "url": "https://vnext-api.10000ft.com/api/v1/",
@@ -15,12 +13,6 @@ var apiKeys = {
 };
 
 jobRouter.get("/all", function (req, res) {
-    // job.find({}, function (err, jobs) {
-    //     if (err) {
-    //         console.log(err)
-    //     }
-    //     res.json(jobs);
-    // });
     unirest.get(apiKeys.dev.url + "projects")
         .headers({
             "Content-Type": "application/json",

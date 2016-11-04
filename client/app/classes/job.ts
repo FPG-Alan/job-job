@@ -1,0 +1,18 @@
+import {Client} from "./client";
+import {Phase} from "./phase";
+
+export class Job {
+    constructor(public name: string,
+                public client: Client,
+                public brand: string,
+                public projectCode: number,
+                public projectStatus: string,
+                public rateCard: string,
+                public serviceType: string,
+                public description: string,
+                public tags: any[],
+                public startDate: string,
+                public endDate: string,
+                public phases: Phase[]) {
+    }
+}
