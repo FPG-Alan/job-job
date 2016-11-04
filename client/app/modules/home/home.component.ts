@@ -15,4 +15,9 @@ export class HomeComponent implements OnInit {
 
     ngOnInit() {
     }
+
+    onJobCreateSuccess(e: any){
+        this.creatingJob = false;
+        // TODO: refresh job list
+    }
 }

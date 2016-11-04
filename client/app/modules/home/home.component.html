@@ -1,24 +1,34 @@
-<a class="ui button" (click)="creatingJob = !creatingJob"><i class="add icon"></i>Create New Job</a>
-<app-create-job-form [class.hidden]="!creatingJob"></app-create-job-form>
-
-<div class="ui three item pointing menu">
-    <a class="item"
-       (click)="activeMenuTab='jobs'"
-       [class.active]="activeMenuTab=='jobs'">
-        Jobs
+<div [class.hidden]="!creatingJob">
+    <a class="ui button" (click)="creatingJob = false">
+        <i class="chevron left icon"></i>Back
     </a>
-    <a class="item"
-       (click)="activeMenuTab='clients'"
-       [class.active]="activeMenuTab=='clients'">
-        Clients
-    </a>
-    <a class="item"
-       (click)="activeMenuTab='users'"
-       [class.active]="activeMenuTab=='users'">
-        Users
-    </a>
+    <app-create-job-form
+            (onSuccess)="onJobCreateSuccess($event)">
+    </app-create-job-form>
 </div>
 
-<app-display-jobs *ngIf="activeMenuTab=='jobs'"></app-display-jobs>
-<app-display-clients *ngIf="activeMenuTab=='clients'"></app-display-clients>
-<app-display-users *ngIf="activeMenuTab=='users'"></app-display-users>
+<div [class.hidden]="creatingJob">
+    <a class="ui button" (click)="creatingJob = !creatingJob">
+        <i class="add icon"></i>Create New Job</a>
+    <div class="ui three item pointing menu">
+        <a class="item"
+           (click)="activeMenuTab='jobs'"
+           [class.active]="activeMenuTab=='jobs'">
+            Jobs
+        </a>
+        <a class="item"
+           (click)="activeMenuTab='clients'"
+           [class.active]="activeMenuTab=='clients'">
+            Clients
+        </a>
+        <a class="item"
+           (click)="activeMenuTab='users'"
+           [class.active]="activeMenuTab=='users'">
+            Users
+        </a>
+    </div>
+
+    <app-display-jobs *ngIf="activeMenuTab=='jobs'"></app-display-jobs>
+    <app-display-clients *ngIf="activeMenuTab=='clients'"></app-display-clients>
+    <app-display-users *ngIf="activeMenuTab=='users'"></app-display-users>
+</div>

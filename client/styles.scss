@@ -3,4 +3,4 @@ html { font-size: 14px; }
 
 .show { display: block; }
 
-.hidden { display: none; }
+.hidden { display: none !important; }

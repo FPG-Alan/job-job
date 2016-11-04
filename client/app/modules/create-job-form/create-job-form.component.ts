@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Job} from "../../classes/job";
 import {TenKFtService} from "../../services/ten-k-ft.service";
@@ -10,12 +10,14 @@ import {TenKFtService} from "../../services/ten-k-ft.service";
 })
 export class CreateJobFormComponent implements OnInit {
 
-    job = new Job("", null, "", null, "", "", "", "", null, "", "", []);
+    job: Job;
+    @Output() onSuccess = new EventEmitter<any>();
 
     constructor(private tenKFtService: TenKFtService) {
     }
 
     ngOnInit() {
+        this.resetJobModel();
     }
 
     onSubmit(form: NgForm) {
@@ -23,6 +25,14 @@ export class CreateJobFormComponent implements OnInit {
         console.log(form.valid);
         // TODO: validation and set to untouched/clean to avoid spamming
         this.tenKFtService.createNewJob(this.job)
-            .subscribe(res => console.log(res))
+            .subscribe(res => {
+                console.log(res);
+                this.onSuccess.emit();
+                this.resetJobModel();
+            })
+    }
+
+    resetJobModel() {
+        this.job = new Job("", null, "", null, "", "", "", "", null, "", "", []);
     }
 }
