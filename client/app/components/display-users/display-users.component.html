@@ -1,5 +1,11 @@
-<ul>
+<ul *ngIf="users !== null && users.length > 0">
     <li *ngFor="let u of users">
         {{u.first_name + " " + u.last_name}}
     </li>
 </ul>
+
+<div *ngIf="users === null || users.length == 0" class="ui warning message">
+    <div class="header">
+        No users found
+    </div>
+</div>

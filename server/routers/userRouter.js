@@ -12,7 +12,7 @@ var apiKeys = {
     "prod": {
         "url": "https://api.10000ft.com/api/v1/"
     }
-}
+};
 
 userRouter.get("/all", function (req, res) {
     // user.find({}, function (err, users) {

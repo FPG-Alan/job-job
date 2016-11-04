@@ -13,10 +13,12 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/job-job")
 // Import routers
 var userRouter = require("./server/routers/userRouter");
 var jobRouter = require("./server/routers/jobRouter");
+var clientRouter = require("./server/routers/clientRouter");
 
 // API routers
 app.use("/user", userRouter);
 app.use("/job", jobRouter);
+app.use("/client", clientRouter);
 
 // Resource loading
 app.use("/node_modules", express.static(__dirname + "../node_modules"));

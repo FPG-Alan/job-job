@@ -12,7 +12,7 @@ var apiKeys = {
     "prod": {
         "url": "https://api.10000ft.com/api/v1/"
     }
-}
+};
 
 jobRouter.get("/all", function (req, res) {
     // job.find({}, function (err, jobs) {

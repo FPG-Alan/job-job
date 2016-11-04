@@ -4,19 +4,13 @@ import {Response} from "@angular/http";
 import {Observable} from "rxjs";
 
 @Injectable()
-export class TenKFtService {
+export class ApiService {
 
     constructor(private authHttp: AuthHttp) {
     }
 
-    getAllJobs() {
-        return this.authHttp.get("/job/all")
-            .map(res => res.json())
-            .catch(this.handleError);
-    }
-
-    getAllUsers() {
-        return this.authHttp.get("/user/all")
+    getAllClients() {
+        return this.authHttp.get("/client/all")
             .map(res => res.json())
             .catch(this.handleError);
     }

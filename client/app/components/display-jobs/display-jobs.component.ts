@@ -15,7 +15,10 @@ export class DisplayJobsComponent implements OnInit {
 
     ngOnInit() {
         this.tenKFtService.getAllJobs()
-            .subscribe(result => this.jobs = result.data)
+            .subscribe(
+                result => this.jobs = result.data,
+                err => console.log(err)
+            )
     }
 
 }

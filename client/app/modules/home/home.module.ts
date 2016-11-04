@@ -7,6 +7,7 @@ import {HomeComponent} from "./home.component";
 import {routing} from "./home.routing";
 import {DisplayUsersComponent} from "../../components/display-users/display-users.component";
 import {DisplayJobsComponent} from "../../components/display-jobs/display-jobs.component";
+import {DisplayClientsComponent} from "../../components/display-clients/display-clients.component";
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import {DisplayJobsComponent} from "../../components/display-jobs/display-jobs.c
     declarations: [
         HomeComponent,
         DisplayUsersComponent,
-        DisplayJobsComponent
+        DisplayJobsComponent,
+        DisplayClientsComponent
     ]
 })
 export class HomeModule {

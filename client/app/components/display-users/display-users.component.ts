@@ -15,7 +15,10 @@ export class DisplayUsersComponent implements OnInit {
 
     ngOnInit() {
         this.tenKFtService.getAllUsers()
-            .subscribe(result => this.users = result.data)
+            .subscribe(
+                result => this.users = result.data,
+                err => console.log(err)
+            )
     }
 
 }
