@@ -1,3 +1,19 @@
-<p>
-  create-job-form works!
-</p>
+<h1>
+    Create New Job
+</h1>
+
+<form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate>
+    <input type="text" [(ngModel)]="job.name" name="name" required>
+    <!--TODO
+        client select
+        brand select after client
+        auto generate projectCode
+        projectStatus select
+        rateCard select
+        serviceType (toggle or select or radial)
+        description text area
+        tags (form/list display like cakebook's ingredients; be careful of enter button)
+        start and end date
+    -->
+    <button type="submit" class="ui positive button">Submit</button>
+</form>
