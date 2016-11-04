@@ -2,18 +2,25 @@
     Create New Job
 </h1>
 
-<form #form="ngForm" (ngSubmit)="onSubmit(form)" novalidate>
-    <input type="text" [(ngModel)]="job.name" name="name" required>
+<form #form="ngForm" class="ui form"
+      (ngSubmit)="onSubmit(form)"
+      novalidate>
+    <div class="field">
+        <!--TODO: toggle on whether user would let system auto generate name-->
+        <label>Job Name</label>
+        <input type="text" [(ngModel)]="job.name" name="name" required>
+    </div>
     <!--TODO
         client select
         brand select after client
-        auto generate projectCode
+        auto generated projectCode
         projectStatus select
         rateCard select
         serviceType (toggle or select or radial)
         description text area
         tags (form/list display like cakebook's ingredients; be careful of enter button)
-        start and end date
+        start and end date (format: e.g. 2015-03-01) required
+        phases (not MVP(?))
     -->
     <button type="submit" class="ui positive button">Submit</button>
 </form>

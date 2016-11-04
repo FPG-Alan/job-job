@@ -24,4 +24,21 @@ jobRouter.get("/all", function (req, res) {
         });
 });
 
+jobRouter.post("", function (req, res) {
+    var newProject = {
+        "name": req.body.name
+    };
+    unirest.post(apiKeys.dev.url + "projects")
+        .headers({
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "auth": apiKeys.dev.keys
+        })
+        .send(newProject)
+        .end(function (response) {
+            console.log(response.body);
+            res.send(response.body);
+        });
+});
+
 module.exports = jobRouter;

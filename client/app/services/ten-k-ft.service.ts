@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
 import {AuthHttp} from "angular2-jwt";
-import {Response} from "@angular/http";
+import {Response, Headers, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs";
+import {Job} from "../classes/job";
 
 @Injectable()
 export class TenKFtService {
@@ -11,6 +12,16 @@ export class TenKFtService {
 
     getAllJobs() {
         return this.authHttp.get("/job/all")
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
+    createNewJob(job: Job) {
+        let body = job;
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/job", body, options)
             .map(res => res.json())
             .catch(this.handleError);
     }
