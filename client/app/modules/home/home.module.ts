@@ -5,6 +5,7 @@ import {SharedModule} from "../shared/shared.module";
 import {NgSemanticModule} from "ng-semantic";
 import {HomeComponent} from "./home.component";
 import {routing} from "./home.routing";
+import {CreateJobFormModule} from "../create-job-form/create-job-form.module";
 import {DisplayUsersComponent} from "../../components/display-users/display-users.component";
 import {DisplayJobsComponent} from "../../components/display-jobs/display-jobs.component";
 import {DisplayClientsComponent} from "../../components/display-clients/display-clients.component";
@@ -15,6 +16,7 @@ import {DisplayClientsComponent} from "../../components/display-clients/display-
         HttpModule,
         SharedModule.forRoot(),
         NgSemanticModule,
+        CreateJobFormModule,
         routing
     ],
     declarations: [

@@ -1,3 +1,6 @@
+<a class="ui button" (click)="creatingJob = !creatingJob"><i class="add icon"></i>Create New Job</a>
+<app-create-job-form [class.hidden]="!creatingJob"></app-create-job-form>
+
 <div class="ui three item pointing menu">
     <a class="item"
        (click)="activeMenuTab='jobs'"
