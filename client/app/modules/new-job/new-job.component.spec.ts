@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { CreateJobFormComponent } from './create-job-form.component';
+import { CreateJobFormComponent } from './new-job.component';
 
 describe('CreateJobFormComponent', () => {
   let component: CreateJobFormComponent;

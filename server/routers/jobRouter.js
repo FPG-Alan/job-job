@@ -19,7 +19,7 @@ jobRouter.get("/all", function (req, res) {
             "auth": apiKeys.dev.keys
         })
         .end(function (response) {
-            console.log(response.body);
+            // console.log(response.body);
             res.send(response.body);
         });
 });

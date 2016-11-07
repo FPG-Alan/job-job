@@ -4,11 +4,11 @@ import {Job} from "../../classes/job";
 import {TenKFtService} from "../../services/ten-k-ft.service";
 
 @Component({
-    selector: 'app-create-job-form',
-    templateUrl: './create-job-form.component.html',
-    styleUrls: ['./create-job-form.component.scss']
+    selector: 'app-new-job',
+    templateUrl: './new-job.component.html',
+    styleUrls: ['./new-job.component.scss']
 })
-export class CreateJobFormComponent implements OnInit {
+export class NewJobComponent implements OnInit {
 
     job: Job;
     @Output() onSuccess = new EventEmitter<any>();

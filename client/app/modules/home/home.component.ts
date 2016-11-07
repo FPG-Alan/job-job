@@ -8,7 +8,6 @@ import {Component, OnInit} from "@angular/core";
 export class HomeComponent implements OnInit {
 
     activeMenuTab = "jobs";
-    creatingJob = false;
 
     constructor() {
     }
@@ -17,7 +16,6 @@ export class HomeComponent implements OnInit {
     }
 
     onJobCreateSuccess(e: any){
-        this.creatingJob = false;
         // TODO: refresh job list
     }
 }

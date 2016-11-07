@@ -8,6 +8,7 @@ import {AppComponent} from "./app.component";
 import {routing, appRoutingProviders} from "./app.routing";
 import {LoginModule} from "./modules/login/login.module";
 import {HomeModule} from "./modules/home/home.module";
+import {NewJobModule} from "./modules/new-job/new-job.module";
 
 @NgModule({
     declarations: [
@@ -20,6 +21,7 @@ import {HomeModule} from "./modules/home/home.module";
         NgSemanticModule,
         LoginModule,
         HomeModule,
+        NewJobModule,
         routing
     ],
     providers: [
