@@ -1,3 +1,6 @@
+/*
+ * Main Navigation
+ */
 #main-menu {
   font-size: 1.1rem;
   border-radius: 0; }
@@ -19,8 +22,19 @@
     #main-menu #sidebar-toggle {
       display: block !important; } }
 
+/*
+ * Pushed Container for Sidebar
+ */
 .pusher {
   margin-top: 45px;
   padding-top: 50px; }
+
+/*
+ * Notification Message Popup
+ */
+#notif-message {
+  position: fixed;
+  right: 20px;
+  bottom: 20px; }
 
 /*# sourceMappingURL=app.component.css.map */
