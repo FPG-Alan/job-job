@@ -6,13 +6,38 @@
     Create New Job
 </h1>
 
-<form #form="ngForm" class="ui form"
+<form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
       novalidate>
-    <div class="field">
+    <div class="field" [class.error]="submitted && !jobName.valid">
         <!--TODO: toggle on whether user would let system auto generate name-->
         <label>Job Name</label>
-        <input type="text" [(ngModel)]="job.name" name="name" required>
+        <input type="text"
+               required
+               [(ngModel)]="job.name"
+               (ngModelChange)="this.submitted = false;"
+               name="name"
+               #jobName="ngModel">
+    </div>
+    <div class="two fields">
+        <div class="field" [class.error]="!startDate.valid">
+            <label>Start Date (Month/Day/Year)</label>
+            <input type="date"
+                   required
+                   [(ngModel)]="job.startDate"
+                   (ngModelChange)="onDateChange('start', $event)"
+                   name="startDate"
+                   #startDate="ngModel">
+        </div>
+        <div class="field" [class.error]="!endDate.valid">
+            <label>End Date (Month/Day/Year)</label>
+            <input type="date"
+                   required
+                   [(ngModel)]="job.endDate"
+                   (ngModelChange)="onDateChange('end', $event)"
+                   name="endDate"
+                   #endDate="ngModel">
+        </div>
     </div>
     <!--TODO
         client select
@@ -26,5 +51,9 @@
         start and end date (format: e.g. 2015-03-01) required
         phases (not MVP(?))
     -->
-    <button type="submit" class="ui positive button">Submit</button>
+    <button type="submit" class="ui positive button"
+            [disabled]="!form.form.valid || submitted">Submit
+    </button>
+
+    <div class="ui error message"></div>
 </form>

@@ -11,8 +11,8 @@ export class Job {
                 public serviceType: string,
                 public description: string,
                 public tags: any[],
-                public startDate: string,
-                public endDate: string,
+                public startDate: string | Date,
+                public endDate: string | Date,
                 public phases: Phase[]) {
     }
 }
