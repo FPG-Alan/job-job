@@ -1,11 +1,10 @@
 <nav class="ui fixed inverted menu" id="main-menu" *ngIf="authService.authenticated()">
-    <div id="main-menu-items">
+    <div class="right menu" id="main-menu-items">
         <a routerLink="/home" routerLinkActive="active" class="item">
             <i class="home icon"></i>Home</a>
-        <a class="item" (click)="authService.logout()" *ngIf="authService.authenticated()">
+        <a class="item" (click)="authService.logout()">
             <i class="sign out icon"></i>Log Out</a>
     </div>
-
     <a (click)="toggleSidebar()" class="item" id="sidebar-toggle"><i class="large content icon"></i></a>
 </nav>
 
@@ -17,8 +16,7 @@
        (click)="toggleSidebar()">
         <i class="home icon"></i>Home</a>
     <a class="item"
-       (click)="authService.logout(); toggleSidebar()"
-       *ngIf="authService.authenticated()">
+       (click)="authService.logout(); toggleSidebar()">
         <i class="sign out icon"></i>Log Out</a>
 </div>
 
