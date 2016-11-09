@@ -1,8 +1,15 @@
 var express = require("express"),
-    app = express(),
+    dotenv = require('dotenv').config(),
     path = require("path"),
     bodyParser = require("body-parser"),
-    mongoose = require("mongoose");
+    mongoose = require("mongoose"),
+    app = express(),
+    jwt = require('express-jwt'),
+    authenticate = jwt({
+        secret: new Buffer(process.env.AUTH0_CLIENT_SECRET, 'base64'),
+        audience: process.env.AUTH0_CLIENT_ID
+    });
+;
 
 // Settings
 require('dotenv').config();
@@ -16,9 +23,9 @@ var jobRouter = require("./server/routers/jobRouter");
 var clientRouter = require("./server/routers/clientRouter");
 
 // API routers
-app.use("/user", userRouter);
-app.use("/job", jobRouter);
-app.use("/client", clientRouter);
+app.use("/user", authenticate, userRouter);
+app.use("/job", authenticate, jobRouter);
+app.use("/client", authenticate, clientRouter);
 
 // Resource loading
 app.use("/node_modules", express.static(__dirname + "../node_modules"));
