@@ -6,6 +6,7 @@ import {NgSemanticModule} from "ng-semantic";
 import {HomeComponent} from "./home.component";
 import {routing} from "./home.routing";
 import {NewJobModule} from "../new-job/new-job.module";
+import {NewClientModule} from "../new-client/new-client.module";
 import {DisplayUsersComponent} from "../../components/display-users/display-users.component";
 import {DisplayJobsComponent} from "../../components/display-jobs/display-jobs.component";
 import {DisplayClientsComponent} from "../../components/display-clients/display-clients.component";
@@ -17,6 +18,7 @@ import {DisplayClientsComponent} from "../../components/display-clients/display-
         SharedModule.forRoot(),
         NgSemanticModule,
         NewJobModule,
+        NewClientModule,
         routing
     ],
     declarations: [

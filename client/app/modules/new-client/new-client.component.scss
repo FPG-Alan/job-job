@@ -1,0 +1,16 @@
+i.icon {
+    margin: 0 !important;
+}
+
+.ui.segment {
+    padding: 5px;
+    margin-top: 5px;
+
+    p { padding: 5px; }
+
+    .ui.label {
+        margin-left: 0 !important;
+        margin-right: calc(.14285714em * 2) !important;
+        margin-bottom: calc(.14285714em * 2) !important;
+    }
+}

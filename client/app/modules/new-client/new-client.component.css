@@ -1,0 +1,14 @@
+i.icon {
+  margin: 0 !important; }
+
+.ui.segment {
+  padding: 5px;
+  margin-top: 5px; }
+  .ui.segment p {
+    padding: 5px; }
+  .ui.segment .ui.label {
+    margin-left: 0 !important;
+    margin-right: calc(.14285714em * 2) !important;
+    margin-bottom: calc(.14285714em * 2) !important; }
+
+/*# sourceMappingURL=new-client.component.css.map */

@@ -9,7 +9,7 @@
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
       novalidate>
-    <div class="field" [class.error]="submitted && !jobName.valid">
+    <div class="field" [class.error]="submitted && !name.valid">
         <!--TODO: toggle on whether user would let system auto generate name-->
         <label>Job Name</label>
         <input type="text"
@@ -17,7 +17,7 @@
                [(ngModel)]="job.name"
                (ngModelChange)="this.submitted = false;"
                name="name"
-               #jobName="ngModel">
+               #name="ngModel">
     </div>
     <div class="two fields">
         <div class="field" [class.error]="!startDate.valid">
