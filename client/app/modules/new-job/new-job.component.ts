@@ -27,7 +27,6 @@ export class NewJobComponent implements OnInit {
     }
 
     onDateChange(isStartEnd: string, strDate: string) {
-        console.log(strDate);
         if (!this.isEmptyString(strDate)) {
             if (isStartEnd == "start") {
                 this.job.startDate = strDate;

@@ -36,6 +36,13 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + "/index.html");
 });
 
+// Error handling
+app.use(function (err, req, res, next) {
+    if (401 == err.status) { // unauthorized
+        res.redirect('/')
+    }
+});
+
 
 // Run app
 app.listen(process.env.PORT || '3000', function () {
