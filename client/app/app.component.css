@@ -4,10 +4,6 @@
 #main-menu {
   font-size: 1.1rem;
   border-radius: 0; }
-  #main-menu #main-menu-items {
-    display: block;
-    position: absolute;
-    right: 0; }
   #main-menu #sidebar-toggle {
     display: none !important;
     position: absolute;
