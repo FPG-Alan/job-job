@@ -19,13 +19,13 @@
                #name="ngModel">
     </div>
     <div class="field" [class.error]="submitted && !shortCode.valid">
-        <label>Short Code (2-3 uppercase letters)</label>
+        <label>Short Code (2-3 uppercase letters or leave blank)</label>
         <input type="text"
-               minlength="2"
                maxlength="3"
+               pattern="^$|^[A-Z]{2,3}$"
                [(ngModel)]="client.shortCode"
                (ngModelChange)="this.submitted = false;"
-               name="name"
+               name="shortCode"
                #shortCode="ngModel">
     </div>
     <!-- TODO:
