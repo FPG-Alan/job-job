@@ -15,7 +15,7 @@ export class ApiService {
      ***********/
     getAllClients() {
         return this.authHttp.get("/client/all")
-            .map(res => res.json())
+            .map(res => <Client[]> res.json())
             .catch(this.handleError);
     }
 

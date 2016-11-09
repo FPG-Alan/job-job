@@ -1,4 +1,5 @@
 import {Component, OnInit} from "@angular/core";
+import {Client} from "../../classes/client";
 import {ApiService} from "../../services/api.service";
 
 @Component({
@@ -8,7 +9,7 @@ import {ApiService} from "../../services/api.service";
 })
 export class DisplayClientsComponent implements OnInit {
 
-    clients: any[] = [];
+    clients: Client[] = [];
 
     constructor(private apiService: ApiService) {
     }
@@ -16,7 +17,7 @@ export class DisplayClientsComponent implements OnInit {
     ngOnInit() {
         this.apiService.getAllClients()
             .subscribe(
-                result => this.clients = result,
+                res => this.clients = res,
                 err => console.log(err)
             )
     }

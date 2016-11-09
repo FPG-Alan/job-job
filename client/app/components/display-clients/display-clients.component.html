@@ -1,6 +1,6 @@
 <ul *ngIf="clients !== null && clients.length > 0">
     <li *ngFor="let c of clients">
-        {{u.name + " (" + u.codeName + ")"}}
+        {{c.name + " (" + c.shortCode + ")"}}
     </li>
 </ul>
 
