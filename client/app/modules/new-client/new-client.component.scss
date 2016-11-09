@@ -6,11 +6,7 @@ i.icon {
     padding: 5px;
     margin-top: 5px;
 
-    p { padding: 5px; }
-
     .ui.label {
-        margin-left: 0 !important;
-        margin-right: calc(.14285714em * 2) !important;
-        margin-bottom: calc(.14285714em * 2) !important;
+        margin: 0 calc(.14285714em * 2) 0 0 !important;
     }
 }

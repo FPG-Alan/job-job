@@ -13,7 +13,7 @@ var apiKeys = {
 };
 
 jobRouter.get("/all", function (req, res) {
-    unirest.get(apiKeys.dev.url + "projects")
+    unirest.get(apiKeys.dev.url + "projects?with_archived=true&per_page=100000")
         .headers({
             "Content-Type": "application/json",
             "auth": apiKeys.dev.keys
@@ -26,7 +26,9 @@ jobRouter.get("/all", function (req, res) {
 
 jobRouter.post("", function (req, res) {
     var newProject = {
-        "name": req.body.name
+        "name": req.body.name,
+        "starts_at": req.body.startDate,
+        "ends_at": req.body.endDate
     };
     unirest.post(apiKeys.dev.url + "projects")
         .headers({
@@ -39,6 +41,8 @@ jobRouter.post("", function (req, res) {
             console.log(response.body);
             res.send(response.body);
         });
+    // // for testing
+    // res.status(500).send({ error: 'Something failed!' });
 });
 
 module.exports = jobRouter;

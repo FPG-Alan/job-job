@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var ClientSchema = new Schema({
     name: {type: String, required: true},
-    shortCode: {type: String, required: true},
+    shortCode: String,
     rate: String,
     count: Number,
     brands: [String]

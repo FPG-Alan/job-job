@@ -9,7 +9,7 @@
 <form #form="ngForm" class="ui form" id="new-client-form"
       (ngSubmit)="onSubmit(form)"
       novalidate>
-    <div class="field" [class.error]="submitted && !name.valid">
+    <div class="required field" [class.error]="submitted && !name.valid">
         <label>Client Name</label>
         <input type="text"
                required
@@ -21,7 +21,8 @@
     <div class="field" [class.error]="submitted && !shortCode.valid">
         <label>Short Code (2-3 uppercase letters)</label>
         <input type="text"
-               required
+               minlength="2"
+               maxlength="3"
                [(ngModel)]="client.shortCode"
                (ngModelChange)="this.submitted = false;"
                name="name"
@@ -43,18 +44,17 @@
                        #brand="ngModel">
                 <button type="submit" class="ui label button"><i class="add icon"></i></button>
             </div>
-            <div class="ui secondary compact segment">
+            <div class="ui secondary compact segment" *ngIf="client.brands.length > 0">
                 <div class="ui blue label" *ngFor="let b of client.brands; let i = index">{{b}}
                     <a (click)="removeBrand(i)"><i class="close icon"></i></a>
                 </div>
-                <p *ngIf="client.brands.length == 0">(no brands added)</p>
             </div>
         </div>
     </form>
 
-    <button type="submit" class="ui positive button"
+    <div class="ui divider"></div>
+    <button type="submit" class="ui right floated positive button"
             [disabled]="!form.form.valid || submitted">Submit
     </button>
 
-    <div class="ui error message"></div>
 </form>

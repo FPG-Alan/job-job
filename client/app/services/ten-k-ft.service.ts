@@ -10,6 +10,19 @@ export class TenKFtService {
     constructor(private authHttp: AuthHttp) {
     }
 
+    /*********
+     * USERS *
+     *********/
+    getAllUsers() {
+        return this.authHttp.get("/user/all")
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
+
+    /********
+     * JOBS *
+     ********/
     getAllJobs() {
         return this.authHttp.get("/job/all")
             .map(res => res.json())
@@ -22,12 +35,6 @@ export class TenKFtService {
         let options = new RequestOptions({headers: headers});
 
         return this.authHttp.post("/job", body, options)
-            .map(res => res.json())
-            .catch(this.handleError);
-    }
-
-    getAllUsers() {
-        return this.authHttp.get("/user/all")
             .map(res => res.json())
             .catch(this.handleError);
     }

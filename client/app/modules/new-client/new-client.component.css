@@ -4,11 +4,7 @@ i.icon {
 .ui.segment {
   padding: 5px;
   margin-top: 5px; }
-  .ui.segment p {
-    padding: 5px; }
   .ui.segment .ui.label {
-    margin-left: 0 !important;
-    margin-right: calc(.14285714em * 2) !important;
-    margin-bottom: calc(.14285714em * 2) !important; }
+    margin: 0 calc(.14285714em * 2) 0 0 !important; }
 
 /*# sourceMappingURL=new-client.component.css.map */

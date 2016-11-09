@@ -2,7 +2,7 @@ var express = require('express');
 var unirest = require('unirest');
 var userRouter = express.Router();
 
-var user = require("../models/user");
+var User = require("../models/user");
 
 var apiKeys = {
     "dev": {
@@ -15,7 +15,7 @@ var apiKeys = {
 };
 
 userRouter.get("/all", function (req, res) {
-    // user.find({}, function (err, users) {
+    // User.find({}, function (err, users) {
     //     if (err) {
     //         console.log(err)
     //     }
@@ -27,7 +27,7 @@ userRouter.get("/all", function (req, res) {
             "auth": apiKeys.dev.keys
         })
         .end(function (response) {
-            console.log(response.body);
+            // console.log(response.body);
             res.send(response.body);
         });
 });

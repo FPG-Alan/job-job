@@ -9,7 +9,7 @@
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
       novalidate>
-    <div class="field" [class.error]="submitted && !name.valid">
+    <div class="required field" [class.error]="submitted && !name.valid">
         <!--TODO: toggle on whether user would let system auto generate name-->
         <label>Job Name</label>
         <input type="text"
@@ -20,7 +20,7 @@
                #name="ngModel">
     </div>
     <div class="two fields">
-        <div class="field" [class.error]="!startDate.valid">
+        <div class="required field" [class.error]="!startDate.valid">
             <label>Start Date (Month/Day/Year)</label>
             <input type="date"
                    required
@@ -29,7 +29,7 @@
                    name="startDate"
                    #startDate="ngModel">
         </div>
-        <div class="field" [class.error]="!endDate.valid">
+        <div class="required field" [class.error]="!endDate.valid">
             <label>End Date (Month/Day/Year)</label>
             <input type="date"
                    required
@@ -51,9 +51,9 @@
         start and end date (format: e.g. 2015-03-01) required
         phases (not MVP(?))
     -->
-    <button type="submit" class="ui positive button"
+    <div class="ui divider"></div>
+    <button type="submit" class="ui right floated positive button"
             [disabled]="!form.form.valid || submitted">Submit
     </button>
 
-    <div class="ui error message"></div>
 </form>

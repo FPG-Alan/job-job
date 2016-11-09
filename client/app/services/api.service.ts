@@ -1,7 +1,8 @@
 import {Injectable} from "@angular/core";
 import {AuthHttp} from "angular2-jwt";
-import {Response} from "@angular/http";
+import {Response, Headers, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs";
+import {Client} from "../classes/client";
 
 @Injectable()
 export class ApiService {
@@ -9,8 +10,21 @@ export class ApiService {
     constructor(private authHttp: AuthHttp) {
     }
 
+    /***********
+     * CLIENTS *
+     ***********/
     getAllClients() {
         return this.authHttp.get("/client/all")
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
+    createNewClient(client: Client) {
+        let body = client;
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/client", body, options)
             .map(res => res.json())
             .catch(this.handleError);
     }

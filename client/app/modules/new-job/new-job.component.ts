@@ -77,12 +77,12 @@ export class NewJobComponent implements OnInit {
                             });
                         }, 4000);
 
-                        this.router.navigate(["/home"]);
+                        this.router.navigate(["/"]);
                     },
                     err => {
                         let $notifMessage = $("#notif-message");
                         $notifMessage.addClass("error");
-                        $notifMessage.find(".header").html("Something failed!");
+                        $notifMessage.find(".header").html("Something failed");
                         $notifMessage.find(".content").html("Could not create a new job");
                         $notifMessage.transition({
                             animation: "fade",

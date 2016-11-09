@@ -19,7 +19,7 @@ export class AuthService {
         this.lock.on("authenticated", (authResult) => {
             localStorage.setItem('id_token', authResult.idToken);
 
-            this.router.navigate(["/home"]);
+            this.router.navigate(["/"]);
         });
     }
 
