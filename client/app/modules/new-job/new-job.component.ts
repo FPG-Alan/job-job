@@ -2,7 +2,9 @@ import {Component, OnInit} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {Job} from "../../classes/job";
+import {Client} from "../../classes/client";
 import {TenKFtService} from "../../services/ten-k-ft.service";
+import {ApiService} from "../../services/api.service";
 import {DatePipe} from "@angular/common";
 
 declare var $;
@@ -15,15 +17,66 @@ declare var $;
 export class NewJobComponent implements OnInit {
 
     job: Job;
+    clients: Client[] = [];
     submitted = false;
-    finalName: string = "";
+    finalName: any = {
+        result: "",
+        clientCode: "",
+        startYear: "",
+        projectCount: "01",
+        brand: "",
+        formattedName: ""
+    };
 
     constructor(private router: Router,
-                private tenKFtService: TenKFtService) {
+                private tenKFtService: TenKFtService,
+                private apiService: ApiService) {
     }
 
     ngOnInit() {
         this.resetJobModel();
+        this.apiService.getAllClients()
+            .subscribe(
+                res => this.clients = res,
+                err => console.log(err)
+            )
+    }
+
+    testOnJobNameChange(value: string) {
+        let result = "";
+        let words = value.split(" ");
+        for (let w in words) {
+            if (w > 0) { result += "_"; }
+            words[w] = words[w].charAt(0).toUpperCase();
+            result += words[w];
+        }
+        return result
+    }
+
+    onFinalNameChange() {
+        this.finalName.result =
+            this.finalName.clientCode
+            + this.finalName.startYear
+            + this.finalName.projectCount
+            + this.finalName.brand
+            + this.finalName.formattedName;
+        console.log(this.finalName.result);
+    }
+
+    onJobNameChange() {
+        this.finalName.formattedName = "";
+        let words = this.job.name.split(" ");
+        for (let w in words) {
+            if (w > 0) { this.finalName.formattedName += "_"; }
+            words[w] = words[w].charAt(0).toUpperCase();
+            this.finalName.formattedName += words[w];
+        }
+    }
+
+    onClientChange(value: any) {
+        console.log(value);
+        this.finalName.clientCode = value;
+        this.onFinalNameChange();
     }
 
     onDateChange(isStartEnd: string, strDate: string) {
@@ -39,6 +92,12 @@ export class NewJobComponent implements OnInit {
                     ? strDate
                     : this.job.startDate;
             }
+
+            this.finalName.startYear =
+                new Date(this.job.startDate.toString())
+                    .getFullYear().toString().substr(2, 2);
+            this.onFinalNameChange();
+
         }
     }
 

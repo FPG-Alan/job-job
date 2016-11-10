@@ -9,16 +9,29 @@
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
       novalidate>
+    {{finalName.result}}
+    <!--Job Name-->
     <div class="required field" [class.error]="submitted && !name.valid">
         <!--TODO: toggle on whether user would let system auto generate name-->
         <label>Job Name</label>
         <input type="text"
                required
                [(ngModel)]="job.name"
-               (ngModelChange)="this.submitted = false;"
+               (ngModelChange)="this.submitted = false; onJobNameChange()"
                name="name"
                #name="ngModel">
     </div>
+    <!--Client-->
+    <div class="field">
+        <label>Client</label>
+        <select class="ui search dropdown" (change)="onClientChange($event.target.value)" name="client">
+            <option value=""></option>
+            <option *ngFor="let cli of clients; let i = index"
+                    [value]="cli.shortCode">{{cli.name}}
+            </option>
+        </select>
+    </div>
+    <!--Start and End Dates-->
     <div class="two fields">
         <div class="required field" [class.error]="!startDate.valid">
             <label>Start Date (Month/Day/Year)</label>
