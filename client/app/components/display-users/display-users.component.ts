@@ -18,7 +18,7 @@ export class DisplayUsersComponent implements OnInit {
             .subscribe(
                 result => this.users = result.data,
                 err => console.log(err)
-            )
+            );
     }
 
 }

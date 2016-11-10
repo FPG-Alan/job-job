@@ -39,18 +39,7 @@ export class NewJobComponent implements OnInit {
             .subscribe(
                 res => this.clients = res,
                 err => console.log(err)
-            )
-    }
-
-    testOnJobNameChange(value: string) {
-        let result = "";
-        let words = value.split(" ");
-        for (let w in words) {
-            if (w > 0) { result += "_"; }
-            words[w] = words[w].charAt(0).toUpperCase();
-            result += words[w];
-        }
-        return result
+            );
     }
 
     onFinalNameChange() {
@@ -63,13 +52,30 @@ export class NewJobComponent implements OnInit {
         console.log(this.finalName.result);
     }
 
+    testOnJobNameChange(value: string) {
+        let result = "";
+        let words = value.split(" ");
+        for (let w in words) {
+            if (words.hasOwnProperty(w)) {
+                console.log(w);
+                // if (w > 0) { result += "_"; }
+                words[w] = words[w].charAt(0).toUpperCase();
+                result += words[w];
+            }
+        }
+        return result;
+    }
+
     onJobNameChange() {
         this.finalName.formattedName = "";
         let words = this.job.name.split(" ");
         for (let w in words) {
-            if (w > 0) { this.finalName.formattedName += "_"; }
-            words[w] = words[w].charAt(0).toUpperCase();
-            this.finalName.formattedName += words[w];
+            if (words.hasOwnProperty(w)) {
+                console.log(w);
+                // if (w > 0) { this.finalName.formattedName += "_"; }
+                words[w] = words[w].charAt(0).toUpperCase();
+                this.finalName.formattedName += words[w];
+            }
         }
     }
 
@@ -81,12 +87,12 @@ export class NewJobComponent implements OnInit {
 
     onDateChange(isStartEnd: string, strDate: string) {
         if (!this.isEmptyString(strDate)) {
-            if (isStartEnd == "start") {
+            if (isStartEnd === "start") {
                 this.job.startDate = strDate;
                 this.job.endDate = new Date(strDate) > new Date(this.job.endDate.toString())
                     ? strDate
                     : this.job.endDate;
-            } else if (isStartEnd == "end") {
+            } else if (isStartEnd === "end") {
                 this.job.endDate = strDate;
                 this.job.startDate = new Date(strDate) < new Date(this.job.startDate.toString())
                     ? strDate
@@ -158,7 +164,7 @@ export class NewJobComponent implements OnInit {
                                 }
                             });
                         }, 4000);
-                    })
+                    });
         }
     }
 
@@ -177,6 +183,6 @@ export class NewJobComponent implements OnInit {
 
     isEmptyString(text: string) {
         text = text != null ? text.trim() : null;
-        return text == "" || text == null;
+        return text === "" || text === null;
     }
 }

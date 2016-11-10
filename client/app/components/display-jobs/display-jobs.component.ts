@@ -18,7 +18,7 @@ export class DisplayJobsComponent implements OnInit {
             .subscribe(
                 result => this.jobs = result.data,
                 err => console.log(err)
-            )
+            );
     }
 
 }

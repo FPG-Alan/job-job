@@ -93,16 +93,16 @@ export class NewClientComponent implements OnInit {
                             });
                         }, 4000);
                     }
-                )
+                );
         }
     }
 
     resetClientModel() {
-        this.client = new Client("", "", "", 0, [])
+        this.client = new Client("", "", "", 0, []);
     }
 
     isEmptyString(text: string) {
         text = text != null ? text.trim() : null;
-        return text == "" || text == null;
+        return text === "" || text === null;
     }
 }

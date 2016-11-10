@@ -5,6 +5,7 @@ import { DebugElement } from '@angular/core';
 
 import { NewJobComponent } from './new-job.component';
 import {FormsModule} from "@angular/forms";
+import {Router} from "@angular/router";
 
 describe('NewJobComponent', () => {
   let component: NewJobComponent;
@@ -13,7 +14,8 @@ describe('NewJobComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
-      declarations: [ NewJobComponent ]
+      declarations: [ NewJobComponent ],
+      providers: [Router]
     })
     .compileComponents();
   }));
@@ -28,9 +30,9 @@ describe('NewJobComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it("should split words on name change", () =>{
+  it("should split words on name change", () => {
       fixture = TestBed.createComponent(NewJobComponent);
       let app = fixture.debugElement.componentInstance;
       expect(app.testOnJobNameChange("What a test name")).toEqual("What_A_Test_Name");
-  })
+  });
 });
