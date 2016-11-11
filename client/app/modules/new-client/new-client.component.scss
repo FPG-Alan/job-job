@@ -4,9 +4,10 @@ i.icon {
 
 .ui.segment {
     padding: 5px;
+    padding-bottom: 0;
     margin-top: 5px;
 
     .ui.label {
-        margin: 0 calc(.14285714em * 2) 0 0 !important;
+        margin: 0 calc(.14285714em * 2) calc(.14285714em * 2) 0 !important;
     }
 }

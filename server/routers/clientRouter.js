@@ -36,7 +36,8 @@ clientRouter.post("/", function (req, res) {
                     res.status(500).send({error: 'Something failed!'});
                 }
                 console.log("Added new Client: " + client.name);
-            })
+                res.json(client);
+            });
         }
     })
 });

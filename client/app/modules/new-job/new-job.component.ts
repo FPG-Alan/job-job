@@ -74,14 +74,27 @@ export class NewJobComponent implements OnInit {
         this.onFinalNameChange();
     }
 
-    onClientChange(index: number, shortCode: any) {
-        this.finalName.clientCode = shortCode;
-        this.brands = this.clients[index].brands;
+    onClientChange() {
+        this.job.brand = "";
+        this.finalName.brand = "";
+        
+        let n = this.job.client.count + 1;
+        this.finalName.projectCount = (n < 10) ? ("0" + n) : ("" + n);
+        this.finalName.clientCode = this.job.client.shortCode;
         this.onFinalNameChange();
     }
 
-    onBrandChange(){
-        // TODO
+    onBrandChange() {
+        this.finalName.brand = "";
+        let words = this.job.brand.match(/\S+/g);
+        for (let w in words) {
+            if (words.hasOwnProperty(w)) {
+                if (parseInt(w) > 0) { this.finalName.brand += "_"; }
+                words[w] = words[w].charAt(0).toUpperCase() + words[w].slice(1);
+                this.finalName.brand += words[w];
+            }
+        }
+        this.onFinalNameChange();
     }
 
     onDateChange(isStartEnd: string, strDate: string) {
@@ -166,6 +179,7 @@ export class NewJobComponent implements OnInit {
         }
     }
 
+
     resetModels() {
         // preformat to the date-type HTML inputs
         let datePipe = new DatePipe("en-US");
@@ -173,7 +187,8 @@ export class NewJobComponent implements OnInit {
         let strStartDate = datePipe.transform(startDate.toString(), "yyyy-MM-dd");
         let endDate = new Date(startDate.getTime() + (7 * 24 * 60 * 60 * 1000));
         let strEndDate = datePipe.transform(endDate.toString(), "yyyy-MM-dd");
-        this.job = new Job("", null, "", null, "", "", "", "", null,
+        let newClient = new Client("", "", "", 0, []);
+        this.job = new Job("", newClient, "", null, "", "", "", "", null,
             strStartDate, strEndDate, []);
 
         this.finalName = {

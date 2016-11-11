@@ -28,7 +28,7 @@
             <label>Client</label>
             <select class="ui search dropdown selection"
                     [(ngModel)]="job.client"
-                    (ngModelChage)="onClientChange(i, $event)"
+                    (ngModelChange)="onClientChange()"
                     name="client">
                 <option value=" ">(no client)</option>
                 <option *ngFor="let cli of clients; let i = index"
@@ -38,9 +38,12 @@
         </div>
         <div class="field">
             <label>Brand (optional)</label>
-            <select class="ui search dropdown selection" name="brand">
+            <select class="ui search dropdown selection" name="brand"
+                    [disabled]="!job.client.brands || job.client.brands.length == 0"
+                    [(ngModel)]="job.brand"
+                    (ngModelChange)="onBrandChange()">
                 <option value=" ">(no brand)</option>
-                <option *ngFor="let b of brands; let i = index"
+                <option *ngFor="let b of job.client.brands; let i = index"
                         [value]="b">{{b}}
                 </option>
             </select>
