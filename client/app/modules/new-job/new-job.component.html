@@ -9,10 +9,32 @@
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
       novalidate>
-    {{finalName.result}}
+    <!--Final Generated Name-->
+    <div class="inline fields">
+        <div class="read-only ten wide field">
+            <label>Generated Name</label>
+            <input *ngIf="usingFinalName" type="text"
+                   require
+                   [(ngModel)]="finalName.result"
+                   name="finalName"
+                   #name="ngModel">
+            <input *ngIf="!usingFinalName" type="text"
+                   require
+                   [(ngModel)]="job.name"
+                   name="finalName"
+                   #name="ngModel">
+        </div>
+        <div class="six wide field">
+            <div class="ui toggle checkbox">
+                <input type="checkbox" tabindex="0" class="hidden"
+                       [checked]="usingFinalName"
+                       (click)="usingFinalName = !usingFinalName">
+                <label>Use generated name?</label>
+            </div>
+        </div>
+    </div>
     <!--Job Name-->
     <div class="required field" [class.error]="submitted && !name.valid">
-        <!--TODO: toggle on whether user would let system auto generate name-->
         <label>Job Name</label>
         <input type="text"
                required

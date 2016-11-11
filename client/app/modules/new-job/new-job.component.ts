@@ -16,10 +16,10 @@ declare var $;
 })
 export class NewJobComponent implements OnInit {
 
+    submitted = false;
     job: Job;
     clients: Client[] = [];
     brands: string[] = [];
-    submitted = false;
     finalName: any = {
         result: "",
         clientCode: "",
@@ -28,6 +28,7 @@ export class NewJobComponent implements OnInit {
         brand: "",
         formattedName: ""
     };
+    usingFinalName = true;
 
     constructor(private router: Router,
                 private tenKFtService: TenKFtService,
@@ -42,10 +43,11 @@ export class NewJobComponent implements OnInit {
                 err => console.log(err)
             );
 
+        $('.ui.checkbox').checkbox();
         $('.ui.search.dropdown.selection').dropdown();
     }
 
-    onFinalNameChange() {
+    updateFinalName() {
         // reinitiating as an empty string to make sure it's not a null addition
         this.finalName.result = "";
         this.finalName.result += !this.isEmptyString(this.finalName.clientCode)
@@ -71,7 +73,7 @@ export class NewJobComponent implements OnInit {
                 this.finalName.formattedName += words[w];
             }
         }
-        this.onFinalNameChange();
+        this.updateFinalName();
     }
 
     onClientChange() {
@@ -83,7 +85,7 @@ export class NewJobComponent implements OnInit {
         let n = this.job.client.count + 1;
         this.finalName.projectCount = (n < 10) ? ("0" + n) : ("" + n);
         this.finalName.clientCode = this.job.client.shortCode;
-        this.onFinalNameChange();
+        this.updateFinalName();
     }
 
     onBrandChange() {
@@ -96,7 +98,7 @@ export class NewJobComponent implements OnInit {
                 this.finalName.brand += words[w];
             }
         }
-        this.onFinalNameChange();
+        this.updateFinalName();
     }
 
     onDateChange(isStartEnd: string, strDate: string) {
@@ -116,7 +118,7 @@ export class NewJobComponent implements OnInit {
             this.finalName.startYear =
                 new Date(this.job.startDate.toString())
                     .getFullYear().toString().substr(2, 2);
-            this.onFinalNameChange();
+            this.updateFinalName();
         }
     }
 
@@ -126,7 +128,9 @@ export class NewJobComponent implements OnInit {
             this.submitted = true;
             // compile what everything that hasn't been updated yet
             this.job.code = "" + this.finalName.clientCode + this.finalName.startYear + this.finalName.projectCount;
-            this.tenKFtService.createNewJob(this.job, this.finalName.result)
+
+            let submittedName = this.usingFinalName ? this.finalName.result : this.job.name;
+            this.tenKFtService.createNewJob(this.job, submittedName)
                 .subscribe(
                     res => {
                         console.log(res);
@@ -202,7 +206,7 @@ export class NewJobComponent implements OnInit {
 
         // reuse codes even more
         this.onDateChange("start", strStartDate);
-        this.onFinalNameChange();
+        this.updateFinalName();
     }
 
     isEmptyString(text: string) {

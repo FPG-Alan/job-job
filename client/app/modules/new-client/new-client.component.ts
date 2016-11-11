@@ -13,8 +13,8 @@ declare var $;
 })
 export class NewClientComponent implements OnInit {
 
-    client: Client;
     submitted = false;
+    client: Client;
     currentBrand: string = "";
 
     constructor(private router: Router,
@@ -26,8 +26,10 @@ export class NewClientComponent implements OnInit {
     }
 
     addBrand() {
-        this.client.brands.push(this.currentBrand);
-        this.currentBrand = "";
+        if (!this.isEmptyString(this.currentBrand)) {
+            this.client.brands.push(this.currentBrand.trim());
+            this.currentBrand = "";
+        }
     }
 
     removeBrand(index: number) {
