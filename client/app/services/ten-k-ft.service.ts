@@ -29,8 +29,9 @@ export class TenKFtService {
             .catch(this.handleError);
     }
 
-    createNewJob(job: Job) {
+    createNewJob(job: Job, finalName: string) {
         let body = job;
+        body.name = finalName;
         let headers = new Headers({"Content-Type": "application/json"});
         let options = new RequestOptions({headers: headers});
 

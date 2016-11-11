@@ -12,8 +12,6 @@ export class AppComponent {
     title = 'app works!';
 
     constructor(private authService: AuthService) {
-        $('.ui.dropdown').dropdown();
-
         $('#notif-message .close')
             .on('click', function () {
                 $(this).closest('.message').transition('fade');

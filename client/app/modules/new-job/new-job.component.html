@@ -17,19 +17,34 @@
         <input type="text"
                required
                [(ngModel)]="job.name"
-               (ngModelChange)="this.submitted = false; onJobNameChange()"
+               (ngModelChange)="this.submitted = false; onJobNameChange();"
                name="name"
                #name="ngModel">
     </div>
-    <!--Client-->
-    <div class="field">
-        <label>Client</label>
-        <select class="ui search dropdown" (change)="onClientChange($event.target.value)" name="client">
-            <option value=""></option>
-            <option *ngFor="let cli of clients; let i = index"
-                    [value]="cli.shortCode">{{cli.name}}
-            </option>
-        </select>
+    <!--Client & Brand-->
+    <div class="two fields">
+        <div class="field">
+            <!--TODO-->
+            <label>Client</label>
+            <select class="ui search dropdown selection"
+                    [(ngModel)]="job.client"
+                    (ngModelChage)="onClientChange(i, $event)"
+                    name="client">
+                <option value=" ">(no client)</option>
+                <option *ngFor="let cli of clients; let i = index"
+                        [ngValue]="cli">{{cli.name}}
+                </option>
+            </select>
+        </div>
+        <div class="field">
+            <label>Brand (optional)</label>
+            <select class="ui search dropdown selection" name="brand">
+                <option value=" ">(no brand)</option>
+                <option *ngFor="let b of brands; let i = index"
+                        [value]="b">{{b}}
+                </option>
+            </select>
+        </div>
     </div>
     <!--Start and End Dates-->
     <div class="two fields">
@@ -55,13 +70,11 @@
     <!--TODO
         client select
         brand select after client
-        auto generated projectCode
         projectStatus select
         rateCard select
         serviceType (toggle or select or radial)
         description text area
         tags (form/list display like cakebook's ingredients; be careful of enter button)
-        start and end date (format: e.g. 2015-03-01) required
         phases (not MVP(?))
     -->
     <div class="ui divider"></div>

@@ -102,7 +102,11 @@ export class NewClientComponent implements OnInit {
     }
 
     isEmptyString(text: string) {
-        text = text != null ? text.trim() : null;
-        return text === "" || text === null;
+        if (text) {
+            text = text.trim();
+            return text === "" || text === null;
+        } else {
+            return true;
+        }
     }
 }

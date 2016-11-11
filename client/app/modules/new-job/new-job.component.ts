@@ -18,6 +18,7 @@ export class NewJobComponent implements OnInit {
 
     job: Job;
     clients: Client[] = [];
+    brands: string[] = [];
     submitted = false;
     finalName: any = {
         result: "",
@@ -34,55 +35,53 @@ export class NewJobComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.resetJobModel();
+        this.resetModels();
         this.apiService.getAllClients()
             .subscribe(
                 res => this.clients = res,
                 err => console.log(err)
             );
+
+        $('.ui.search.dropdown.selection').dropdown();
     }
 
     onFinalNameChange() {
-        this.finalName.result =
-            this.finalName.clientCode
-            + this.finalName.startYear
-            + this.finalName.projectCount
-            + this.finalName.brand
-            + this.finalName.formattedName;
-        console.log(this.finalName.result);
-    }
-
-    testOnJobNameChange(value: string) {
-        let result = "";
-        let words = value.split(" ");
-        for (let w in words) {
-            if (words.hasOwnProperty(w)) {
-                console.log(w);
-                // if (w > 0) { result += "_"; }
-                words[w] = words[w].charAt(0).toUpperCase();
-                result += words[w];
-            }
-        }
-        return result;
+        // reinitiating as an empty string to make sure it's not a null addition
+        this.finalName.result = "";
+        this.finalName.result += !this.isEmptyString(this.finalName.clientCode)
+            ? this.finalName.clientCode
+            : "";
+        // these will always be present
+        this.finalName.result += this.finalName.startYear + this.finalName.projectCount;
+        this.finalName.result += !this.isEmptyString(this.finalName.brand)
+            ? "_" + this.finalName.brand
+            : "";
+        this.finalName.result += !this.isEmptyString(this.finalName.formattedName)
+            ? "_" + this.finalName.formattedName
+            : "";
     }
 
     onJobNameChange() {
         this.finalName.formattedName = "";
-        let words = this.job.name.split(" ");
+        let words = this.job.name.match(/\S+/g);
         for (let w in words) {
             if (words.hasOwnProperty(w)) {
-                console.log(w);
-                // if (w > 0) { this.finalName.formattedName += "_"; }
-                words[w] = words[w].charAt(0).toUpperCase();
+                if (parseInt(w) > 0) { this.finalName.formattedName += "_"; }
+                words[w] = words[w].charAt(0).toUpperCase() + words[w].slice(1);
                 this.finalName.formattedName += words[w];
             }
         }
+        this.onFinalNameChange();
     }
 
-    onClientChange(value: any) {
-        console.log(value);
-        this.finalName.clientCode = value;
+    onClientChange(index: number, shortCode: any) {
+        this.finalName.clientCode = shortCode;
+        this.brands = this.clients[index].brands;
         this.onFinalNameChange();
+    }
+
+    onBrandChange(){
+        // TODO
     }
 
     onDateChange(isStartEnd: string, strDate: string) {
@@ -103,7 +102,6 @@ export class NewJobComponent implements OnInit {
                 new Date(this.job.startDate.toString())
                     .getFullYear().toString().substr(2, 2);
             this.onFinalNameChange();
-
         }
     }
 
@@ -115,11 +113,11 @@ export class NewJobComponent implements OnInit {
         if (form.valid && !this.submitted) {
             // validation set to submitted to avoid spamming
             this.submitted = true;
-            this.tenKFtService.createNewJob(this.job)
+            this.tenKFtService.createNewJob(this.job, this.finalName.result)
                 .subscribe(
                     res => {
                         console.log(res);
-                        this.resetJobModel();
+                        this.resetModels();
 
                         // TODO: put this is a service
                         let $notifMessage = $("#notif-message");
@@ -168,21 +166,36 @@ export class NewJobComponent implements OnInit {
         }
     }
 
-    resetJobModel() {
-        // preformat the date inputs
+    resetModels() {
+        // preformat to the date-type HTML inputs
         let datePipe = new DatePipe("en-US");
-
         let startDate = new Date();
         let strStartDate = datePipe.transform(startDate.toString(), "yyyy-MM-dd");
         let endDate = new Date(startDate.getTime() + (7 * 24 * 60 * 60 * 1000));
         let strEndDate = datePipe.transform(endDate.toString(), "yyyy-MM-dd");
-
         this.job = new Job("", null, "", null, "", "", "", "", null,
             strStartDate, strEndDate, []);
+
+        this.finalName = {
+            result: "",
+            clientCode: "",
+            startYear: "",
+            projectCount: "01",
+            brand: "",
+            formattedName: ""
+        };
+
+        // reuse codes even more
+        this.onDateChange("start", strStartDate);
+        this.onFinalNameChange();
     }
 
     isEmptyString(text: string) {
-        text = text != null ? text.trim() : null;
-        return text === "" || text === null;
+        if (text) {
+            text = text.trim();
+            return text === "" || text === null;
+        } else {
+            return true;
+        }
     }
 }
