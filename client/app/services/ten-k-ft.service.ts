@@ -30,8 +30,10 @@ export class TenKFtService {
     }
 
     createNewJob(job: Job, finalName: string) {
-        let body = job;
-        body.name = finalName;
+        let body = {
+            job: job,
+            finalName: finalName
+        };
         let headers = new Headers({"Content-Type": "application/json"});
         let options = new RequestOptions({headers: headers});
 

@@ -5,7 +5,7 @@ export class Job {
     constructor(public name: string,
                 public client: Client,
                 public brand: string,
-                public jobNumber: number,
+                public code: string,
                 public status: string,
                 public rateCard: string,
                 public serviceType: string,

@@ -121,13 +121,11 @@ export class NewJobComponent implements OnInit {
     }
 
     onSubmit(form: NgForm) {
-        console.log(form.value);
-        console.log(form.valid);
-        console.log(form);
-
         if (form.valid && !this.submitted) {
             // validation set to submitted to avoid spamming
             this.submitted = true;
+            // compile what everything that hasn't been updated yet
+            this.job.code = "" + this.finalName.clientCode + this.finalName.startYear + this.finalName.projectCount;
             this.tenKFtService.createNewJob(this.job, this.finalName.result)
                 .subscribe(
                     res => {

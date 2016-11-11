@@ -28,7 +28,7 @@
             <label>Client</label>
             <select class="ui search dropdown selection"
                     [(ngModel)]="job.client"
-                    (ngModelChange)="onClientChange()"
+                    (ngModelChange)="this.submitted = false; onClientChange()"
                     name="client">
                 <option value=" ">(no client)</option>
                 <option *ngFor="let cli of clients; let i = index"
@@ -41,7 +41,7 @@
             <select class="ui search dropdown selection" name="brand"
                     [disabled]="!job.client.brands || job.client.brands.length == 0"
                     [(ngModel)]="job.brand"
-                    (ngModelChange)="onBrandChange()">
+                    (ngModelChange)="this.submitted = false; onBrandChange()">
                 <option value=" ">(no brand)</option>
                 <option *ngFor="let b of job.client.brands; let i = index"
                         [value]="b">{{b}}
@@ -56,7 +56,7 @@
             <input type="date"
                    required
                    [(ngModel)]="job.startDate"
-                   (ngModelChange)="onDateChange('start', $event)"
+                   (ngModelChange)="this.submitted = false; onDateChange('start', $event)"
                    name="startDate"
                    #startDate="ngModel">
         </div>
@@ -65,14 +65,12 @@
             <input type="date"
                    required
                    [(ngModel)]="job.endDate"
-                   (ngModelChange)="onDateChange('end', $event)"
+                   (ngModelChange)="this.submitted = false; onDateChange('end', $event)"
                    name="endDate"
                    #endDate="ngModel">
         </div>
     </div>
     <!--TODO
-        client select
-        brand select after client
         projectStatus select
         rateCard select
         serviceType (toggle or select or radial)

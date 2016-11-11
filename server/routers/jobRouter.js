@@ -24,11 +24,13 @@ jobRouter.get("/all", function (req, res) {
         });
 });
 
-jobRouter.post("", function (req, res) {
+jobRouter.post("/", function (req, res) {
     var newProject = {
-        "name": req.body.name,
-        "starts_at": req.body.startDate,
-        "ends_at": req.body.endDate
+        "name": req.body.finalName,
+        "client": req.body.job.client.name,
+        "starts_at": req.body.job.startDate,
+        "ends_at": req.body.job.endDate,
+        "project_code": req.body.job.code
     };
     unirest.post(apiKeys.dev.url + "projects")
         .headers({
