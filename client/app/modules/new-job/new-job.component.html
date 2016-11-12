@@ -37,6 +37,7 @@
     <div class="required field" [class.error]="submitted && !name.valid">
         <label>Job Name</label>
         <input type="text"
+               autofocus
                required
                [(ngModel)]="job.name"
                (ngModelChange)="this.submitted = false; onJobNameChange();"
