@@ -1,5 +1,5 @@
 <a class="ui button" routerLink="/home">
-    <i class="cancel icon"></i>Cancel
+    <i class="chevron left icon"></i>Back
 </a>
 
 <h1>
@@ -94,6 +94,7 @@
                    #endDate="ngModel">
         </div>
     </div>
+
     <!--TODO
         projectStatus select
         rateCard select
@@ -103,8 +104,26 @@
         phases (not MVP(?))
     -->
     <div class="ui divider"></div>
-    <button type="submit" class="ui right floated positive button"
-            [disabled]="!form.form.valid || submitted">Submit
-    </button>
+    <div class="ui right floated large buttons">
+        <button type="submit" class="ui positive button"
+                [disabled]="!form.form.valid || submitted">Submit
+        </button>
+        <div class="or"></div>
+        <button type="button" class="ui negative button"
+                (click)="confirmResetModels()"><i class="refresh icon"></i>Clear
+        </button>
+    </div>
 
 </form>
+
+
+<div class="ui small modal" id="confirm-reset-job">
+    <i class="close icon"></i>
+    <div class="header">
+        Are you sure you want to reset the fields on this form?
+    </div>
+    <div class="actions">
+        <div class="ui positive button" (click)="resetModels()"><i class="checkmark icon"></i>I'm sure!</div>
+        <div class="ui negative button"><i class="remove icon"></i>Nope</div>
+    </div>
+</div>

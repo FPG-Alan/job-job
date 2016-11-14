@@ -1,5 +1,5 @@
 <a class="ui button" routerLink="/home">
-    <i class="cancel icon"></i>Cancel
+    <i class="chevron left icon"></i>Back
 </a>
 
 <h1>
@@ -53,8 +53,14 @@
     </form>
 
     <div class="ui divider"></div>
-    <button type="submit" class="ui right floated positive button"
-            [disabled]="!form.form.valid || submitted">Submit
-    </button>
+    <div class="ui right floated large buttons">
+        <button type="submit" class="ui positive button"
+                [disabled]="!form.form.valid || submitted">Submit
+        </button>
+        <div class="or"></div>
+        <button type="button" class="ui negative button"
+                (click)="resetModels()"><i class="refresh icon"></i>Clear
+        </button>
+    </div>
 
 </form>

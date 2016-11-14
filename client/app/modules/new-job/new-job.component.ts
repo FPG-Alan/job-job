@@ -38,7 +38,14 @@ export class NewJobComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.resetModels();
+        let savedJob = sessionStorage.getItem("saved_job_fields");
+        let savedFinalName = sessionStorage.getItem("saved_final_name");
+        if (savedJob && savedFinalName) {
+            this.job = JSON.parse(savedJob);
+            this.finalName.result = JSON.parse(savedFinalName);
+        } else {
+            this.resetModels();
+        }
         this.apiService.getAllClients()
             .subscribe(
                 res => {
@@ -50,6 +57,7 @@ export class NewJobComponent implements OnInit {
         $('.ui.checkbox').checkbox();
         $('.ui.search.dropdown.selection').dropdown();
     }
+
 
     getClientProjectCount() {
         if (this.usingFinalName && !this.commonService.isEmptyString(this.job.client.name)) {
@@ -68,6 +76,7 @@ export class NewJobComponent implements OnInit {
         }
     }
 
+
     updateFinalName() {
         // reinitiating as an empty string to make sure it's not a null addition
         this.finalName.result = "";
@@ -83,7 +92,10 @@ export class NewJobComponent implements OnInit {
         this.finalName.result += !this.commonService.isEmptyString(this.finalName.formattedName)
             ? "_" + this.finalName.formattedName
             : "";
+        sessionStorage.setItem("saved_job_fields", JSON.stringify(this.job));
+        sessionStorage.setItem("saved_final_name", JSON.stringify(this.finalName.result));
     }
+
 
     onJobNameChange() {
         this.finalName.formattedName = "";
@@ -98,6 +110,7 @@ export class NewJobComponent implements OnInit {
         this.updateFinalName();
     }
 
+
     onClientChange() {
         this.job.brand = "";
         this.finalName.brand = "";
@@ -106,10 +119,11 @@ export class NewJobComponent implements OnInit {
         $("#brand-select-field div.text")[0].innerText = "(no brand)";
 
         this.finalName.clientCode = this.job.client.shortCode;
-
         this.getClientProjectCount();
+
         this.updateFinalName();
     }
+
 
     onBrandChange() {
         this.finalName.brand = "";
@@ -123,6 +137,7 @@ export class NewJobComponent implements OnInit {
         }
         this.updateFinalName();
     }
+
 
     onDateChange(isStartEnd: string, strDate: string) {
         if (!this.commonService.isEmptyString(strDate)) {
@@ -142,10 +157,10 @@ export class NewJobComponent implements OnInit {
                 new Date(this.job.startDate.toString())
                     .getFullYear().toString().substr(2, 2);
             this.getClientProjectCount();
-
             this.updateFinalName();
         }
     }
+
 
     onSubmit(form: NgForm) {
         if (form.valid && !this.submitted) {
@@ -178,6 +193,11 @@ export class NewJobComponent implements OnInit {
     }
 
 
+    confirmResetModels(){
+        $("#confirm-reset-job")
+            .modal("show");
+    }
+
     resetModels() {
         // preformat to the date-type HTML inputs
         let datePipe = new DatePipe("en-US");
@@ -200,6 +220,10 @@ export class NewJobComponent implements OnInit {
 
         // reuse codes even more
         this.onDateChange("start", strStartDate);
+
+        // clear session-saved job
+        sessionStorage.removeItem("saved_job_fields");
+        sessionStorage.removeItem("saved_final_name");
         this.updateFinalName();
     }
 }

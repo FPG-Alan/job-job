@@ -16,6 +16,8 @@ export class AppComponent {
             .on('click', function () {
                 $(this).closest('.message').transition('fade');
             });
+
+        $('.ui.modal').modal();
     }
 
     toggleSidebar() {
