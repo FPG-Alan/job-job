@@ -171,29 +171,21 @@ export class NewJobComponent implements OnInit {
 
             let submittedName = this.usingFinalName ? this.finalName.result : this.job.name;
             this.tenKFtService.createNewJob(this.job, submittedName)
-                .subscribe(
-                    res => {
-                        console.log(res);
-                        this.resetModels();
-                        this.commonService.notifyMessage(
-                            "success",
-                            "Sweet!",
-                            "Successfully created a new job"
-                        );
-                        this.router.navigate(["/"]);
-                    },
-                    err => {
-                        this.commonService.notifyMessage(
-                            "error",
-                            "Something failed",
-                            "Could not create a new job"
-                        );
-                    });
+                .subscribe(res => {
+                    console.log(res);
+                    this.resetModels();
+                    this.commonService.notifyMessage(
+                        "success",
+                        "Sweet!",
+                        "Successfully created a new job"
+                    );
+                    this.router.navigate(["/"]);
+                });
         }
     }
 
 
-    confirmResetModels(){
+    confirmResetModels() {
         $("#confirm-reset-job")
             .modal("show");
     }

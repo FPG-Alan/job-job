@@ -17,7 +17,7 @@ var apiKeys = {
 clientRouter.get("/all", function (req, res) {
     Client.find({}, function (err, clients) {
         if (err) {
-            console.log(err);
+            res.status(500).send({error: 'Couldn\'t get all clients!'});
         }
         // for (i in clients){
         //     var client = clients[i];
@@ -32,7 +32,7 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
     Client.findOne({name: req.params.client}, function (err, client) {
         if (err) {
             console.log(err);
-            // TODO: warn user that we couldn't find client
+            res.status(500).send({error: 'Couldn\'t find client!'});
         } else {
             console.log("client:", client.name)
             unirest.get(apiKeys.dev.url + "projects?from=" + req.params.year + "-01-01"
@@ -66,7 +66,7 @@ clientRouter.post("/", function (req, res) {
     Client.findOne({name: req.body.name}, function (err, client) {
         if (client) {
             // TODO: return "Client name already exists - Please try a different name"
-            res.status(500).send({error: 'Something failed!'});
+            res.status(500).send({error: 'Client already exists!'});
         } else {
             var newClient = new Client(req.body);
             newClient.save(function (err, client) {

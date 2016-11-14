@@ -3,11 +3,13 @@ import {AuthHttp} from "angular2-jwt";
 import {Response, Headers, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs";
 import {Client} from "../classes/client";
+import {CommonService} from "./common.service";
 
 @Injectable()
 export class ApiService {
 
-    constructor(private authHttp: AuthHttp) {
+    constructor(private authHttp: AuthHttp,
+                private commonService: CommonService) {
     }
 
     /***********
@@ -46,6 +48,13 @@ export class ApiService {
             errMsg = error.message ? error.message : error.toString();
         }
         console.error(errMsg);
+
+        this.commonService.notifyMessage(
+            "error",
+            "Something failed",
+            errMsg
+        );
+
         return Observable.throw(errMsg);
     }
 }
