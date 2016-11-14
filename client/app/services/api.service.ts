@@ -29,6 +29,12 @@ export class ApiService {
             .catch(this.handleError);
     }
 
+    getClientProjectCount(clientName: string, year: string) {
+        return this.authHttp.get("/client/count-by-year/" + clientName + "/" + year)
+            .map(res => res.json())
+            .catch(this.handleError);
+    }
+
     private handleError(error: Response | any) {
         // In a real world app, we might use a remote logging infrastructure
         let errMsg: string;

@@ -100,7 +100,7 @@ export class NewClientComponent implements OnInit {
     }
 
     resetClientModel() {
-        this.client = new Client("", "", "", 0, []);
+        this.client = new Client("", "", "", []);
     }
 
     isEmptyString(text: string) {

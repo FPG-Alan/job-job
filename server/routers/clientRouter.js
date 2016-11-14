@@ -28,12 +28,13 @@ clientRouter.get("/all", function (req, res) {
 
 });
 
-clientRouter.put("/update-counts/:client/:year", function (req, res) {
-    Client.find({name: req.params.client}, function (err, client) {
+clientRouter.get("/count-by-year/:client/:year", function (req, res) {
+    Client.findOne({name: req.params.client}, function (err, client) {
         if (err) {
             console.log(err);
             // TODO: warn user that we couldn't find client
         } else {
+            console.log("client:", client.name)
             unirest.get(apiKeys.dev.url + "projects?from=" + req.params.year + "-01-01"
                 + " with_archived=true&per_page=100000")
                 .headers({
@@ -41,17 +42,21 @@ clientRouter.put("/update-counts/:client/:year", function (req, res) {
                     "auth": apiKeys.dev.keys
                 })
                 .end(function (response) {
-                    var projects = response.body;
-                    // TODO: filter out projects that don't start this year
-                    // TODO: get project that have the same client name
+                    var projects = response.body.data;
+                    // get only projects that start this year
+                    // get only projects that have the same client name
+                    projects = projects.filter(function (proj) {
+                        var year = new Date(proj.starts_at).getFullYear();
+                        return proj.client == client.name && year == req.params.year;
+                    });
 
-                    // reset projectCount
-                    // get the ProjectCount that belongs to this year
-                    for (c in client.counts) {
-                        client.counts[c].count = 0;
-                    }
-
-                    // update projectCount
+                    var formattedCount = projects.length + 1 < 10
+                        ? "0" + (projects.length + 1)
+                        : "" + (projects.length + 1);
+                    res.json({
+                        count: projects.length + 1,
+                        formattedCount: formattedCount
+                    });
                 });
         }
     });
