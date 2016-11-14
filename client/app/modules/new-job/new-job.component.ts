@@ -3,8 +3,9 @@ import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {Job} from "../../classes/job";
 import {Client} from "../../classes/client";
-import {TenKFtService} from "../../services/ten-k-ft.service";
+import {CommonService} from "../../services/common.service";
 import {ApiService} from "../../services/api.service";
+import {TenKFtService} from "../../services/ten-k-ft.service";
 import {DatePipe} from "@angular/common";
 
 declare var $;
@@ -31,8 +32,9 @@ export class NewJobComponent implements OnInit {
     usingFinalName = true;
 
     constructor(private router: Router,
-                private tenKFtService: TenKFtService,
-                private apiService: ApiService) {
+                private commonService: CommonService,
+                private apiService: ApiService,
+                private tenKFtService: TenKFtService) {
     }
 
     ngOnInit() {
@@ -50,7 +52,7 @@ export class NewJobComponent implements OnInit {
     }
 
     getClientProjectCount() {
-        if (this.usingFinalName && !this.isEmptyString(this.job.client.name)) {
+        if (this.usingFinalName && !this.commonService.isEmptyString(this.job.client.name)) {
             this.apiService
                 .getClientProjectCount(
                     this.job.client.name,
@@ -69,16 +71,16 @@ export class NewJobComponent implements OnInit {
     updateFinalName() {
         // reinitiating as an empty string to make sure it's not a null addition
         this.finalName.result = "";
-        this.finalName.result += !this.isEmptyString(this.finalName.clientCode)
+        this.finalName.result += !this.commonService.isEmptyString(this.finalName.clientCode)
             ? this.finalName.clientCode
             : "";
         // these will always be present
         // TODO: add leading 0 to project count
         this.finalName.result += this.finalName.startYear + this.finalName.projectCount;
-        this.finalName.result += !this.isEmptyString(this.finalName.brand)
+        this.finalName.result += !this.commonService.isEmptyString(this.finalName.brand)
             ? "_" + this.finalName.brand
             : "";
-        this.finalName.result += !this.isEmptyString(this.finalName.formattedName)
+        this.finalName.result += !this.commonService.isEmptyString(this.finalName.formattedName)
             ? "_" + this.finalName.formattedName
             : "";
     }
@@ -123,7 +125,7 @@ export class NewJobComponent implements OnInit {
     }
 
     onDateChange(isStartEnd: string, strDate: string) {
-        if (!this.isEmptyString(strDate)) {
+        if (!this.commonService.isEmptyString(strDate)) {
             if (isStartEnd === "start") {
                 this.job.startDate = strDate;
                 this.job.endDate = new Date(strDate) > new Date(this.job.endDate.toString())
@@ -158,50 +160,19 @@ export class NewJobComponent implements OnInit {
                     res => {
                         console.log(res);
                         this.resetModels();
-
-                        // TODO: put this is a service
-                        let $notifMessage = $("#notif-message");
-                        $notifMessage.addClass("success");
-                        $notifMessage.find(".header").html("Sweet!");
-                        $notifMessage.find(".content").html("Successfully created a new job");
-                        $notifMessage.transition({
-                            animation: "fade",
-                            duration: "500ms"
-                        });
-                        setTimeout(function () {
-                            $notifMessage.transition({
-                                animation: "fade",
-                                duration: "500ms",
-                                onHide: function () {
-                                    $notifMessage.removeClass("success");
-                                    $notifMessage.find(".header").empty();
-                                    $notifMessage.find(".content").empty();
-                                }
-                            });
-                        }, 4000);
-
+                        this.commonService.notifyMessage(
+                            "success",
+                            "Sweet!",
+                            "Successfully created a new job"
+                        );
                         this.router.navigate(["/"]);
                     },
                     err => {
-                        let $notifMessage = $("#notif-message");
-                        $notifMessage.addClass("error");
-                        $notifMessage.find(".header").html("Something failed");
-                        $notifMessage.find(".content").html("Could not create a new job");
-                        $notifMessage.transition({
-                            animation: "fade",
-                            duration: "500ms"
-                        });
-                        setTimeout(function () {
-                            $notifMessage.transition({
-                                animation: "fade",
-                                duration: "500ms",
-                                onHide: function () {
-                                    $notifMessage.removeClass("error");
-                                    $notifMessage.find(".header").empty();
-                                    $notifMessage.find(".content").empty();
-                                }
-                            });
-                        }, 4000);
+                        this.commonService.notifyMessage(
+                            "error",
+                            "Something failed",
+                            "Could not create a new job"
+                        );
                     });
         }
     }
@@ -230,14 +201,5 @@ export class NewJobComponent implements OnInit {
         // reuse codes even more
         this.onDateChange("start", strStartDate);
         this.updateFinalName();
-    }
-
-    isEmptyString(text: string) {
-        if (text) {
-            text = text.trim();
-            return text === "" || text === null;
-        } else {
-            return true;
-        }
     }
 }

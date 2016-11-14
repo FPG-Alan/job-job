@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {Client} from "../../classes/client";
+import {CommonService} from "../../services/common.service";
 import {ApiService} from "../../services/api.service";
 
 declare var $;
@@ -18,15 +19,16 @@ export class NewClientComponent implements OnInit {
     currentBrand: string = "";
 
     constructor(private router: Router,
+                private commonService: CommonService,
                 private apiService: ApiService) {
     }
 
     ngOnInit() {
-        this.resetClientModel();
+        this.resetModels();
     }
 
     addBrand() {
-        if (!this.isEmptyString(this.currentBrand)) {
+        if (!this.commonService.isEmptyString(this.currentBrand)) {
             this.client.brands.push(this.currentBrand.trim());
             this.currentBrand = "";
         }
@@ -49,66 +51,25 @@ export class NewClientComponent implements OnInit {
                 .subscribe(
                     res => {
                         console.log(res);
-                        this.resetClientModel();
-
-                        // TODO: put this is a service
-                        let $notifMessage = $("#notif-message");
-                        $notifMessage.addClass("success");
-                        $notifMessage.find(".header").html("Sweet!");
-                        $notifMessage.find(".content").html("Successfully created a new client");
-                        $notifMessage.transition({
-                            animation: "fade",
-                            duration: "500ms"
-                        });
-                        setTimeout(function () {
-                            $notifMessage.transition({
-                                animation: "fade",
-                                duration: "500ms",
-                                onHide: function () {
-                                    $notifMessage.removeClass("success");
-                                    $notifMessage.find(".header").empty();
-                                    $notifMessage.find(".content").empty();
-                                }
-                            });
-                        }, 4000);
-
+                        this.resetModels();
+                        this.commonService.notifyMessage(
+                            "success",
+                            "Sweet!",
+                            "Successfully created a new client"
+                        );
                         this.router.navigate(["/"]);
                     },
                     err => {
-                        let $notifMessage = $("#notif-message");
-                        $notifMessage.addClass("error");
-                        $notifMessage.find(".header").html("Something failed");
-                        $notifMessage.find(".content").html("Could not create a new client");
-                        $notifMessage.transition({
-                            animation: "fade",
-                            duration: "500ms"
-                        });
-                        setTimeout(function () {
-                            $notifMessage.transition({
-                                animation: "fade",
-                                duration: "500ms",
-                                onHide: function () {
-                                    $notifMessage.removeClass("error");
-                                    $notifMessage.find(".header").empty();
-                                    $notifMessage.find(".content").empty();
-                                }
-                            });
-                        }, 4000);
-                    }
-                );
+                        this.commonService.notifyMessage(
+                            "error",
+                            "Something failed",
+                            "Could not create a new client"
+                        );
+                    });
         }
     }
 
-    resetClientModel() {
+    resetModels() {
         this.client = new Client("", "", "", []);
-    }
-
-    isEmptyString(text: string) {
-        if (text) {
-            text = text.trim();
-            return text === "" || text === null;
-        } else {
-            return true;
-        }
     }
 }

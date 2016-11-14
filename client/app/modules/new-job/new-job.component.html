@@ -55,7 +55,8 @@
                     name="client">
                 <option value=" ">(no client)</option>
                 <option *ngFor="let cli of clients; let i = index"
-                        [ngValue]="cli">{{cli.name}}
+                        [ngValue]="cli">
+                    {{cli.name}}<span *ngIf="commonService.isEmptyString(cli.shortCode)">- ({{cli.shortCode}})</span>
                 </option>
             </select>
         </div>
