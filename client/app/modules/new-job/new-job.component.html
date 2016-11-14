@@ -13,18 +13,16 @@
     <div class="inline fields">
         <div class="read-only ten wide field">
             <label>Generated Name</label>
-            <div class="ui icon input loading">
-                <input *ngIf="usingFinalName" readonly="" type="text"
-                       require
-                       [(ngModel)]="finalName.result"
-                       name="finalName"
-                       #name="ngModel">
-                <input *ngIf="!usingFinalName" readonly="" type="text"
-                       require
-                       [(ngModel)]="job.name"
-                       name="finalName"
-                       #name="ngModel">
-            </div>
+            <input *ngIf="usingFinalName" readonly="" type="text"
+                   require
+                   [(ngModel)]="finalName.result"
+                   name="finalName"
+                   #name="ngModel">
+            <input *ngIf="!usingFinalName" readonly="" type="text"
+                   require
+                   [(ngModel)]="job.name"
+                   name="finalName"
+                   #name="ngModel">
         </div>
         <div class="six wide field">
             <div class="ui toggle checkbox">
