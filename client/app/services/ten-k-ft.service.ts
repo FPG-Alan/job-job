@@ -3,11 +3,13 @@ import {AuthHttp} from "angular2-jwt";
 import {Response, Headers, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs";
 import {Job} from "../classes/job";
+import {CommonService} from "./common.service";
 
 @Injectable()
 export class TenKFtService {
 
-    constructor(private authHttp: AuthHttp) {
+    constructor(private authHttp: AuthHttp,
+                private commonService: CommonService) {
     }
 
     /*********
