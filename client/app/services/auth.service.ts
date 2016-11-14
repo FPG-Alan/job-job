@@ -19,17 +19,7 @@ export class AuthService {
         this.lock.on("authenticated", (authResult) => {
             localStorage.setItem('id_token', authResult.idToken);
 
-            // Fetch profile information
-            this.lock.getProfile(authResult.idToken, (error, profile) => {
-                if (error) {
-                    // Handle error
-                    alert(error);
-                    return;
-                }
-
-                localStorage.setItem('profile', JSON.stringify(profile));
-                this.router.navigate(["/"]);
-            });
+            this.router.navigate(["/"]);
         });
     }
 
@@ -47,7 +37,6 @@ export class AuthService {
     public logout() {
         // Remove token from localStorage
         localStorage.removeItem('id_token');
-        localStorage.removeItem('profile');
         this.router.navigate(["/login"]);
     };
 }
