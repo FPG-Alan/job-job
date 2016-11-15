@@ -98,6 +98,7 @@ export class NewJobComponent implements OnInit {
         this.finalName.result += !this.commonService.isEmptyString(this.finalName.formattedName)
             ? "_" + this.finalName.formattedName
             : "";
+        // update session storage at the end
         sessionStorage.setItem("saved_job_fields", JSON.stringify(this.job));
         sessionStorage.setItem("saved_final_name", JSON.stringify(this.finalName));
     }
@@ -197,6 +198,10 @@ export class NewJobComponent implements OnInit {
     }
 
     resetModels() {
+        // clear session storage when reset
+        sessionStorage.removeItem("saved_job_fields");
+        sessionStorage.removeItem("saved_final_name");
+
         // preformat to the date-type HTML inputs
         let datePipe = new DatePipe("en-US");
         let startDate = new Date();
@@ -215,12 +220,9 @@ export class NewJobComponent implements OnInit {
             brand: "",
             formattedName: ""
         };
-        // reuse code even more
+        // calls to make sure; mainly for updating the start year
         this.onDateChange("start", strStartDate);
 
-        // clear session-saved job
-        sessionStorage.removeItem("saved_job_fields");
-        sessionStorage.removeItem("saved_final_name");
         this.updateFinalName();
     }
 }
