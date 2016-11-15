@@ -48,16 +48,19 @@ export class NewClientComponent implements OnInit {
         if (form.valid && !this.submitted) {
             this.submitted = true;
             this.apiService.createNewClient(this.client)
-                .subscribe(res => {
-                    console.log(res);
-                    this.resetModels();
-                    this.commonService.notifyMessage(
-                        "success",
-                        "Sweet!",
-                        "Successfully created a new client"
-                    );
-                    this.router.navigate(["/"]);
-                });
+                .subscribe(
+                    res => {
+                        console.log(res);
+                        this.resetModels();
+                        this.commonService.notifyMessage(
+                            "success",
+                            "Sweet!",
+                            "Successfully created a new client"
+                        );
+                        this.router.navigate(["/"]);
+                    },
+                    err => this.commonService.handleError(err)
+                );
         }
     }
 

@@ -1,15 +1,12 @@
 import {Injectable} from "@angular/core";
 import {AuthHttp} from "angular2-jwt";
-import {Response, Headers, RequestOptions} from "@angular/http";
-import {Observable} from "rxjs";
+import {Headers, RequestOptions} from "@angular/http";
 import {Client} from "../classes/client";
-import {CommonService} from "./common.service";
 
 @Injectable()
 export class ApiService {
 
-    constructor(private authHttp: AuthHttp,
-                private commonService: CommonService) {
+    constructor(private authHttp: AuthHttp) {
     }
 
     /***********
@@ -18,7 +15,6 @@ export class ApiService {
     getAllClients() {
         return this.authHttp.get("/client/all")
             .map(res => <Client[]> res.json())
-            .catch(this.handleError);
     }
 
     createNewClient(client: Client) {
@@ -27,35 +23,11 @@ export class ApiService {
         let options = new RequestOptions({headers: headers});
 
         return this.authHttp.post("/client", body, options)
-            .map(res => res.json())
-            .catch(this.handleError);
+            .map(res => res.json());
     }
 
     getClientProjectCount(clientName: string, year: string) {
         return this.authHttp.get("/client/count-by-year/" + clientName + "/" + year)
             .map(res => res.json())
-            .catch(this.handleError);
-    }
-
-    handleError(error: Response | any) {
-        // In a real world app, we might use a remote logging infrastructure
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        console.error(errMsg);
-
-        console.log(this.commonService);
-        this.commonService.notifyMessage(
-            "error",
-            "Something failed",
-            errMsg
-        );
-
-        return Observable.throw(errMsg);
     }
 }

@@ -41,7 +41,7 @@ export class NewJobComponent implements OnInit {
         $('.ui.checkbox').checkbox();
         $('.ui.search.dropdown.selection').dropdown();
 
-        // check for prefilled or saved fields
+        // SESSION STORAGE: check for prefilled or saved fields
         let savedJob = sessionStorage.getItem("saved_job_fields");
         let savedFinalName = sessionStorage.getItem("saved_final_name");
         if (savedJob && savedFinalName) {
@@ -58,10 +58,8 @@ export class NewJobComponent implements OnInit {
         }
         this.apiService.getAllClients()
             .subscribe(
-                res => {
-                    this.clients = res;
-                },
-                err => console.log(err)
+                res => this.clients = res,
+                err => this.commonService.handleError(err)
             );
     }
 
@@ -78,7 +76,7 @@ export class NewJobComponent implements OnInit {
                         this.finalName.projectCount = res.formattedCount;
                         this.updateFinalName();
                     },
-                    err => console.log(err)
+                    err => this.commonService.handleError(err)
                 )
         }
     }
@@ -98,7 +96,8 @@ export class NewJobComponent implements OnInit {
         this.finalName.result += !this.commonService.isEmptyString(this.finalName.formattedName)
             ? "_" + this.finalName.formattedName
             : "";
-        // update session storage at the end
+
+        // SESSION STORAGE: update session storage at the end
         sessionStorage.setItem("saved_job_fields", JSON.stringify(this.job));
         sessionStorage.setItem("saved_final_name", JSON.stringify(this.finalName));
     }
@@ -178,16 +177,19 @@ export class NewJobComponent implements OnInit {
 
             let submittedName = this.usingFinalName ? this.finalName.result : this.job.name;
             this.tenKFtService.createNewJob(this.job, submittedName)
-                .subscribe(res => {
-                    console.log(res);
-                    this.resetModels();
-                    this.commonService.notifyMessage(
-                        "success",
-                        "Sweet!",
-                        "Successfully created a new job"
-                    );
-                    this.router.navigate(["/"]);
-                });
+                .subscribe(
+                    res => {
+                        console.log(res);
+                        this.resetModels();
+                        this.commonService.notifyMessage(
+                            "success",
+                            "Sweet!",
+                            "Successfully created a new job"
+                        );
+                        this.router.navigate(["/"]);
+                    },
+                    err => this.commonService.handleError(err)
+                );
         }
     }
 
@@ -198,7 +200,7 @@ export class NewJobComponent implements OnInit {
     }
 
     resetModels() {
-        // clear session storage when reset
+        // SESSION STORAGE: clear session storage when reset
         sessionStorage.removeItem("saved_job_fields");
         sessionStorage.removeItem("saved_final_name");
 
