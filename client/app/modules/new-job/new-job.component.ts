@@ -38,11 +38,21 @@ export class NewJobComponent implements OnInit {
     }
 
     ngOnInit() {
+        $('.ui.checkbox').checkbox();
+        $('.ui.search.dropdown.selection').dropdown();
+
+        // check for prefilled or saved fields
         let savedJob = sessionStorage.getItem("saved_job_fields");
         let savedFinalName = sessionStorage.getItem("saved_final_name");
         if (savedJob && savedFinalName) {
             this.job = JSON.parse(savedJob);
-            this.finalName.result = JSON.parse(savedFinalName);
+            this.finalName = JSON.parse(savedFinalName);
+            $("#client-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.client.name)
+                ? "(no client)"
+                : this.job.client.name;
+            $("#brand-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.finalName.brand)
+                ? "(no brand)"
+                : this.finalName.brand;
         } else {
             this.resetModels();
         }
@@ -53,9 +63,6 @@ export class NewJobComponent implements OnInit {
                 },
                 err => console.log(err)
             );
-
-        $('.ui.checkbox').checkbox();
-        $('.ui.search.dropdown.selection').dropdown();
     }
 
 
@@ -84,7 +91,6 @@ export class NewJobComponent implements OnInit {
             ? this.finalName.clientCode
             : "";
         // these will always be present
-        // TODO: add leading 0 to project count
         this.finalName.result += this.finalName.startYear + this.finalName.projectCount;
         this.finalName.result += !this.commonService.isEmptyString(this.finalName.brand)
             ? "_" + this.finalName.brand
@@ -93,7 +99,7 @@ export class NewJobComponent implements OnInit {
             ? "_" + this.finalName.formattedName
             : "";
         sessionStorage.setItem("saved_job_fields", JSON.stringify(this.job));
-        sessionStorage.setItem("saved_final_name", JSON.stringify(this.finalName.result));
+        sessionStorage.setItem("saved_final_name", JSON.stringify(this.finalName));
     }
 
 
@@ -209,8 +215,7 @@ export class NewJobComponent implements OnInit {
             brand: "",
             formattedName: ""
         };
-
-        // reuse codes even more
+        // reuse code even more
         this.onDateChange("start", strStartDate);
 
         // clear session-saved job

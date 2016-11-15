@@ -8,7 +8,7 @@ export class CommonService {
     constructor() {
     }
 
-    notifyMessage(messageClass: string, messageHeader: string, messageContent) {
+    notifyMessage(messageClass: string, messageHeader: string, messageContent: string) {
         let $notifMessage = $("#notif-message");
         $notifMessage.addClass(messageClass);
         $notifMessage.find(".header").html(messageHeader);

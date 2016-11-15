@@ -37,7 +37,7 @@ export class ApiService {
             .catch(this.handleError);
     }
 
-    private handleError(error: Response | any) {
+    handleError(error: Response | any) {
         // In a real world app, we might use a remote logging infrastructure
         let errMsg: string;
         if (error instanceof Response) {
@@ -49,6 +49,7 @@ export class ApiService {
         }
         console.error(errMsg);
 
+        console.log(this.commonService);
         this.commonService.notifyMessage(
             "error",
             "Something failed",
