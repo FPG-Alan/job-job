@@ -4,7 +4,7 @@ var clientRouter = express.Router();
 
 var Client = require("../models/client");
 
-var apiKeys = {
+var tenKApiKeys = {
     "dev": {
         "url": "https://vnext-api.10000ft.com/api/v1/",
         "keys": process.env.TEN_K_TOKEN_DEV
@@ -35,11 +35,11 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
             res.status(500).send({message: 'Couldn\'t find client!'});
         } else {
             console.log("client:", client.name)
-            unirest.get(apiKeys.dev.url + "projects?from=" + req.params.year + "-01-01"
+            unirest.get(tenKApiKeys.dev.url + "projects?from=" + req.params.year + "-01-01"
                 + " with_archived=true&per_page=100000")
                 .headers({
                     "Content-Type": "application/json",
-                    "auth": apiKeys.dev.keys
+                    "auth": tenKApiKeys.dev.keys
                 })
                 .end(function (response) {
                     var projects = response.body.data;

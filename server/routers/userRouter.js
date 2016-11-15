@@ -15,12 +15,6 @@ var apiKeys = {
 };
 
 userRouter.get("/all", function (req, res) {
-    // User.find({}, function (err, users) {
-    //     if (err) {
-    //         console.log(err)
-    //     }
-    //     res.json(users);
-    // });
     unirest.get(apiKeys.dev.url + "users")
         .headers({
             "Content-Type": "application/json",

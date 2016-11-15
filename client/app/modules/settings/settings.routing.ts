@@ -1,9 +1,9 @@
 import {Routes, RouterModule} from "@angular/router";
-import {NewClientComponent} from "./new-client.component";
+import {SettingsComponent} from "./settings.component";
 import {AuthGuard} from "../../services/auth.guard";
 
 export const routes: Routes = [
-    {path: 'new-client', component: NewClientComponent, canActivate: [AuthGuard]}
+    {path: 'settings', component: SettingsComponent, canActivate: [AuthGuard]}
 ];
 
 export const routing = RouterModule.forChild(routes);
