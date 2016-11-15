@@ -1,10 +1,9 @@
+/*
+ * Main Navigation
+ */
 #main-menu {
   font-size: 1.1rem;
   border-radius: 0; }
-  #main-menu #main-menu-items {
-    display: block;
-    position: absolute;
-    right: 0; }
   #main-menu #sidebar-toggle {
     display: none !important;
     position: absolute;
@@ -19,7 +18,26 @@
     #main-menu #sidebar-toggle {
       display: block !important; } }
 
+/*
+ * Pushed Container for Sidebar
+ */
 .pusher {
-  padding-top: 52px; }
+  margin-top: 45px;
+  padding-top: 50px;
+  padding-bottom: 50px; }
+
+/*
+ * Notification Message Popup
+ */
+#notif-message {
+  position: fixed;
+  right: 20px;
+  bottom: 20px; }
+
+/*
+ * General Overrides
+ */
+.ui.divider {
+  margin-top: 1.5rem; }
 
 /*# sourceMappingURL=app.component.css.map */

@@ -2,8 +2,7 @@ import {Routes, RouterModule} from "@angular/router";
 import {AuthGuard} from "./services/auth.guard";
 
 export const routes: Routes = [
-    {path: '', redirectTo: 'home', pathMatch: 'full'},
-    {path: '**', redirectTo: 'home'}
+    {path: '**', redirectTo: ''}
 
 ];
 

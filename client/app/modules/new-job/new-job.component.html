@@ -1,0 +1,128 @@
+<a class="ui button" routerLink="/home">
+    <i class="chevron left icon"></i>Back
+</a>
+
+<h1>
+    Create New Job
+</h1>
+
+<form #form="ngForm" class="ui form" id="new-job-form"
+      (ngSubmit)="onSubmit(form)"
+      novalidate>
+    <!--Final Generated Name-->
+    <div class="inline fields">
+        <div class="read-only ten wide field">
+            <label>Generated Name</label>
+            <input *ngIf="usingFinalName" readonly="" type="text"
+                   require
+                   [(ngModel)]="finalName.result"
+                   name="finalName"
+                   #name="ngModel">
+            <input *ngIf="!usingFinalName" readonly="" type="text"
+                   require
+                   [(ngModel)]="job.name"
+                   name="finalName"
+                   #name="ngModel">
+        </div>
+        <div class="six wide field">
+            <div class="ui toggle checkbox">
+                <input type="checkbox" tabindex="0" class="hidden"
+                       [checked]="usingFinalName"
+                       (change)="usingFinalName = !usingFinalName">
+                <label>Use generated name?</label>
+            </div>
+        </div>
+    </div>
+    <!--Job Name-->
+    <div class="required field" [class.error]="submitted && !name.valid">
+        <label>Job Name</label>
+        <input type="text"
+               autofocus
+               required
+               [(ngModel)]="job.name"
+               (ngModelChange)="this.submitted = false; onJobNameChange();"
+               name="name"
+               #name="ngModel">
+    </div>
+    <!--Client & Brand-->
+    <div class="two fields">
+        <div class="field" id="client-select-field">
+            <label>Client</label>
+            <select class="ui search dropdown selection"
+                    [(ngModel)]="job.client"
+                    (ngModelChange)="this.submitted = false; onClientChange()"
+                    name="client">
+                <option value=" ">(no client)</option>
+                <option *ngFor="let cli of clients; let i = index"
+                        [ngValue]="cli">
+                    {{cli.name}} <span *ngIf="!commonService.isEmptyString(cli.shortCode)">- ({{cli.shortCode}})</span>
+                </option>
+            </select>
+        </div>
+        <div class="field" id="brand-select-field">
+            <label>Brand (optional)</label>
+            <select class="ui search dropdown selection" name="brand"
+                    [disabled]="!job.client.brands || job.client.brands.length == 0"
+                    [(ngModel)]="job.brand"
+                    (ngModelChange)="this.submitted = false; onBrandChange()">
+                <option value=" ">(no brand)</option>
+                <option *ngFor="let b of job.client.brands; let i = index"
+                        [value]="b">{{b}}
+                </option>
+            </select>
+        </div>
+    </div>
+    <!--Start and End Dates-->
+    <div class="two fields">
+        <div class="required field" [class.error]="!startDate.valid">
+            <label>Start Date (Month/Day/Year)</label>
+            <input type="date"
+                   required
+                   [(ngModel)]="job.startDate"
+                   (ngModelChange)="this.submitted = false; onDateChange('start', $event)"
+                   name="startDate"
+                   #startDate="ngModel">
+        </div>
+        <div class="required field" [class.error]="!endDate.valid">
+            <label>End Date (Month/Day/Year)</label>
+            <input type="date"
+                   required
+                   [(ngModel)]="job.endDate"
+                   (ngModelChange)="this.submitted = false; onDateChange('end', $event)"
+                   name="endDate"
+                   #endDate="ngModel">
+        </div>
+    </div>
+
+    <!--TODO
+        projectStatus select
+        rateCard select
+        serviceType (toggle or select or radial)
+        description text area
+        tags (form/list display like cakebook's ingredients; be careful of enter button)
+        phases (not MVP(?))
+    -->
+    <div class="ui divider"></div>
+    <div class="ui right floated large buttons">
+        <button type="submit" class="ui positive button"
+                [disabled]="!form.form.valid || submitted"><i class="checkmark icon"></i>Submit
+        </button>
+        <div class="or"></div>
+        <button type="button" class="ui negative button"
+                (click)="confirmResetModels()"><i class="refresh icon"></i>Clear
+        </button>
+    </div>
+
+</form>
+
+
+<div class="ui small modal" id="confirm-reset-job">
+    <i class="close icon"></i>
+    <div class="header">
+        Are you sure you want to reset the fields on this form?
+    </div>
+    <div class="actions">
+        <div class="ui positive button" (click)="resetModels()"><i class="checkmark icon"></i>I'm sure!</div>
+        <div class="ui negative button"><i class="remove icon"></i>Nope</div>
+    </div>
+</div>

@@ -3,9 +3,13 @@ import {CommonModule} from "@angular/common";
 import {HttpModule} from "@angular/http";
 import {SharedModule} from "../shared/shared.module";
 import {NgSemanticModule} from "ng-semantic";
-
 import {HomeComponent} from "./home.component";
 import {routing} from "./home.routing";
+import {NewJobModule} from "../new-job/new-job.module";
+import {NewClientModule} from "../new-client/new-client.module";
+import {DisplayUsersComponent} from "../../components/display-users/display-users.component";
+import {DisplayJobsComponent} from "../../components/display-jobs/display-jobs.component";
+import {DisplayClientsComponent} from "../../components/display-clients/display-clients.component";
 
 @NgModule({
     imports: [
@@ -13,9 +17,16 @@ import {routing} from "./home.routing";
         HttpModule,
         SharedModule.forRoot(),
         NgSemanticModule,
+        NewJobModule,
+        NewClientModule,
         routing
     ],
-    declarations: [HomeComponent]
+    declarations: [
+        HomeComponent,
+        DisplayUsersComponent,
+        DisplayJobsComponent,
+        DisplayClientsComponent
+    ]
 })
 export class HomeModule {
 }

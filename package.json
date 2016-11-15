@@ -27,6 +27,7 @@
     "core-js": "^2.4.1",
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
+    "express-jwt": "^5.1.0",
     "jquery": "^3.1.1",
     "mongoose": "^4.6.5",
     "ng-semantic": "^1.1.11",

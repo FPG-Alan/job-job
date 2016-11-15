@@ -1,0 +1,10 @@
+.ui.form .inline.fields .field {
+  margin-bottom: 5px !important; }
+
+input[readonly]:focus {
+  border: 1px solid rgba(34, 36, 38, 0.15) !important; }
+
+@media screen and (max-width: 768px) {
+  padding-right: 0 !important; }
+
+/*# sourceMappingURL=new-job.component.css.map */

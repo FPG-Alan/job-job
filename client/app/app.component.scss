@@ -1,12 +1,10 @@
+/*
+ * Main Navigation
+ */
 #main-menu {
     font-size: 1.1rem;
     border-radius: 0;
 
-    #main-menu-items {
-        display: block;
-        position: absolute;
-        right: 0;
-    }
     #sidebar-toggle {
         display: none !important;
         position: absolute;
@@ -21,5 +19,25 @@
     }
 }
 
-// move below menu
-.pusher { padding-top: 52px; }
+/*
+ * Pushed Container for Sidebar
+ */
+.pusher {
+    margin-top: 45px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+/*
+ * Notification Message Popup
+ */
+#notif-message {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+}
+
+/*
+ * General Overrides
+ */
+.ui.divider { margin-top: 1.5rem }

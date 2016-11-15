@@ -12,6 +12,12 @@ export class AppComponent {
     title = 'app works!';
 
     constructor(private authService: AuthService) {
+        $('#notif-message .close')
+            .on('click', function () {
+                $(this).closest('.message').transition('fade');
+            });
+
+        $('.ui.modal').modal();
     }
 
     toggleSidebar() {

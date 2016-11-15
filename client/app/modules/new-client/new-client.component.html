@@ -1,0 +1,66 @@
+<a class="ui button" routerLink="/home">
+    <i class="chevron left icon"></i>Back
+</a>
+
+<h1>
+    Create New Client
+</h1>
+
+<form #form="ngForm" class="ui form" id="new-client-form"
+      (ngSubmit)="onSubmit(form)"
+      novalidate>
+    <div class="required field" [class.error]="submitted && !name.valid">
+        <label>Client Name</label>
+        <input type="text"
+               required
+               [(ngModel)]="client.name"
+               (ngModelChange)="this.submitted = false;"
+               name="name"
+               #name="ngModel">
+    </div>
+    <div class="field" [class.error]="submitted && !shortCode.valid">
+        <label>Short Code (2-4 uppercase letters / numbers or leave blank)</label>
+        <input type="text"
+               maxlength="4"
+               pattern="^$|^[A-Z0-9]{2,4}$"
+               [(ngModel)]="client.shortCode"
+               (ngModelChange)="this.submitted = false;"
+               name="shortCode"
+               #shortCode="ngModel">
+    </div>
+    <!-- TODO:
+        rate cards(?)
+        brands
+     -->
+    <form #brandForm="ngForm" class="field"
+          (ngSubmit)="addBrand()"
+          novalidate>
+        <div class="field">
+            <label>Brands</label>
+            <div class="ui right labeled input">
+                <input type="text"
+                       [(ngModel)]="currentBrand"
+                       name="brand"
+                       #brand="ngModel">
+                <button type="submit" class="ui label button"><i class="add icon"></i></button>
+            </div>
+            <div class="ui secondary compact segment" *ngIf="client.brands.length > 0">
+                <div class="ui blue label" *ngFor="let b of client.brands; let i = index">{{b}}
+                    <a (click)="removeBrand(i)"><i class="close icon"></i></a>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="ui divider"></div>
+    <div class="ui right floated large buttons">
+        <button type="submit" class="ui positive button"
+                [disabled]="!form.form.valid || submitted"><i class="checkmark icon"></i>Submit
+        </button>
+        <div class="or"></div>
+        <button type="button" class="ui negative button"
+                (click)="resetModels()"><i class="refresh icon"></i>Clear
+        </button>
+    </div>
+
+</form>

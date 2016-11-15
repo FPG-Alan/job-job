@@ -2,4 +2,10 @@
 html {
   font-size: 14px; }
 
+.show {
+  display: block; }
+
+.hidden {
+  display: none; }
+
 /*# sourceMappingURL=styles.css.map */

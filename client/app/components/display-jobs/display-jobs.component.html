@@ -1,0 +1,11 @@
+<ul *ngIf="jobs !== null && jobs.length > 0">
+    <li *ngFor="let j of jobs">
+        {{j.name}}
+    </li>
+</ul>
+
+<div *ngIf="jobs === null || jobs.length == 0" class="ui warning message">
+  <div class="header">
+      No jobs found
+  </div>
+</div>

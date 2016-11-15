@@ -5,9 +5,10 @@ import {HttpModule} from "@angular/http";
 import {NgSemanticModule} from "ng-semantic";
 import {AUTH_PROVIDERS} from "angular2-jwt";
 import {AppComponent} from "./app.component";
+import {routing, appRoutingProviders} from "./app.routing";
 import {LoginModule} from "./modules/login/login.module";
 import {HomeModule} from "./modules/home/home.module";
-import {routing, appRoutingProviders} from "./app.routing";
+import {NewJobModule} from "./modules/new-job/new-job.module";
 
 @NgModule({
     declarations: [
@@ -20,6 +21,7 @@ import {routing, appRoutingProviders} from "./app.routing";
         NgSemanticModule,
         LoginModule,
         HomeModule,
+        NewJobModule,
         routing
     ],
     providers: [
