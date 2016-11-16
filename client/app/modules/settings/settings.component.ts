@@ -1,5 +1,4 @@
 import {Component, OnInit} from "@angular/core";
-import {BoxService} from "../../services/box.service";
 
 @Component({
     selector: 'app-settings',
@@ -8,14 +7,26 @@ import {BoxService} from "../../services/box.service";
 })
 export class SettingsComponent implements OnInit {
 
-    constructor(private boxService: BoxService) {
+    constructor() {
     }
 
     ngOnInit() {
     }
 
-    authBox() {
-        this.boxService.authTest()
-            .subscribe(res => console.log(res))
+    navigateBoxAuth() {
+        let encodedRedirect = encodeURIComponent("http://localhost:3000/auth/box");
+
+        let child = window.open("https://fancypantsgroup.app.box.com/api/oauth2/authorize" +
+            "?response_type=code" +
+            "&client_id=lz5d03ybnt9kc77bhwib4b4kc2i3e6kf" +
+            "&redirect_uri=" + encodedRedirect, '', 'toolbar=0,status=0,width=626,height=436');
+        let timer = setInterval(checkChild, 500);
+        function checkChild() {
+            if (child.closed) {
+                alert("Child window closed");
+                clearInterval(timer);
+                // TODO: check if user has a valid token and update the UI
+            }
+        }
     }
 }
