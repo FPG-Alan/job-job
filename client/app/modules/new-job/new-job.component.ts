@@ -108,7 +108,6 @@ export class NewJobComponent implements OnInit {
         let words = this.job.name.match(/\S+/g);
         for (let w in words) {
             if (words.hasOwnProperty(w)) {
-                if (parseInt(w) > 0) { this.finalName.formattedName += "_"; }
                 words[w] = words[w].charAt(0).toUpperCase() + words[w].slice(1);
                 this.finalName.formattedName += words[w];
             }
@@ -136,7 +135,6 @@ export class NewJobComponent implements OnInit {
         let words = this.job.brand.match(/\S+/g);
         for (let w in words) {
             if (words.hasOwnProperty(w)) {
-                if (parseInt(w) > 0) { this.finalName.brand += "_"; }
                 words[w] = words[w].charAt(0).toUpperCase() + words[w].slice(1);
                 this.finalName.brand += words[w];
             }
