@@ -21,16 +21,14 @@ authRouter.get("/box", function (req, res) {
                 console.log("token:", tokenInfo);
                 Token.findOne({email: req.query.state}, function (err, token) {
                     var newToken = {};
-                    if (!token) {
-                        // token object doesn't exist; making a new one
+                    if (!token) { // token object doesn't exist; making a new one
                         newToken = new Token({
                             email: req.query.state,
                             tokens: {
                                 box: tokenInfo
                             }
                         });
-                    } else {
-                        // token object exists; overwriting
+                    } else { // token object exists; overwriting
                         newToken = token;
                         if (!newToken.tokens) {
                             newToken.tokens = {box: tokenInfo}
