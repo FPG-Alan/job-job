@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {AuthHttp} from "angular2-jwt";
 
 @Injectable()
-export class BoxService {
+export class IntegrationsService {
 
     constructor(private authHttp: AuthHttp) {
     }

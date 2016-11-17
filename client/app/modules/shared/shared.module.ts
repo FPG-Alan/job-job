@@ -3,8 +3,7 @@ import {CommonModule} from "@angular/common";
 import {CommonService} from "../../services/common.service";
 import {AuthService} from "../../services/auth.service";
 import {ApiService} from "../../services/api.service";
-import {TenKFtService} from "../../services/ten-k-ft.service";
-import {BoxService} from "../../services/box.service";
+import {IntegrationsService} from "../../services/integrations.service";
 
 @NgModule({
     imports: [CommonModule],
@@ -20,8 +19,7 @@ export class SharedModule {
                 CommonService,
                 AuthService,
                 ApiService,
-                TenKFtService,
-                BoxService
+                IntegrationsService
             ]
         };
     }

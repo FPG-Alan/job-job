@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {TenKFtService} from "../../services/ten-k-ft.service";
+import {ApiService} from "../../services/api.service";
 
 @Component({
     selector: 'app-display-jobs',
@@ -10,11 +10,11 @@ export class DisplayJobsComponent implements OnInit {
 
     jobs: any[] = [];
 
-    constructor(private tenKFtService: TenKFtService) {
+    constructor(private apiService: ApiService) {
     }
 
     ngOnInit() {
-        this.tenKFtService.getAllJobs()
+        this.apiService.getAllJobs()
             .subscribe(
                 result => this.jobs = result.data,
                 err => console.log(err)

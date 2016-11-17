@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {TenKFtService} from "../../services/ten-k-ft.service";
+import {ApiService} from "../../services/api.service";
 
 @Component({
     selector: 'app-display-users',
@@ -10,11 +10,11 @@ export class DisplayUsersComponent implements OnInit {
 
     users: any[] = [];
 
-    constructor(private tenKFtService: TenKFtService) {
+    constructor(private apiService: ApiService) {
     }
 
     ngOnInit() {
-        this.tenKFtService.getAllUsers()
+        this.apiService.getAllUsers()
             .subscribe(
                 result => this.users = result.data,
                 err => console.log(err)

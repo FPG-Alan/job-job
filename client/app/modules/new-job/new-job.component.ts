@@ -5,7 +5,6 @@ import {Job} from "../../classes/job";
 import {Client} from "../../classes/client";
 import {CommonService} from "../../services/common.service";
 import {ApiService} from "../../services/api.service";
-import {TenKFtService} from "../../services/ten-k-ft.service";
 import {DatePipe} from "@angular/common";
 
 declare var $;
@@ -33,8 +32,7 @@ export class NewJobComponent implements OnInit {
 
     constructor(private router: Router,
                 private commonService: CommonService,
-                private apiService: ApiService,
-                private tenKFtService: TenKFtService) {
+                private apiService: ApiService) {
     }
 
     ngOnInit() {
@@ -174,7 +172,7 @@ export class NewJobComponent implements OnInit {
             this.job.code = "" + this.finalName.clientCode + this.finalName.startYear + this.finalName.projectCount;
 
             let submittedName = this.usingFinalName ? this.finalName.result : this.job.name;
-            this.tenKFtService.createNewJob(this.job, submittedName)
+            this.apiService.createNewJob(this.job, submittedName)
                 .subscribe(
                     res => {
                         console.log(res);
