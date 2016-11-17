@@ -2,6 +2,9 @@ var express = require('express');
 var path = require("path");
 var authRouter = express.Router();
 
+var User = require("../models/user");
+var Token = require("../models/token");
+
 // Initialize SDK
 var BoxSDK = require('box-node-sdk');
 var sdk = new BoxSDK({
@@ -10,19 +13,49 @@ var sdk = new BoxSDK({
 });
 
 authRouter.get("/box", function (req, res) {
-    if (req.query.code) {
+    // TODO: hash query.state for security
+    // TODO: rewrite horrible callback pyramids
+    if (req.query.code && req.query.state) {
         sdk.getTokensAuthorizationCodeGrant(req.query.code, null, function (err, tokenInfo) {
-            console.log("getting token:", tokenInfo);
-            if (!tokenInfo) {
-                res.redirect("/");
-            } else {
-                // TODO: save tokenInfo associated with a user in a Token table
-                res.sendFile(path.join(__dirname + '/../views/success.html'));
+            if (tokenInfo) {
+                console.log("token:", tokenInfo);
+                Token.findOne({email: req.query.state}, function (err, token) {
+                    var newToken = {};
+                    if (!token) {
+                        // token object doesn't exist; making a new one
+                        newToken = new Token({
+                            email: req.query.state,
+                            tokens: {
+                                box: tokenInfo
+                            }
+                        });
+                    } else {
+                        // token object exists; overwriting
+                        newToken = token;
+                        if (!newToken.tokens) {
+                            newToken.tokens = {box: tokenInfo}
+                        } else {
+                            newToken.tokens.box = tokenInfo
+                        }
+                    }
+                    newToken.save(function (err, token) {
+                        if (token) {
+                            User.findOne({email: req.query.state}, function (err, user) {
+                                if (user) {
+                                    user.boxAuthenticated = true;
+                                    user.save(function (err, user) {
+                                        // SUCCESS at last
+                                        res.sendFile(path.join(__dirname + '/../views/success.html'));
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
             }
         });
-    } else {
-        res.redirect('/');
     }
+    res.redirect('/');
 });
 
 module.exports = authRouter;

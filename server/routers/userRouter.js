@@ -16,7 +16,6 @@ userRouter.get("/all", function (req, res) {
 userRouter.post("/", function (req, res) {
     User.findOne({email: req.body.email}, function (err, user) {
         if (user) {
-            // TODO: check if authentication works via Token model
             res.json(user);
         } else {
             var newUser = new User({

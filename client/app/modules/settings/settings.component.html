@@ -18,8 +18,9 @@
                *ngIf="!user.boxAuthenticated"
                [class.loading]="authenticatingBox"
                (click)="navigateBoxAuth()">Authenticate Box</a>
-            <a class="ui active positive button"
-               *ngIf="user.boxAuthenticated">Authenticated</a>
+            <a class="ui positive button"
+               *ngIf="user.boxAuthenticated"
+               (click)="navigateBoxAuth()">Authenticated</a>
         </td>
     </tr>
     </tbody>
