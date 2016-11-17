@@ -17,15 +17,10 @@ var tenKApiKeys = {
 clientRouter.get("/all", function (req, res) {
     Client.find({}, function (err, clients) {
         if (err) {
-            res.status(500).send({error: 'Couldn\'t get all clients!'});
+            res.status(500).send({error: 'Couldn\'t retrieve all clients!'});
         }
-        // for (i in clients){
-        //     var client = clients[i];
-        //     // Client
-        // }
         res.json(clients);
     });
-
 });
 
 clientRouter.get("/count-by-year/:client/:year", function (req, res) {
@@ -65,8 +60,7 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
 clientRouter.post("/", function (req, res) {
     Client.findOne({name: req.body.name}, function (err, client) {
         if (client) {
-            // TODO: return "Client name already exists - Please try a different name"
-            res.status(500).send({message: 'Client already exists!'});
+            res.status(500).send({message: 'Client name already exists. Please try a different name'});
         } else {
             var newClient = new Client(req.body);
             newClient.save(function (err, client) {

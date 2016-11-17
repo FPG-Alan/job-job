@@ -1,5 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ApiService} from "../../services/api.service";
+import {User} from "../../classes/user";
 
 @Component({
     selector: 'app-display-users',
@@ -8,7 +9,7 @@ import {ApiService} from "../../services/api.service";
 })
 export class DisplayUsersComponent implements OnInit {
 
-    users: any[] = [];
+    users: User[] = [];
 
     constructor(private apiService: ApiService) {
     }
@@ -16,7 +17,7 @@ export class DisplayUsersComponent implements OnInit {
     ngOnInit() {
         this.apiService.getAllUsers()
             .subscribe(
-                result => this.users = result.data,
+                res => this.users = res,
                 err => console.log(err)
             );
     }

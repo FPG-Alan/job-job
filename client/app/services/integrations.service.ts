@@ -7,8 +7,4 @@ export class IntegrationsService {
     constructor(private authHttp: AuthHttp) {
     }
 
-    authTest() {
-        return this.authHttp.get("/auth/box")
-            .map(res => res.json())
-    }
 }

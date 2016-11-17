@@ -3,6 +3,7 @@ import {AuthHttp} from "angular2-jwt";
 import {Headers, RequestOptions} from "@angular/http";
 import {Client} from "../classes/client";
 import {Job} from "../classes/job";
+import {User} from "../classes/user";
 
 @Injectable()
 export class ApiService {
@@ -16,7 +17,17 @@ export class ApiService {
      *********/
     getAllUsers() {
         return this.authHttp.get("/user/all")
-            .map(res => res.json());
+            .map(res => <User[]> res.json());
+    }
+
+    findOrCreateMyUser(user: User) {
+        let body = user;
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/user", body, options)
+            .map(res => <User> res.json());
+
     }
 
 

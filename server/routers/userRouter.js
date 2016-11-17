@@ -4,26 +4,34 @@ var userRouter = express.Router();
 
 var User = require("../models/user");
 
-var apiKeys = {
-    "dev": {
-        "url": "https://vnext-api.10000ft.com/api/v1/",
-        "keys": process.env.TEN_K_TOKEN_DEV
-    },
-    "prod": {
-        "url": "https://api.10000ft.com/api/v1/"
-    }
-};
-
 userRouter.get("/all", function (req, res) {
-    unirest.get(apiKeys.dev.url + "users")
-        .headers({
-            "Content-Type": "application/json",
-            "auth": apiKeys.dev.keys
-        })
-        .end(function (response) {
-            // console.log(response.body);
-            res.send(response.body);
-        });
+    User.find({}, function (err, users) {
+        if (err) {
+            res.status(500).send({message: 'Couldn\'t retrieve all users'});
+        }
+        res.json(users);
+    })
+});
+
+userRouter.post("/", function (req, res) {
+    User.findOne({email: req.body.email}, function (err, user) {
+        if (user) {
+            // TODO: check if authentication works via Token model
+            res.json(user);
+        } else {
+            var newUser = new User({
+                name: req.body.name,
+                email: req.body.email,
+                boxAuthenticated: req.body.boxAuthenticated
+            });
+            newUser.save(function (err, newUser) {
+                if (err) {
+                    res.status(500).send({message: 'Couldn\'t find or create user with this email'});
+                }
+                res.json(newUser);
+            });
+        }
+    });
 });
 
 module.exports = userRouter;
