@@ -17,7 +17,7 @@ var tenKApiKeys = {
 clientRouter.get("/all", function (req, res) {
     Client.find({}, function (err, clients) {
         if (err) {
-            res.status(500).send({error: 'Couldn\'t retrieve all clients!'});
+            res.status(500).send({header: 'Couldn\'t retrieve all clients!'});
         }
         res.json(clients);
     });
@@ -27,7 +27,7 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
     Client.findOne({name: req.params.client}, function (err, client) {
         if (err) {
             console.log(err);
-            res.status(500).send({message: 'Couldn\'t find client!'});
+            res.status(500).send({header: 'Couldn\'t find client!'});
         } else {
             console.log("client:", client.name)
             unirest.get(tenKApiKeys.dev.url + "projects?from=" + req.params.year + "-01-01"
@@ -60,12 +60,15 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
 clientRouter.post("/", function (req, res) {
     Client.findOne({name: req.body.name}, function (err, client) {
         if (client) {
-            res.status(500).send({message: 'Client name already exists. Please try a different name'});
+            res.status(500).send({
+                header: 'Client name already exists',
+                message: 'Please try a different name'
+            });
         } else {
             var newClient = new Client(req.body);
             newClient.save(function (err, client) {
                 if (err) {
-                    res.status(500).send({message: 'Couldn\'t save new client'});
+                    res.status(500).send({header: 'Couldn\'t save new client'});
                 }
                 console.log("Added new Client: " + client.name);
                 res.json(client);

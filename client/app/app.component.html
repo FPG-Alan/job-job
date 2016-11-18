@@ -23,7 +23,8 @@
         <i class="home icon"></i>Home</a>
     <a routerLink="/settings"
        routerLinkActive="active"
-       class="item">
+       class="item"
+       (click)="toggleSidebar()">
         <i class="cogs icon"></i>Settings</a>
     <a class="item"
        (click)="authService.logout(); toggleSidebar()">
