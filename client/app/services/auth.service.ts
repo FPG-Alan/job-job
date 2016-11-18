@@ -30,6 +30,7 @@ export class AuthService {
                     return;
                 }
                 localStorage.setItem("profile", JSON.stringify(profile));
+                // store user info in database
                 if (profile) {
                     this.user.userId = profile.user_id;
                     this.user.name = profile.name;

@@ -82,6 +82,7 @@ export class ApiService {
      *******************/
     createNewTestFolder(folderName: string) {
         // TODO: get user ID
+        
 
         let body = {folderName: folderName};
         let headers = new Headers({"Content-Type": "application/json"});

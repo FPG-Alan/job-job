@@ -27,6 +27,7 @@ boxIntegrationRouter.post("/", function (req, res) {
                     header: "Couldn't create folder"
                 });
             }
+            console.log(folder);
             res.json(folder);
         });
     });
