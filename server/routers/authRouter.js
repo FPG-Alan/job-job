@@ -17,27 +17,26 @@ authRouter.get("/box", function (req, res) {
     // TODO: rewrite horrible callback pyramids
     if (req.query.code && req.query.state) {
         sdk.getTokensAuthorizationCodeGrant(req.query.code, null, function (err, tokenInfo) {
+            if (err) res.redirect('/');
             if (tokenInfo) {
                 console.log("token:", tokenInfo);
-                Token.findOne({email: req.query.state}, function (err, token) {
-                    var newToken = {};
-                    if (!token) { // token object doesn't exist; making a new one
-                        newToken = new Token({
-                            email: req.query.state,
-                            tokens: {
-                                box: tokenInfo
-                            }
-                        });
-                    } else { // token object exists; overwriting
-                        newToken = token;
-                        if (!newToken.tokens) {
-                            newToken.tokens = {box: tokenInfo}
-                        } else {
-                            newToken.tokens.box = tokenInfo
+                Token.findOne(
+                    {email: req.query.state, provider: "box"},
+                    function (err, token) {
+                        if (err) res.redirect('/');
+                        var newToken = {};
+                        if (!token) { // token object doesn't exist; making a new one
+                            newToken = new Token({
+                                email: req.query.state,
+                                provider: "box",
+                                tokenInfo: tokenInfo
+                            });
+                        } else { // token object exists; overwriting
+                            newToken = token;
+                            newToken.tokenInfo = tokenInfo;
                         }
-                    }
-                    newToken.save(function (err, token) {
-                        if (token) {
+                        newToken.save(function (err, token) {
+                            if (err) res.redirect('/');
                             User.findOne({email: req.query.state}, function (err, user) {
                                 if (user) {
                                     user.boxAuthenticated = true;
@@ -47,13 +46,14 @@ authRouter.get("/box", function (req, res) {
                                     });
                                 }
                             });
-                        }
-                    });
-                });
+                        });
+                    }
+                );
             }
         });
+    } else {
+        res.redirect('/');
     }
-    res.redirect('/');
 });
 
 module.exports = authRouter;
