@@ -11,27 +11,23 @@ import {User} from "../../classes/user";
 })
 export class SettingsComponent implements OnInit {
 
-    user: User = new User("", "", false);
+    localProfile: any;
+    user: User = new User("", "", "", false);
     authenticatingBox = false;
 
     constructor(private authService: AuthService,
                 private commonService: CommonService,
                 private apiService: ApiService) {
+
     }
 
     ngOnInit() {
-        let localProfile = this.authService.getUserProfile();
-        if (localProfile) {
-            this.user.name = localProfile.name;
-            this.user.email = localProfile.email;
-            if (!this.commonService.isEmptyString(this.user.email)) {
-                this.apiService.findOrCreateMyUser(this.user)
-                    .subscribe(
-                        res => this.user = res,
-                        err => this.commonService.handleError(err)
-                    )
-            }
-        }
+        this.localProfile = this.authService.getUserProfile();
+        this.apiService.findMyUser(this.localProfile.user_id)
+            .subscribe(
+                res => this.user = res,
+                err => this.commonService.handleError(err)
+            )
     }
 
     navigateBoxAuth() {
@@ -42,14 +38,14 @@ export class SettingsComponent implements OnInit {
             "?response_type=code" +
             "&client_id=lz5d03ybnt9kc77bhwib4b4kc2i3e6kf" +
             "&redirect_uri=" + encodedRedirect +
-            "&state=" + this.user.email, '', 'toolbar=0,status=0,width=626,height=436');
+            "&state=" + this.user.userId, '', 'toolbar=0,status=0,width=626,height=436');
         // manipulate UI on child window close
         let timer = setInterval(() => {
             if (child.closed) {
                 clearInterval(timer);
                 this.authenticatingBox = false;
-                // TODO: get user again and check if Box is authenticated
-                this.apiService.findOrCreateMyUser(this.user)
+                // get user again and check if Box is authenticated
+                this.apiService.findMyUser(this.localProfile.user_id)
                     .subscribe(
                         res => this.user = res,
                         err => this.commonService.handleError(err)

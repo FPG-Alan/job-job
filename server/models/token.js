@@ -6,8 +6,8 @@ function toLower(s) {
 }
 
 var TokenSchema = new Schema({
-    email: {type: String, set: toLower},
-    provider: {type: String, set: toLower},
+    userId: {type: String, required: true},
+    provider: {type: String, set: toLower, required: true},
     tokenInfo: Object
 }, {
     timestamps: true

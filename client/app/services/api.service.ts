@@ -11,13 +11,17 @@ export class ApiService {
     constructor(private authHttp: AuthHttp) {
     }
 
-
     /*********
      * USERS *
      *********/
     getAllUsers() {
         return this.authHttp.get("/user/all")
             .map(res => <User[]> res.json());
+    }
+
+    findMyUser(userId: string){
+        return this.authHttp.get("/user?id=" + userId)
+                    .map(res => <User> res.json())
     }
 
     findOrCreateMyUser(user: User) {
@@ -27,7 +31,6 @@ export class ApiService {
 
         return this.authHttp.post("/user", body, options)
             .map(res => <User> res.json());
-
     }
 
 
@@ -71,6 +74,20 @@ export class ApiService {
         let options = new RequestOptions({headers: headers});
 
         return this.authHttp.post("/job", body, options)
+            .map(res => res.json());
+    }
+
+    /*******************
+     * BOX INTEGRATION *
+     *******************/
+    createNewTestFolder(folderName: string) {
+        // TODO: get user ID
+
+        let body = {folderName: folderName};
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/box", body, options)
             .map(res => res.json());
     }
 }

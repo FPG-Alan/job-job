@@ -6,6 +6,7 @@ function toLower(s) {
 }
 
 var UserSchema = new Schema({
+    userId: {type: String, unique: true},
     name: String,
     email: {type: String, set: toLower, unique: true},
     boxAuthenticated: Boolean

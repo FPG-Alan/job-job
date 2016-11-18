@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
 import {tokenNotExpired} from "angular2-jwt";
 import {Router} from "@angular/router";
+import {CommonService} from "./common.service";
 import {ApiService} from "./api.service";
 import {User} from "../classes/user";
 
@@ -15,8 +16,10 @@ export class AuthService {
         autoclose: true
     };
     lock = new Auth0Lock('1CD38zBzoOUTvLzrWlredXlx0Q1IRJNJ', 'davefpg.auth0.com', this.options);
+    user: User = new User("", "", "", false);
 
     constructor(private router: Router,
+                private commonService: CommonService,
                 private apiService: ApiService) {
         // add callback for lock "authenticated" event
         this.lock.on("authenticated", (authResult) => {
@@ -27,6 +30,16 @@ export class AuthService {
                     return;
                 }
                 localStorage.setItem("profile", JSON.stringify(profile));
+                if (profile) {
+                    this.user.userId = profile.user_id;
+                    this.user.name = profile.name;
+                    this.user.email = profile.email;
+                    this.apiService.findOrCreateMyUser(this.user)
+                        .subscribe(
+                            res => this.user = res,
+                            err => this.commonService.handleError(err)
+                        )
+                }
                 console.log(profile);
             });
             this.router.navigate(["/"]);

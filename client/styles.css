@@ -2,10 +2,13 @@
 html {
   font-size: 14px; }
 
+a:hover {
+  cursor: pointer; }
+
 .show {
   display: block; }
 
 .hidden {
-  display: none; }
+  display: none !important; }
 
 /*# sourceMappingURL=styles.css.map */
