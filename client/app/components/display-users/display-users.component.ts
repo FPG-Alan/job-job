@@ -1,5 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ApiService} from "../../services/api.service";
+import {CommonService} from "../../services/common.service";
 import {User} from "../../classes/user";
 
 @Component({
@@ -11,14 +12,15 @@ export class DisplayUsersComponent implements OnInit {
 
     users: User[] = [];
 
-    constructor(private apiService: ApiService) {
+    constructor(private apiService: ApiService,
+                private commonService: CommonService) {
     }
 
     ngOnInit() {
         this.apiService.getAllUsers()
             .subscribe(
                 res => this.users = res,
-                err => console.log(err)
+                err => this.commonService.handleError(err)
             );
     }
 

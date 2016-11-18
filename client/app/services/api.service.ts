@@ -19,9 +19,9 @@ export class ApiService {
             .map(res => <User[]> res.json());
     }
 
-    findMyUser(userId: string){
-        return this.authHttp.get("/user?id=" + userId)
-                    .map(res => <User> res.json())
+    findMyUser(userId: string) {
+        return this.authHttp.get("/user/?id=" + userId)
+            .map(res => <User> res.json())
     }
 
     findOrCreateMyUser(user: User) {
@@ -81,10 +81,14 @@ export class ApiService {
      * BOX INTEGRATION *
      *******************/
     createNewTestFolder(folderName: string) {
-        // TODO: get user ID
-        
+        let userId = "";
+        let localProfile = JSON.parse(localStorage.getItem("profile"));
+        if (localProfile) userId = localProfile.user_id;
 
-        let body = {folderName: folderName};
+        let body = {
+            userId: userId,
+            folderName: folderName
+        };
         let headers = new Headers({"Content-Type": "application/json"});
         let options = new RequestOptions({headers: headers});
 

@@ -10,7 +10,7 @@ userRouter.get("/all", function (req, res) {
     });
 });
 
-userRouter.get("/:id", function (req, res) {
+userRouter.get("/", function (req, res) {
     User.findOne({userId: req.query.id}, function (err, user) {
         if (err) {
             res.status(500).send({header: 'Couldn\'t find your user data'});
