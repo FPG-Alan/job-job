@@ -2,6 +2,8 @@ import {Component, OnInit} from "@angular/core";
 import {ApiService} from "../../services/api.service";
 import {CommonService} from "../../services/common.service";
 
+declare var $;
+
 @Component({
     selector: 'app-display-jobs',
     templateUrl: './display-jobs.component.html',
@@ -18,15 +20,26 @@ export class DisplayJobsComponent implements OnInit {
     ngOnInit() {
         this.apiService.getAllJobs()
             .subscribe(
-                result => this.jobs = result.data,
+                result => {
+                    this.jobs = result.data;
+                    console.log(this.jobs)
+                },
                 err => this.commonService.handleError(err)
             );
     }
 
-    createNewTestFolder(folderName: string) {
-        this.apiService.createNewTestFolder(folderName)
+    startBoxCreate(jobObject: any) {
+        $("#create-box-folder")
+            .modal("show");
+    }
+
+    createNewFolder(jobObject: any) {
+        console.log(jobObject);
+        this.apiService.createNewFolder(jobObject)
             .subscribe(
-                res => console.log(res),
+                res => {
+                    console.log(res)
+                },
                 err => this.commonService.handleError(err)
             );
     }

@@ -15,30 +15,54 @@ var invalidTokenError = {
     message: "Please go to Settings and re-authenticate Box"
 };
 
-boxIntegrationRouter.post("/", function (req, res) {
+boxIntegrationRouter.post("/client", function (req, res) {
     // get token using user ID first
+    // TODO: put finding token steps of this callback hell in a single function
     Token.findOne({userId: req.body.userId, provider: "box"}, function (err, token) {
-        if (err || !token.tokenInfo) {
+        if (err || !token || !token.tokenInfo) {
             res.status(500).send(invalidTokenError);
         }
-
         sdk.getTokensRefreshGrant(token.tokenInfo.refreshToken, function (err, newTokenInfo) {
-            if (err || !newTokenInfo.accessToken) {
+            if (err || !newTokenInfo || !newTokenInfo.accessToken) {
                 res.status(500).send(invalidTokenError);
-            }
+            } else {
+                // store refreshed token
+                token.tokenInfo = newTokenInfo;
+                token.save();
 
-            var box = sdk.getBasicClient(newTokenInfo.accessToken);
-            box.folders.create("0", req.body.folderName, function (err, folder) {
-                if (err) {
-                    console.log(err);
-                    res.status(500).send({
-                        header: "Couldn't create folder",
-                        message: "You might have insufficient permissions"
+                // find client folder if it exists
+                var box = sdk.getBasicClient(newTokenInfo.accessToken);
+                box.folders.getItems(process.env.BOX_ROOT_FOLDER, {fields: "name,type,url"}, function (err, data) {
+                    if (err) {
+                        console.log(err);
+                        res.status(500).send({
+                            // header: "Couldn't create folder",
+                            message: "You might have insufficient permissions"
+                        });
+                    }
+                    if (data.total_count > 0) {
+                        for (var i = 0; i < data.total_count; i++) {
+                            var currItem = data.entries[i];
+                            if (currItem.type == "folder" && currItem.name == req.body.job.client) {
+                                console.log(currItem, "with client", req.body.job.client);
+                                res.json(currItem);
+                            }
+                        }
+                    }
+                    console.log("Could not find client; creating one");
+                    // create client folder when not found
+                    box.folders.create(process.env.BOX_ROOT_FOLDER, req.body.job.client, function (err, folder) {
+                        if (err) {
+                            res.status(500).send({
+                                header: "Couldn't create folder",
+                                message: "You might have insufficient permissions"
+                            });
+                        }
+                        console.log(folder);
+                        res.json(folder);
                     });
-                }
-                console.log(folder);
-                res.json(folder);
-            });
+                });
+            }
         });
     });
 });

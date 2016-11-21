@@ -1,11 +1,23 @@
 <ul *ngIf="jobs !== null && jobs.length > 0">
     <li *ngFor="let j of jobs">
-        <a (click)="createNewTestFolder(j.name)">{{j.name}}</a>
+        <a (click)="createNewFolder(j)">{{j.name}}</a>
     </li>
 </ul>
 
 <div *ngIf="jobs === null || jobs.length == 0" class="ui warning message">
     <div class="header">
         No jobs found
+    </div>
+</div>
+
+
+<div class="ui modal" id="create-box-folder">
+    <i class="close icon"></i>
+    <div class="header">
+        Setting up your project in Box...
+    </div>
+    <div class="actions">
+        <div class="ui positive button"><i class="checkmark icon"></i>I'm sure!</div>
+        <div class="ui negative button"><i class="remove icon"></i>Nope</div>
     </div>
 </div>
