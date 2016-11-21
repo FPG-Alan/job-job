@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, EventEmitter} from "@angular/core";
 import {ApiService} from "../../services/api.service";
 import {CommonService} from "../../services/common.service";
 
@@ -23,22 +23,6 @@ export class DisplayJobsComponent implements OnInit {
                 result => {
                     this.jobs = result.data;
                     console.log(this.jobs)
-                },
-                err => this.commonService.handleError(err)
-            );
-    }
-
-    startBoxCreate(jobObject: any) {
-        $("#create-box-folder")
-            .modal("show");
-    }
-
-    createNewFolder(jobObject: any) {
-        console.log(jobObject);
-        this.apiService.createNewFolder(jobObject)
-            .subscribe(
-                res => {
-                    console.log(res)
                 },
                 err => this.commonService.handleError(err)
             );

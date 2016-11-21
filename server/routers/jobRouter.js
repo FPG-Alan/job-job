@@ -20,7 +20,6 @@ jobRouter.get("/all", function (req, res) {
         })
         .end(function (response) {
             // TODO: handle err
-            // console.log(response.body);
             res.send(response.body);
         });
 });
@@ -42,7 +41,6 @@ jobRouter.post("/", function (req, res) {
         .send(newProject)
         .end(function (response) {
             // TODO: handle err
-            console.log(response.body);
             res.send(response.body);
         });
 });

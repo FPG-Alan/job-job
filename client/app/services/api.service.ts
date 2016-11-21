@@ -80,7 +80,7 @@ export class ApiService {
     /*******************
      * BOX INTEGRATION *
      *******************/
-    createNewFolder(jobObject: any) {
+    createNewFolder(folderName: any, parentFolderId: string) {
         // get user info to retrieve security tokens
         let userId = "";
         let localProfile = JSON.parse(localStorage.getItem("profile"));
@@ -88,7 +88,8 @@ export class ApiService {
 
         let body = {
             userId: userId,
-            job: jobObject
+            folderName: folderName,
+            parentFolderId: parentFolderId
         };
         let headers = new Headers({"Content-Type": "application/json"});
         let options = new RequestOptions({headers: headers});

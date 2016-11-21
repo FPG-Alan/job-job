@@ -176,13 +176,7 @@ export class NewJobComponent implements OnInit {
                 .subscribe(
                     res => {
                         console.log(res);
-                        this.resetModels();
-                        this.commonService.notifyMessage(
-                            "success",
-                            "Sweet!",
-                            "Successfully created a new job"
-                        );
-                        this.router.navigate(["/"]);
+                        this.startCreateBoxFolder();
                     },
                     err => this.commonService.handleError(err)
                 );
@@ -222,5 +216,79 @@ export class NewJobComponent implements OnInit {
         this.onDateChange("start", strStartDate);
 
         this.updateFinalName();
+    }
+
+
+    /*******************
+     * BOX INTEGRATION *
+     *******************/
+        // basically the integration needs a full job object (due to 10Kft not saving Brands),
+        // and also needs the final name that gets submitted (generated name or custom name?)
+
+    processingStates = {
+        client: "disabled",
+        brand: "disabled",
+        job: "disabled",
+        confirming: "disabled"
+    };
+    step: number = 0;
+
+    startCreateBoxFolder() {
+        // TODO: allow user to confirm by pressing Enter; also show the Enter icons for UX
+        // open modal for the workflow
+        $("#create-box-folder")
+            .modal("show");
+        this.createNewFolder(null, "client");
+    }
+
+    createNewFolder(parentFolderId: string, type: string) {
+        // NOTE: feature is currently only for projects with clients
+        // also check if the type is empty
+        if (this.commonService.isEmptyString(this.job.client.name) ||
+            this.commonService.isEmptyString(type)) {
+            return;
+        } else {
+            // TODO: create 2nd modal for confirming?
+            // TODO: createNewFolder, move on if found, ask to create if not found
+            var folderName = "";
+            var nextType = "";
+            if (type == "client") {
+                folderName = this.job.client.name;
+                // there are cases where brand name is empty
+                nextType = !this.commonService.isEmptyString(this.job.brand) ? "brand" : "job";
+            }
+            else if (type == "brand") {
+                folderName = this.job.brand;
+                nextType = "job";
+            }
+            else if (type == "job") {
+                folderName = this.usingFinalName ? this.finalName.result : this.job.name;
+                nextType = "confirm";
+            }
+            else {
+                // TODO: let the user know it's done, like navigating home
+                this.resetModels();
+                this.commonService.notifyMessage(
+                    "success",
+                    "Sweet!",
+                    "Successfully created a new job"
+                );
+                this.router.navigate(["/"]);
+                return;
+            }
+
+            if (!this.commonService.isEmptyString(folderName)) {
+                console.log("sending request for type:", type, "with folder name:", folderName);
+                this.apiService.createNewFolder(folderName, parentFolderId)
+                    .subscribe(
+                        res => {
+                            console.log(type, res);
+                            let parentId = res.id;
+                            this.createNewFolder(parentId, nextType);
+                        },
+                        err => this.commonService.handleError(err)
+                    );
+            }
+        }
     }
 }
