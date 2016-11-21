@@ -38,6 +38,7 @@ export class NewJobComponent implements OnInit {
     ngOnInit() {
         $('.ui.checkbox').checkbox();
         $('.ui.search.dropdown.selection').dropdown();
+        $('.ui.modal').modal();
 
         // SESSION STORAGE: check for prefilled or saved fields
         let savedJob = sessionStorage.getItem("saved_job_fields");
@@ -62,6 +63,9 @@ export class NewJobComponent implements OnInit {
     }
 
 
+    /*******************
+     * TWO-WAY BINDING *
+     *******************/
     getClientProjectCount() {
         if (this.usingFinalName && !this.commonService.isEmptyString(this.job.client.name)) {
             this.apiService
@@ -78,7 +82,6 @@ export class NewJobComponent implements OnInit {
                 )
         }
     }
-
 
     updateFinalName() {
         // reinitiating as an empty string to make sure it's not a null addition
@@ -100,7 +103,6 @@ export class NewJobComponent implements OnInit {
         sessionStorage.setItem("saved_final_name", JSON.stringify(this.finalName));
     }
 
-
     onJobNameChange() {
         this.finalName.formattedName = "";
         let words = this.job.name.match(/\S+/g);
@@ -112,7 +114,6 @@ export class NewJobComponent implements OnInit {
         }
         this.updateFinalName();
     }
-
 
     onClientChange() {
         this.job.brand = "";
@@ -127,7 +128,6 @@ export class NewJobComponent implements OnInit {
         this.updateFinalName();
     }
 
-
     onBrandChange() {
         this.finalName.brand = "";
         let words = this.job.brand.match(/\S+/g);
@@ -139,7 +139,6 @@ export class NewJobComponent implements OnInit {
         }
         this.updateFinalName();
     }
-
 
     onDateChange(isStartEnd: string, strDate: string) {
         if (!this.commonService.isEmptyString(strDate)) {
@@ -163,7 +162,6 @@ export class NewJobComponent implements OnInit {
         }
     }
 
-
     onSubmit(form: NgForm) {
         if (form.valid && !this.submitted) {
             // validation set to submitted to avoid spamming
@@ -184,6 +182,9 @@ export class NewJobComponent implements OnInit {
     }
 
 
+    /***********************
+     * RESETTING COMPONENT *
+     **********************/
     confirmResetModels() {
         $("#confirm-reset-job")
             .modal("show");
@@ -222,19 +223,16 @@ export class NewJobComponent implements OnInit {
     /*******************
      * BOX INTEGRATION *
      *******************/
-        // basically the integration needs a full job object (due to 10Kft not saving Brands),
+    // basically the integration needs a full job object (due to 10Kft not saving Brands),
         // and also needs the final name that gets submitted (generated name or custom name?)
 
     processingStates = {
         client: "disabled",
         brand: "disabled",
         job: "disabled",
-        confirming: "disabled"
     };
-    step: number = 0;
 
     startCreateBoxFolder() {
-        // TODO: allow user to confirm by pressing Enter; also show the Enter icons for UX
         // open modal for the workflow
         $("#create-box-folder")
             .modal("show");
@@ -248,41 +246,44 @@ export class NewJobComponent implements OnInit {
             this.commonService.isEmptyString(type)) {
             return;
         } else {
-            // TODO: create 2nd modal for confirming?
-            // TODO: createNewFolder, move on if found, ask to create if not found
             var folderName = "";
             var nextType = "";
+
             if (type == "client") {
+                this.processingStates.client = "active";
                 folderName = this.job.client.name;
                 // there are cases where brand name is empty
                 nextType = !this.commonService.isEmptyString(this.job.brand) ? "brand" : "job";
-            }
-            else if (type == "brand") {
+            } else if (type == "brand") {
+                this.processingStates.brand = "active";
                 folderName = this.job.brand;
                 nextType = "job";
-            }
-            else if (type == "job") {
+            } else if (type == "job") {
+                this.processingStates.job = "active";
                 folderName = this.usingFinalName ? this.finalName.result : this.job.name;
                 nextType = "confirm";
-            }
-            else {
+            } else if (type == "confirm") {
                 // TODO: let the user know it's done, like navigating home
-                this.resetModels();
-                this.commonService.notifyMessage(
-                    "success",
-                    "Sweet!",
-                    "Successfully created a new job"
-                );
-                this.router.navigate(["/"]);
+                setTimeout(() => {
+                    this.resetModels();
+                    $("#create-box-folder")
+                        .modal("hide");
+                    this.commonService.notifyMessage(
+                        "success",
+                        "Sweet!",
+                        "Successfully created a new job"
+                    );
+                    this.router.navigate(["/"]);
+                }, 1500);
                 return;
-            }
+            } else return;
 
+            // recursive folder creation
             if (!this.commonService.isEmptyString(folderName)) {
-                console.log("sending request for type:", type, "with folder name:", folderName);
                 this.apiService.createNewFolder(folderName, parentFolderId)
                     .subscribe(
                         res => {
-                            console.log(type, res);
+                            this.processingStates[type] = "completed";
                             let parentId = res.id;
                             this.createNewFolder(parentId, nextType);
                         },

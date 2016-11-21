@@ -55,16 +55,15 @@ boxIntegrationRouter.post("/", function (req, res) {
                     if (!sameNameFound) {
                         // create folder if found none
                         box.folders.create(parentFolderId, req.body.folderName, function (err, folder) {
-                            console.log("folder name:", req.body.folderName)
                             if (err) {
                                 console.log(err);
-                                return;
                                 res.status(500).send({
                                     header: "Couldn't create folder",
                                     message: "You might have insufficient permissions"
                                 });
                             } else {
                                 res.json(folder);
+                                console.log("Created new Box folder:", req.body.folderName)
                             }
                         });
                     }

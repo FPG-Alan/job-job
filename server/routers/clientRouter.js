@@ -29,7 +29,6 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
             console.log(err);
             res.status(500).send({header: 'Couldn\'t find client!'});
         } else {
-            console.log("client:", client.name)
             unirest.get(tenKApiKeys.dev.url + "projects?from=" + req.params.year + "-01-01"
                 + " with_archived=true&per_page=100000")
                 .headers({

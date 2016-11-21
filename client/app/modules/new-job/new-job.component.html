@@ -129,14 +129,13 @@
 
 
 <!--Box Integration-->
-<div class="ui large modal" id="create-box-folder">
+<div class="ui modal" id="create-box-folder">
     <i class="close icon"></i>
     <div class="header">
         Setting up your project in Box...
     </div>
     <div class="content">
-        <div class="ui centered inline loader"
-             [class.active]="processingStates.confirming == 'completed'"></div>
+        <div class="ui centered active inline loader"></div>
         <div class="ui steps">
             <div class="step {{processingStates.client}}">
                 <i class="users icon"></i>
