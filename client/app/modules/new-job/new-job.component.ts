@@ -24,7 +24,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         result: "",
         clientCode: "",
         startYear: "",
-        projectCount: "01",
+        projectCount: "001",
         brand: "",
         formattedName: ""
     };

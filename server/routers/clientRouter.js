@@ -44,9 +44,16 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
                         return proj.client == client.name && year == req.params.year;
                     });
 
-                    var formattedCount = projects.length + 1 < 10
+                    // alternatively, we can add a lot of leading zeroes,
+                    // then splice the last 3 or n characters (more efficient
+                    // but not necessary for now)
+                    var formattedCount = projects.length + 1 >= 100
+                        ? "" + (projects.length + 1)
+                        : projects.length + 1 >= 10
                         ? "0" + (projects.length + 1)
-                        : "" + (projects.length + 1);
+                        : "00" + (projects.length + 1);
+
+
                     res.json({
                         count: projects.length + 1,
                         formattedCount: formattedCount
