@@ -63,7 +63,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         // avoid duplicate modals
+        $("#confirm-reset-job").modal("hide");
         $("#confirm-reset-job").remove();
+        $("#create-box-folder").modal("hide");
         $("#create-box-folder").remove();
     }
 
