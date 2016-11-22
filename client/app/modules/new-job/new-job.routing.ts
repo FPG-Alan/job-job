@@ -1,5 +1,4 @@
 import {Routes, RouterModule} from "@angular/router";
-
 import {NewJobComponent} from "./new-job.component";
 import {AuthGuard} from "../../services/auth.guard";
 

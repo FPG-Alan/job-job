@@ -1,0 +1,27 @@
+<h1>
+    Settings
+</h1>
+
+<div>
+
+</div>
+
+<table class="ui very basic table">
+    <thead>
+    </thead>
+    <tbody>
+    <tr>
+        <td><img class="ui logo image" src="assets/logos/box_logo.png"></td>
+        <td>Online file sharing and personal cloud content management service for businesses</td>
+        <td class="right aligned">
+            <a class="ui button"
+               *ngIf="!user.boxAuthenticated"
+               [class.loading]="authenticatingBox"
+               (click)="navigateBoxAuth()">Authenticate Box</a>
+            <a class="ui positive button"
+               *ngIf="user.boxAuthenticated"
+               (click)="navigateBoxAuth()">Authenticated</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

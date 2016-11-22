@@ -1,11 +1,10 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, OnDestroy} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {Job} from "../../classes/job";
 import {Client} from "../../classes/client";
 import {CommonService} from "../../services/common.service";
 import {ApiService} from "../../services/api.service";
-import {TenKFtService} from "../../services/ten-k-ft.service";
 import {DatePipe} from "@angular/common";
 
 declare var $;
@@ -15,7 +14,7 @@ declare var $;
     templateUrl: './new-job.component.html',
     styleUrls: ['./new-job.component.scss']
 })
-export class NewJobComponent implements OnInit {
+export class NewJobComponent implements OnInit, OnDestroy {
 
     submitted = false;
     job: Job;
@@ -25,7 +24,7 @@ export class NewJobComponent implements OnInit {
         result: "",
         clientCode: "",
         startYear: "",
-        projectCount: "01",
+        projectCount: "001",
         brand: "",
         formattedName: ""
     };
@@ -33,8 +32,7 @@ export class NewJobComponent implements OnInit {
 
     constructor(private router: Router,
                 private commonService: CommonService,
-                private apiService: ApiService,
-                private tenKFtService: TenKFtService) {
+                private apiService: ApiService) {
     }
 
     ngOnInit() {
@@ -63,7 +61,18 @@ export class NewJobComponent implements OnInit {
             );
     }
 
+    ngOnDestroy() {
+        // avoid duplicate modals
+        $("#confirm-reset-job").modal("hide");
+        $("#confirm-reset-job").remove();
+        $("#create-box-folder").modal("hide");
+        $("#create-box-folder").remove();
+    }
 
+
+    /*******************
+     * TWO-WAY BINDING *
+     *******************/
     getClientProjectCount() {
         if (this.usingFinalName && !this.commonService.isEmptyString(this.job.client.name)) {
             this.apiService
@@ -80,7 +89,6 @@ export class NewJobComponent implements OnInit {
                 )
         }
     }
-
 
     updateFinalName() {
         // reinitiating as an empty string to make sure it's not a null addition
@@ -102,20 +110,17 @@ export class NewJobComponent implements OnInit {
         sessionStorage.setItem("saved_final_name", JSON.stringify(this.finalName));
     }
 
-
     onJobNameChange() {
         this.finalName.formattedName = "";
         let words = this.job.name.match(/\S+/g);
         for (let w in words) {
             if (words.hasOwnProperty(w)) {
-                if (parseInt(w) > 0) { this.finalName.formattedName += "_"; }
                 words[w] = words[w].charAt(0).toUpperCase() + words[w].slice(1);
                 this.finalName.formattedName += words[w];
             }
         }
         this.updateFinalName();
     }
-
 
     onClientChange() {
         this.job.brand = "";
@@ -130,20 +135,17 @@ export class NewJobComponent implements OnInit {
         this.updateFinalName();
     }
 
-
     onBrandChange() {
         this.finalName.brand = "";
         let words = this.job.brand.match(/\S+/g);
         for (let w in words) {
             if (words.hasOwnProperty(w)) {
-                if (parseInt(w) > 0) { this.finalName.brand += "_"; }
                 words[w] = words[w].charAt(0).toUpperCase() + words[w].slice(1);
                 this.finalName.brand += words[w];
             }
         }
         this.updateFinalName();
     }
-
 
     onDateChange(isStartEnd: string, strDate: string) {
         if (!this.commonService.isEmptyString(strDate)) {
@@ -167,7 +169,6 @@ export class NewJobComponent implements OnInit {
         }
     }
 
-
     onSubmit(form: NgForm) {
         if (form.valid && !this.submitted) {
             // validation set to submitted to avoid spamming
@@ -176,17 +177,22 @@ export class NewJobComponent implements OnInit {
             this.job.code = "" + this.finalName.clientCode + this.finalName.startYear + this.finalName.projectCount;
 
             let submittedName = this.usingFinalName ? this.finalName.result : this.job.name;
-            this.tenKFtService.createNewJob(this.job, submittedName)
+            this.apiService.createNewJob(this.job, submittedName)
                 .subscribe(
                     res => {
                         console.log(res);
-                        this.resetModels();
-                        this.commonService.notifyMessage(
-                            "success",
-                            "Sweet!",
-                            "Successfully created a new job"
-                        );
-                        this.router.navigate(["/"]);
+
+                        if (!this.commonService.isEmptyString(this.job.client.name)) {
+                            this.startCreateBoxFolder();
+                        } else {
+                            this.resetModels();
+                            this.commonService.notifyMessage(
+                                "success",
+                                "Sweet!",
+                                "Successfully created a new job"
+                            );
+                            this.router.navigate(["/"]);
+                        }
                     },
                     err => this.commonService.handleError(err)
                 );
@@ -194,6 +200,9 @@ export class NewJobComponent implements OnInit {
     }
 
 
+    /***********************
+     * RESETTING COMPONENT *
+     **********************/
     confirmResetModels() {
         $("#confirm-reset-job")
             .modal("show");
@@ -226,5 +235,82 @@ export class NewJobComponent implements OnInit {
         this.onDateChange("start", strStartDate);
 
         this.updateFinalName();
+    }
+
+
+    /*******************
+     * BOX INTEGRATION *
+     *******************/
+        // basically the integration needs a full job object (due to 10Kft not saving Brands),
+        // and also needs the final name that gets submitted (generated name or custom name?)
+
+    processingStates:any = {
+        client: "disabled",
+        brand: "disabled",
+        job: "disabled",
+    };
+
+    startCreateBoxFolder() {
+        if (!this.commonService.isEmptyString(this.job.client.name)) {
+            // open modal for the workflow
+            $("#create-box-folder")
+                .modal("show");
+            this.createNewFolder(null, "client");
+        }
+    }
+
+    createNewFolder(parentFolderId: string, type: string) {
+        // NOTE: feature is currently only for projects with clients
+        // also check if the type is empty
+        if (this.commonService.isEmptyString(this.job.client.name) ||
+            this.commonService.isEmptyString(type)) {
+            return;
+        } else {
+            var folderName = "";
+            var nextType = "";
+
+            if (type == "client") {
+                this.processingStates.client = "active";
+                folderName = this.job.client.name;
+                // there are cases where brand name is empty
+                nextType = !this.commonService.isEmptyString(this.job.brand) ? "brand" : "job";
+            } else if (type == "brand") {
+                this.processingStates.brand = "active";
+                folderName = this.job.brand;
+                nextType = "job";
+            } else if (type == "job") {
+                this.processingStates.job = "active";
+                folderName = this.usingFinalName ? this.finalName.result : this.job.name;
+                nextType = "confirm";
+            } else if (type == "confirm") {
+                // TODO: put this in a separate function
+                // TODO: create an animated overlay over the steps when done
+                setTimeout(() => {
+                    this.resetModels();
+                    $("#create-box-folder")
+                        .modal("hide");
+                    this.commonService.notifyMessage(
+                        "success",
+                        "Sweet!",
+                        "Successfully created a new job"
+                    );
+                    this.router.navigate(["/"]);
+                }, 1000);
+                return;
+            } else return;
+
+            // recursive folder creation
+            if (!this.commonService.isEmptyString(folderName)) {
+                this.apiService.createNewFolder(folderName, parentFolderId)
+                    .subscribe(
+                        res => {
+                            this.processingStates[type] = "completed";
+                            let parentId = res.id;
+                            this.createNewFolder(parentId, nextType);
+                        },
+                        err => this.commonService.handleError(err)
+                    );
+            }
+        }
     }
 }

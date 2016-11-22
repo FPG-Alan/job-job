@@ -94,7 +94,7 @@
         </div>
     </div>
 
-    <!--TODO
+    <!--TODO: remaining features
         projectStatus select
         rateCard select
         serviceType (toggle or select or radial)
@@ -125,4 +125,44 @@
         <div class="ui positive button" (click)="resetModels()"><i class="checkmark icon"></i>I'm sure!</div>
         <div class="ui negative button"><i class="remove icon"></i>Nope</div>
     </div>
+</div>
+
+
+<!--Box Integration-->
+<div class="ui modal" id="create-box-folder">
+    <i class="close icon"></i>
+    <div class="header">
+        Setting up your project in Box...
+    </div>
+    <div class="content">
+        <!--TODO: display message representing current action-->
+        <div class="ui active centered inline loader"></div>
+        <div class="ui fluid steps">
+            <div class="step {{processingStates.client}}">
+                <i class="users icon"></i>
+                <div class="content">
+                    <div class="title">Client</div>
+                    <div class="description">Finding a folder<br>with the client's name</div>
+                </div>
+            </div>
+            <div class="step {{processingStates.brand}}">
+                <i class="trademark icon"></i>
+                <div class="content">
+                    <div class="title">Brand</div>
+                    <div class="description">Finding a folder<br>with the brand name</div>
+                </div>
+            </div>
+            <div class="step {{processingStates.job}}">
+                <i class="suitcase icon"></i>
+                <div class="content">
+                    <div class="title">Job</div>
+                    <div class="description">Creating a folder<br>with the job's<br> coded name</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="actions">-->
+    <!--<div class="ui positive button"><i class="checkmark icon"></i>I'm sure!</div>-->
+    <!--<div class="ui negative button"><i class="remove icon"></i>Nope</div>-->
+    <!--</div>-->
 </div>

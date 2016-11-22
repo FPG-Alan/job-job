@@ -1,35 +1,43 @@
 var express = require('express');
-var unirest = require('unirest');
 var userRouter = express.Router();
 
 var User = require("../models/user");
 
-var apiKeys = {
-    "dev": {
-        "url": "https://vnext-api.10000ft.com/api/v1/",
-        "keys": process.env.TEN_K_TOKEN_DEV
-    },
-    "prod": {
-        "url": "https://api.10000ft.com/api/v1/"
-    }
-};
-
 userRouter.get("/all", function (req, res) {
-    // User.find({}, function (err, users) {
-    //     if (err) {
-    //         console.log(err)
-    //     }
-    //     res.json(users);
-    // });
-    unirest.get(apiKeys.dev.url + "users")
-        .headers({
-            "Content-Type": "application/json",
-            "auth": apiKeys.dev.keys
-        })
-        .end(function (response) {
-            // console.log(response.body);
-            res.send(response.body);
-        });
+    User.find({}, function (err, users) {
+        // need admin access to access this
+        res.status(500).send({header: 'Couldn\'t retrieve all users'});
+    });
+});
+
+userRouter.get("/", function (req, res) {
+    User.findOne({userId: req.query.id}, function (err, user) {
+        if (err) {
+            res.status(500).send({header: 'Couldn\'t find your user data'});
+        }
+        res.json(user);
+    });
+});
+
+userRouter.post("/", function (req, res) {
+    User.findOne({userId: req.body.userId}, function (err, user) {
+        if (user) {
+            res.json(user);
+        } else {
+            var newUser = new User({
+                userId: req.body.userId,
+                name: req.body.name,
+                email: req.body.email,
+                boxAuthenticated: req.body.boxAuthenticated
+            });
+            newUser.save(function (err, newUser) {
+                if (err) {
+                    res.status(500).send({header: 'Couldn\'t find or create user with this email'});
+                }
+                res.json(newUser);
+            });
+        }
+    });
 });
 
 module.exports = userRouter;

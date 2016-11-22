@@ -52,8 +52,8 @@ export class CommonService {
             // custom notification
             this.notifyMessage(
                 "error",
-                "Something failed",
-                body.message
+                body.header || "Something failed",
+                body.message || ""
             );
         } else {
             errMsg = error.message ? error.message : error.toString();
@@ -61,7 +61,7 @@ export class CommonService {
             this.notifyMessage(
                 "error",
                 "Something failed",
-                errMsg
+                errMsg || ""
             );
         }
         console.error(errMsg);

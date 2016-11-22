@@ -1,5 +1,7 @@
 import {Component, OnInit} from "@angular/core";
-import {TenKFtService} from "../../services/ten-k-ft.service";
+import {ApiService} from "../../services/api.service";
+import {CommonService} from "../../services/common.service";
+import {User} from "../../classes/user";
 
 @Component({
     selector: 'app-display-users',
@@ -8,16 +10,17 @@ import {TenKFtService} from "../../services/ten-k-ft.service";
 })
 export class DisplayUsersComponent implements OnInit {
 
-    users: any[] = [];
+    users: User[] = [];
 
-    constructor(private tenKFtService: TenKFtService) {
+    constructor(private apiService: ApiService,
+                private commonService: CommonService) {
     }
 
     ngOnInit() {
-        this.tenKFtService.getAllUsers()
+        this.apiService.getAllUsers()
             .subscribe(
-                result => this.users = result.data,
-                err => console.log(err)
+                res => this.users = res,
+                err => this.commonService.handleError(err)
             );
     }
 

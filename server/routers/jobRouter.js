@@ -19,7 +19,7 @@ jobRouter.get("/all", function (req, res) {
             "auth": apiKeys.dev.keys
         })
         .end(function (response) {
-            // console.log(response.body);
+            // TODO: handle err
             res.send(response.body);
         });
 });
@@ -40,11 +40,9 @@ jobRouter.post("/", function (req, res) {
         })
         .send(newProject)
         .end(function (response) {
-            console.log(response.body);
+            // TODO: handle err
             res.send(response.body);
         });
-    // // for testing
-    // res.status(500).send({ error: 'Something failed!' });
 });
 
 module.exports = jobRouter;

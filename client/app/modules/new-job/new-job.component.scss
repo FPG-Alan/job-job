@@ -2,6 +2,11 @@
     margin-bottom: 5px !important;
 }
 
+// override loader color in a dimmer (set to white by default)
+#create-box-folder .ui.loader:after {
+    border-color: #767676 transparent transparent !important;
+}
+
 input[readonly]:focus {
     border: 1px solid rgba(34, 36, 38, .15) !important;
 }

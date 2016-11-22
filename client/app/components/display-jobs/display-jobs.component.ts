@@ -1,5 +1,8 @@
 import {Component, OnInit} from "@angular/core";
-import {TenKFtService} from "../../services/ten-k-ft.service";
+import {ApiService} from "../../services/api.service";
+import {CommonService} from "../../services/common.service";
+
+declare var $;
 
 @Component({
     selector: 'app-display-jobs',
@@ -10,15 +13,18 @@ export class DisplayJobsComponent implements OnInit {
 
     jobs: any[] = [];
 
-    constructor(private tenKFtService: TenKFtService) {
+    constructor(private apiService: ApiService,
+                private commonService: CommonService) {
     }
 
     ngOnInit() {
-        this.tenKFtService.getAllJobs()
+        this.apiService.getAllJobs()
             .subscribe(
-                result => this.jobs = result.data,
-                err => console.log(err)
+                result => {
+                    this.jobs = result.data;
+                    console.log(this.jobs)
+                },
+                err => this.commonService.handleError(err)
             );
     }
-
 }
