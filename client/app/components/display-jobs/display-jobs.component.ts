@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {ApiService} from "../../services/api.service";
 import {CommonService} from "../../services/common.service";
+import {Client} from "../../classes/client";
 
 declare var $;
 
@@ -12,12 +13,16 @@ declare var $;
 export class DisplayJobsComponent implements OnInit {
 
     jobs: any[] = [];
+    clients: Client[] = [];
+    filtering: boolean = false;
 
     constructor(private apiService: ApiService,
                 private commonService: CommonService) {
     }
 
     ngOnInit() {
+        $(".ui.multiple.selection.dropdown").dropdown();
+
         this.apiService.getAllJobs()
             .subscribe(
                 result => {
@@ -26,5 +31,18 @@ export class DisplayJobsComponent implements OnInit {
                 },
                 err => this.commonService.handleError(err)
             );
+        this.apiService.getAllClients()
+            .subscribe(
+                result => {
+                    this.clients = result;
+                    console.log(this.clients)
+                },
+                err => this.commonService.handleError(err)
+            );
+    }
+
+    onFilterSearchChange(e: any){
+        this.filtering = true;
+        console.log(e)
     }
 }

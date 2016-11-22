@@ -1,3 +1,15 @@
+<!--Filtering Menu-->
+<div class="ui fluid multiple search selection dropdown">
+    <i class="dropdown icon"></i>
+    <input class="search">
+    <div class="default text">Filter by Clients...</div>
+    <div class="menu">
+        <div class="item" *ngFor="let c of clients">{{c.name}}</div>
+    </div>
+</div>
+
+
+<!--Display Area-->
 <ul *ngIf="jobs !== null && jobs.length > 0">
     <li *ngFor="let j of jobs">
         {{j.name}}
