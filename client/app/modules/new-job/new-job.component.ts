@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, OnDestroy} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {Job} from "../../classes/job";
@@ -14,7 +14,7 @@ declare var $;
     templateUrl: './new-job.component.html',
     styleUrls: ['./new-job.component.scss']
 })
-export class NewJobComponent implements OnInit {
+export class NewJobComponent implements OnInit, OnDestroy {
 
     submitted = false;
     job: Job;
@@ -38,7 +38,6 @@ export class NewJobComponent implements OnInit {
     ngOnInit() {
         $('.ui.checkbox').checkbox();
         $('.ui.search.dropdown.selection').dropdown();
-        $('.ui.modal').modal();
 
         // SESSION STORAGE: check for prefilled or saved fields
         let savedJob = sessionStorage.getItem("saved_job_fields");
@@ -60,6 +59,12 @@ export class NewJobComponent implements OnInit {
                 res => this.clients = res,
                 err => this.commonService.handleError(err)
             );
+    }
+
+    ngOnDestroy() {
+        // avoid duplicate modals
+        $("#confirm-reset-job").remove();
+        $("#create-box-folder").remove();
     }
 
 
@@ -174,7 +179,18 @@ export class NewJobComponent implements OnInit {
                 .subscribe(
                     res => {
                         console.log(res);
-                        this.startCreateBoxFolder();
+
+                        if (!this.commonService.isEmptyString(this.job.client.name)) {
+                            this.startCreateBoxFolder();
+                        } else {
+                            this.resetModels();
+                            this.commonService.notifyMessage(
+                                "success",
+                                "Sweet!",
+                                "Successfully created a new job"
+                            );
+                            this.router.navigate(["/"]);
+                        }
                     },
                     err => this.commonService.handleError(err)
                 );
@@ -223,20 +239,22 @@ export class NewJobComponent implements OnInit {
     /*******************
      * BOX INTEGRATION *
      *******************/
-    // basically the integration needs a full job object (due to 10Kft not saving Brands),
+        // basically the integration needs a full job object (due to 10Kft not saving Brands),
         // and also needs the final name that gets submitted (generated name or custom name?)
 
-    processingStates = {
+    processingStates:any = {
         client: "disabled",
         brand: "disabled",
         job: "disabled",
     };
 
     startCreateBoxFolder() {
-        // open modal for the workflow
-        $("#create-box-folder")
-            .modal("show");
-        this.createNewFolder(null, "client");
+        if (!this.commonService.isEmptyString(this.job.client.name)) {
+            // open modal for the workflow
+            $("#create-box-folder")
+                .modal("show");
+            this.createNewFolder(null, "client");
+        }
     }
 
     createNewFolder(parentFolderId: string, type: string) {
@@ -263,7 +281,8 @@ export class NewJobComponent implements OnInit {
                 folderName = this.usingFinalName ? this.finalName.result : this.job.name;
                 nextType = "confirm";
             } else if (type == "confirm") {
-                // TODO: let the user know it's done, like navigating home
+                // TODO: put this in a separate function
+                // TODO: create an animated overlay over the steps when done
                 setTimeout(() => {
                     this.resetModels();
                     $("#create-box-folder")
@@ -274,7 +293,7 @@ export class NewJobComponent implements OnInit {
                         "Successfully created a new job"
                     );
                     this.router.navigate(["/"]);
-                }, 1500);
+                }, 1000);
                 return;
             } else return;
 
