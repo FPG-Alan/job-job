@@ -13,11 +13,14 @@
     <div class="inline fields">
         <div class="read-only ten wide field">
             <label>Generated Name</label>
-            <input *ngIf="usingFinalName" readonly="" type="text"
-                   require
-                   [(ngModel)]="finalName.result"
-                   name="finalName"
-                   #name="ngModel">
+            <div *ngIf="usingFinalName" class="ui icon input" [class.loading]="generating">
+                <input readonly="" type="text"
+                       require
+                       [(ngModel)]="finalName.result"
+                       name="finalName"
+                       #name="ngModel">
+                <i class="icon"></i>
+            </div>
             <input *ngIf="!usingFinalName" readonly="" type="text"
                    require
                    [(ngModel)]="job.name"
