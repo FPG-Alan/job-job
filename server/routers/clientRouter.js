@@ -41,7 +41,7 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
                     // get only projects that have the same client name
                     projects = projects.filter(function (proj) {
                         var year = new Date(proj.starts_at).getFullYear();
-                        if (proj.client != "" && client.name != "") {
+                        if (!isBlank(proj.client) && !isBlank(client.name)) {
                             return proj.client.toLowerCase() == client.name.toLowerCase()
                                 && year == req.params.year;
                         }
@@ -57,8 +57,9 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
                         ? "0" + (projects.length + 1)
                         : "00" + (projects.length + 1);
 
-
+                    console.log("Counting projects of client:", client.name);
                     res.json({
+                        client: client.name,
                         count: projects.length + 1,
                         formattedCount: formattedCount
                     });
@@ -86,5 +87,9 @@ clientRouter.post("/", function (req, res) {
         }
     })
 });
+
+function isBlank (str) {
+    return (!str || /^\s*$/.test(str));
+}
 
 module.exports = clientRouter;
