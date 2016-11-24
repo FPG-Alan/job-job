@@ -13,6 +13,7 @@ declare var $;
 export class DisplayJobsComponent implements OnInit {
 
     jobs: any[] = [];
+    displayedJobs: any[] = [];
     clients: Client[] = [];
     filtering: boolean = false;
 
@@ -27,6 +28,7 @@ export class DisplayJobsComponent implements OnInit {
             .subscribe(
                 result => {
                     this.jobs = result.data;
+                    this.onFilterSearchChange(""); // TODO: can be stored in localStorage
                     console.log(this.jobs)
                 },
                 err => this.commonService.handleError(err)
@@ -41,8 +43,22 @@ export class DisplayJobsComponent implements OnInit {
             );
     }
 
-    onFilterSearchChange(e: any){
+    onFilterSearchChange(searchValues: string){
         this.filtering = true;
-        console.log(e)
+        if (!this.commonService.isEmptyString(searchValues)){
+            let filteredClients = searchValues.split(",");
+            console.log("filtering", filteredClients);
+
+            this.displayedJobs = this.jobs.filter(function (proj) {
+                if (proj.client) {
+                    return filteredClients.indexOf(proj.client.toLowerCase()) != -1;
+                }
+                return false;
+            });
+        } else {
+            // display all if filter is not working
+            this.displayedJobs = this.jobs;
+        }
+        this.filtering = false;
     }
 }

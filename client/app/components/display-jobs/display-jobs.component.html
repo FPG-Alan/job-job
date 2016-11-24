@@ -1,7 +1,7 @@
 <!--Filtering Menu-->
 <div class="ui fluid multiple search selection dropdown">
-    <input type="hidden" name="country" (change)="onFilterSearchChange(e)">
-    <i class="dropdown icon"></i>
+    <input type="hidden" name="country" (change)="onFilterSearchChange(searchInput.value)" #searchInput>
+    <i class="search icon"></i>
     <input class="search">
     <div class="default text">Filter by Clients...</div>
     <div class="menu">
@@ -11,14 +11,17 @@
 
 
 <!--Display Area-->
-<ul *ngIf="jobs !== null && jobs.length > 0">
-    <li *ngFor="let j of jobs">
-        {{j.name}}
-    </li>
-</ul>
+<div class="ui basic segment" [class.loading]="filtering">
+    <ul *ngIf="displayedJobs !== null && displayedJobs.length > 0">
+        <li *ngFor="let j of displayedJobs">
+            {{j.name}}
+        </li>
+    </ul>
 
-<div *ngIf="jobs === null || jobs.length == 0" class="ui warning message">
-    <div class="header">
-        No jobs found
+    <div *ngIf="displayedJobs === null || displayedJobs.length == 0"
+         class="ui warning message">
+        <div class="header">
+            No jobs found
+        </div>
     </div>
 </div>
