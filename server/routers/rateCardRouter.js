@@ -19,7 +19,7 @@ rateCardRouter.get("/", function (req, res) {
             "auth": tenKApiKeys.dev.keys
         })
         .end(function (response) {
-            console.log(response)
+            console.log(response);
             res.json(response.body);
         });
 });
