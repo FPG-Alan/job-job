@@ -78,6 +78,15 @@ export class ApiService {
     }
 
     /*******************
+     * BILL RATE CARDS *
+     *******************/
+    getAccountBillRates() {
+        return this.authHttp.get("/rate-card")
+            .map(res => res.json())
+    }
+
+
+    /*******************
      * BOX INTEGRATION *
      *******************/
     createNewFolder(folderName: any, parentFolderId: string) {
