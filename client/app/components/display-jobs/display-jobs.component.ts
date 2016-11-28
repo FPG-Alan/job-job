@@ -15,7 +15,7 @@ export class DisplayJobsComponent implements OnInit {
     jobs: any[] = [];
     displayedJobs: any[] = [];
     clients: Client[] = [];
-    filtering: boolean = false;
+    loading: boolean = false;
 
     constructor(private apiService: ApiService,
                 private commonService: CommonService) {
@@ -24,30 +24,29 @@ export class DisplayJobsComponent implements OnInit {
     ngOnInit() {
         $(".ui.multiple.selection.dropdown").dropdown();
 
+        this.loading = true;
         this.apiService.getAllJobs()
             .subscribe(
                 result => {
                     this.jobs = result.data;
                     this.onFilterSearchChange(""); // TODO: can be stored in localStorage
-                    console.log(this.jobs)
+                    console.log(this.jobs);
                 },
-                err => this.commonService.handleError(err)
+                err => this.commonService.handleError(err),
+                () => this.loading = false
             );
         this.apiService.getAllClients()
             .subscribe(
-                result => {
-                    this.clients = result;
-                    console.log(this.clients)
-                },
+                result => this.clients = result,
                 err => this.commonService.handleError(err)
             );
     }
 
     onFilterSearchChange(searchValues: string){
-        this.filtering = true;
+        this.loading = true;
         if (!this.commonService.isEmptyString(searchValues)){
             let filteredClients = searchValues.split(",");
-            console.log("filtering", filteredClients);
+            console.log("loading", filteredClients);
 
             this.displayedJobs = this.jobs.filter(function (proj) {
                 if (proj.client) {
@@ -59,6 +58,6 @@ export class DisplayJobsComponent implements OnInit {
             // display all if filter is not working
             this.displayedJobs = this.jobs;
         }
-        this.filtering = false;
+        this.loading = false;
     }
 }

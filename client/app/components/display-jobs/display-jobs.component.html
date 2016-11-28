@@ -3,24 +3,34 @@
     <input type="hidden" name="client" (change)="onFilterSearchChange(searchInput.value)" #searchInput>
     <i class="filter search icon"
        (click)="searchInput.value = ''">
-    </i><!--leave the "search" class so the puts the icon in the right place-->
+        <!--leave the "search" class so it puts the icon in the right place-->
+    </i>
     <input class="search">
     <div class="default text">Filter by Client...</div>
     <div class="menu">
-        <div class="item" *ngFor="let c of clients">{{c.name}}</div>
+        <div class="item" *ngFor="let c of clients">{{c?.name}}</div>
     </div>
 </div>
 
-
 <!--Display Area-->
-<div class="ui basic segment" [class.loading]="filtering">
-    <ul *ngIf="displayedJobs !== null && displayedJobs.length > 0">
-        <li *ngFor="let j of displayedJobs">
-            {{j.name}}
-        </li>
-    </ul>
+<div class="ui basic segment" [class.loading]="loading">
+    <table class="ui sortable celled table"
+           *ngIf="displayedJobs?.length > 0">
+        <thead>
+        <tr>
+            <th class="descending single line">Job Name</th>
+            <th>Client</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let j of displayedJobs">
+            <td>{{j?.name}}</td>
+            <td>{{j?.client}}</td>
+        </tr>
+        </tbody>
+    </table>
 
-    <div *ngIf="displayedJobs === null || displayedJobs.length == 0"
+    <div *ngIf="displayedJobs === null || displayedJobs?.length == 0"
          class="ui warning message">
         <div class="header">
             No jobs found
