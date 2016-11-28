@@ -33,13 +33,8 @@ export class CommonService {
 
     }
 
-    isEmptyString(text: string) {
-        if (text) {
-            text = text.trim();
-            return text === "" || text === null;
-        } else {
-            return true;
-        }
+    isEmptyString(str: string) {
+        return (!str || /^\s*$/.test(str));
     }
 
     handleError(error: Response | any) {

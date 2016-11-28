@@ -288,7 +288,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 nextType = "confirm";
             } else if (type == "confirm") {
                 // TODO: put this in a separate function
-                // TODO: create an animated overlay over the steps when done
+                // TODO: create an overlay animation above the steps when done
                 setTimeout(() => {
                     this.resetModels();
                     $("#create-box-folder")
@@ -312,7 +312,12 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             let parentId = res.id;
                             this.createNewFolder(parentId, nextType);
                         },
-                        err => this.commonService.handleError(err)
+                        err => {
+                            this.resetModels();
+                            $("#create-box-folder").modal("hide");
+                            this.commonService.handleError(err);
+                            // TODO: take the user the the Job's detail page
+                        }
                     );
             }
         }

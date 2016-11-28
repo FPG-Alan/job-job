@@ -21,55 +21,56 @@ boxIntegrationRouter.post("/", function (req, res) {
     Token.findOne({userId: req.body.userId, provider: "box"}, function (err, token) {
         if (err || !token || !token.tokenInfo) {
             res.status(500).send(invalidTokenError);
-        }
-        sdk.getTokensRefreshGrant(token.tokenInfo.refreshToken, function (err, newTokenInfo) {
-            if (err || !newTokenInfo || !newTokenInfo.accessToken) {
-                res.status(500).send(invalidTokenError);
-            } else {
-                // store refreshed token
-                token.tokenInfo = newTokenInfo;
-                token.save();
+        } else {
+            sdk.getTokensRefreshGrant(token.tokenInfo.refreshToken, function (err, newTokenInfo) {
+                if (err || !newTokenInfo || !newTokenInfo.accessToken) {
+                    res.status(500).send(invalidTokenError);
+                } else {
+                    // store refreshed token
+                    token.tokenInfo = newTokenInfo;
+                    token.save();
 
-                var box = sdk.getBasicClient(newTokenInfo.accessToken);
-                var parentFolderId = req.body.parentFolderId || process.env.BOX_ROOT_FOLDER;
-                var sameNameFound = false;
+                    var box = sdk.getBasicClient(newTokenInfo.accessToken);
+                    var parentFolderId = req.body.parentFolderId || process.env.BOX_ROOT_FOLDER;
+                    var sameNameFound = false;
 
-                box.folders.getItems(parentFolderId, {fields: "name,type,url"}, function (err, data) {
-                    if (err) {
-                        console.log(err);
-                        res.status(500).send({
-                            header: "Something failed during folder items retrieval",
-                            message: "You might have insufficient permissions"
-                        });
-                    }
-                    // find folder if it exists
-                    if (data.total_count > 0) {
-                        for (var i = 0; i < data.total_count; i++) {
-                            var currItem = data.entries[i];
-                            if (currItem.type == "folder" && currItem.name == req.body.folderName) {
-                                sameNameFound = true;
-                                res.json(currItem);
+                    box.folders.getItems(parentFolderId, {fields: "name,type,url"}, function (err, data) {
+                        if (err) {
+                            console.log(err);
+                            res.status(500).send({
+                                header: "Something failed during folder items retrieval",
+                                message: "You might have insufficient permissions"
+                            });
+                        }
+                        // find folder if it exists
+                        if (data.total_count > 0) {
+                            for (var i = 0; i < data.total_count; i++) {
+                                var currItem = data.entries[i];
+                                if (currItem.type == "folder" && currItem.name == req.body.folderName) {
+                                    sameNameFound = true;
+                                    res.json(currItem);
+                                }
                             }
                         }
-                    }
-                    if (!sameNameFound) {
-                        // create folder if found none
-                        box.folders.create(parentFolderId, req.body.folderName, function (err, folder) {
-                            if (err) {
-                                console.log(err);
-                                res.status(500).send({
-                                    header: "Couldn't create folder",
-                                    message: "You might have insufficient permissions"
-                                });
-                            } else {
-                                res.json(folder);
-                                console.log("Created new Box folder:", req.body.folderName)
-                            }
-                        });
-                    }
-                });
-            }
-        });
+                        if (!sameNameFound) {
+                            // create folder if found none
+                            box.folders.create(parentFolderId, req.body.folderName, function (err, folder) {
+                                if (err) {
+                                    console.log(err);
+                                    res.status(500).send({
+                                        header: "Couldn't create folder",
+                                        message: "You might have insufficient permissions"
+                                    });
+                                } else {
+                                    res.json(folder);
+                                    console.log("Created new Box folder:", req.body.folderName)
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
     });
 });
 

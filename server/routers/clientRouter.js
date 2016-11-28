@@ -41,7 +41,11 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
                     // get only projects that have the same client name
                     projects = projects.filter(function (proj) {
                         var year = new Date(proj.starts_at).getFullYear();
-                        return proj.client == client.name && year == req.params.year;
+                        if (!isBlank(proj.client) && !isBlank(client.name)) {
+                            return proj.client.toLowerCase() == client.name.toLowerCase()
+                                && year == req.params.year;
+                        }
+                        return false;
                     });
 
                     // alternatively, we can add a lot of leading zeroes,
@@ -53,8 +57,9 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
                         ? "0" + (projects.length + 1)
                         : "00" + (projects.length + 1);
 
-
+                    console.log("Counting projects of client:", client.name);
                     res.json({
+                        client: client.name,
                         count: projects.length + 1,
                         formattedCount: formattedCount
                     });
@@ -82,5 +87,9 @@ clientRouter.post("/", function (req, res) {
         }
     })
 });
+
+function isBlank (str) {
+    return (!str || /^\s*$/.test(str));
+}
 
 module.exports = clientRouter;

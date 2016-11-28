@@ -1,20 +1,28 @@
 <a class="ui button" routerLink="/new-job">
-    <i class="add icon"></i>Create New Job
+    <i class="icons">
+        <i class="suitcase icon"></i>
+        <i class="corner add icon"></i>
+    </i>
+    Create New Job
 </a>
 <a class="ui button" routerLink="/new-client">
-    <i class="add icon"></i>Create New Client
+    <i class="icons">
+      <i class="users icon"></i>
+      <i class="corner add icon"></i>
+    </i>
+    Create New Client
 </a>
 
 <div class="ui three item pointing menu">
     <a class="item"
        (click)="activeMenuTab='jobs'"
        [class.active]="activeMenuTab=='jobs'">
-        Jobs
+        <i class="suitcase icon"></i>Jobs
     </a>
     <a class="item"
        (click)="activeMenuTab='clients'"
        [class.active]="activeMenuTab=='clients'">
-        Clients
+        <i class="users icon"></i>Clients
     </a>
     <a class="item"
        (click)="activeMenuTab='users'"
