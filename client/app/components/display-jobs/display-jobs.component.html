@@ -21,11 +21,13 @@
             <th [class.sorted]="sortCategory == 'name'"
                 [class.ascending]="sortOrder == 'ascending'"
                 [class.descending]="sortOrder == 'descending'"
+                (click)="sortTable('name')">
                 Job Name
             </th>
             <th [class.sorted]="sortCategory == 'client'"
                 [class.ascending]="sortOrder == 'ascending'"
                 [class.descending]="sortOrder == 'descending'"
+                (click)="sortTable('client')">
                 Client
             </th>
         </tr>
