@@ -18,8 +18,16 @@
            *ngIf="displayedJobs?.length > 0">
         <thead>
         <tr>
-            <th class="descending single line">Job Name</th>
-            <th>Client</th>
+            <th [class.sorted]="sortCategory == 'name'"
+                [class.ascending]="sortOrder == 'ascending'"
+                [class.descending]="sortOrder == 'descending'"
+                Job Name
+            </th>
+            <th [class.sorted]="sortCategory == 'client'"
+                [class.ascending]="sortOrder == 'ascending'"
+                [class.descending]="sortOrder == 'descending'"
+                Client
+            </th>
         </tr>
         </thead>
         <tbody>
