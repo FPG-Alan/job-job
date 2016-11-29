@@ -53,9 +53,18 @@ jobRouter.get("/by-client/:client", function (req, res) {
         })
         .end(function (response) {
             // TODO: handle err
-            res.send(response.body);
-            console.log(response.body);
+            var jobs = response.body.data.filter(function(job){
+                if (!isBlank(job.client) && !isBlank(req.params.client)) {
+                    return job.client.toLowerCase() == req.params.client.toLowerCase();
+                }
+                return false;
+            });
+            res.send(jobs);
         });
 });
+
+function isBlank (str) {
+    return (!str || /^\s*$/.test(str));
+}
 
 module.exports = jobRouter;
