@@ -1,1 +1,12 @@
 <button (click)="testBillRates()">Test</button>
+
+<form>
+    <div class="field">
+        <label>Rate Card</label>
+        <select class="ui fluid dropdown" #selectField>
+            <option value="">{{}}</option>
+            <option *ngFor="let t of templateCards" [value]="t?.id">{{t?.name}}</option>
+        </select>
+    </div>
+    <div class="ui button" (click)="updateBillRates(selectField.value)">Submit</div>
+</form>

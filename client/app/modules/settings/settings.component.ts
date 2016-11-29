@@ -23,7 +23,7 @@ export class SettingsComponent implements OnInit {
 
     ngOnInit() {
         this.localProfile = this.authService.getUserProfile();
-        this.apiService.findMyUser(this.localProfile.user_id)
+        this.apiService.getMyUser(this.localProfile.user_id)
             .subscribe(
                 res => this.user = res,
                 err => this.commonService.handleError(err)
@@ -45,7 +45,7 @@ export class SettingsComponent implements OnInit {
                 clearInterval(timer);
                 this.authenticatingBox = false;
                 // get user again and check if Box is authenticated
-                this.apiService.findMyUser(this.localProfile.user_id)
+                this.apiService.getMyUser(this.localProfile.user_id)
                     .subscribe(
                         res => this.user = res,
                         err => this.commonService.handleError(err)

@@ -19,12 +19,12 @@ export class ApiService {
             .map(res => <User[]> res.json());
     }
 
-    findMyUser(userId: string) {
+    getMyUser(userId: string) {
         return this.authHttp.get("/user/?id=" + userId)
             .map(res => <User> res.json())
     }
 
-    findOrCreateMyUser(user: User) {
+    getOrCreateMyUser(user: User) {
         let body = user;
         let headers = new Headers({"Content-Type": "application/json"});
         let options = new RequestOptions({headers: headers});
@@ -61,6 +61,7 @@ export class ApiService {
      * JOBS *
      ********/
     getAllJobs() {
+        // TODO: map res.data, not just res
         return this.authHttp.get("/job/all")
             .map(res => res.json());
     }
@@ -77,11 +78,26 @@ export class ApiService {
             .map(res => res.json());
     }
 
+    getJobsByClient(clientName: string){
+        return this.authHttp.get("/job/by-client/" + clientName)
+            .map(res => res.json())
+    }
+
     /*******************
      * BILL RATE CARDS *
      *******************/
-    getAccountBillRates() {
-        return this.authHttp.get("/rate-card")
+    updateBillRates() {
+        let body = {
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.put("/rate-card/173869/279195", body, options)
+            .map(res => res.json())
+    }
+
+    getBillRates(templateId: number) {
+        return this.authHttp.get("/rate-card/" + templateId)
             .map(res => res.json())
     }
 

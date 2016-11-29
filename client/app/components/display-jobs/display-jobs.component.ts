@@ -99,6 +99,7 @@ export class DisplayJobsComponent implements OnInit {
         if (!a) a = "";
         if (!b) b = "";
         // compare to see if the 1st string is larger than the 2nd
+        // TODO: lowercase each string
         if (a < b) {
             return -1;
         } else if (a > b) {

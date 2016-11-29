@@ -35,7 +35,7 @@ export class AuthService {
                     this.user.userId = profile.user_id;
                     this.user.name = profile.name;
                     this.user.email = profile.email;
-                    this.apiService.findOrCreateMyUser(this.user)
+                    this.apiService.getOrCreateMyUser(this.user)
                         .subscribe(
                             res => this.user = res,
                             err => this.commonService.handleError(err)

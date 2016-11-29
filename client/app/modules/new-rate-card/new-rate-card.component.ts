@@ -9,19 +9,47 @@ import {CommonService} from "../../services/common.service";
 })
 export class NewRateCardComponent implements OnInit {
 
+    templateCards: any[] = [];
+
     constructor(private apiService: ApiService,
                 private commonService: CommonService) {
     }
 
     ngOnInit() {
+        this.apiService
+            .getJobsByClient("1-FPG-REFERENCE")
+            .subscribe(
+                res => this.templateCards = res,
+                err => this.commonService.handleError(err)
+            );
     }
 
-    testBillRates() {
+    updateBillRates(templateId: number) {
+        // get all rates with templateId
         this.apiService
-            .getAccountBillRates()
+            .getBillRates(templateId)
             .subscribe(
-                res => console.log(res),
+                res => {
+                    console.log(res);
+                    // for each job's rate
+                    // filter where job.role == temp.role
+                    // filter where job.discipline == temp.role
+                    // filter where job.rate !== temp.role
+                    // get the job.id from each result
+
+                    // update bill rate where
+                    //      id = job.id
+                    //      rate = temp.rate
+                },
                 err => this.commonService.handleError(err)
-            )
+            );
+
+
+        // this.apiService
+        //     .updateBillRates()
+        //     .subscribe(
+        //         res => console.log(res),
+        //         err => this.commonService.handleError(err)
+        //     );
     }
 }
