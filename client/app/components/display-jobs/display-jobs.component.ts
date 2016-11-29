@@ -85,7 +85,9 @@ export class DisplayJobsComponent implements OnInit {
                 if (this.sortCategory == "name") {
                     return this.compareStrings(a.name, b.name);
                 } else if (this.sortCategory == "client") {
-                    return this.compareStrings(a.client, b.client);
+                    let result = this.compareStrings(a.client, b.client);
+                    // more consistency; compare with names if no client exists
+                    return result == 0 ? this.compareStrings(a.name, b.name) : result;
                 }
             });
         } else if (this.sortOrder == "ascending") {
