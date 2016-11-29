@@ -78,6 +78,11 @@ export class ApiService {
             .map(res => res.json());
     }
 
+    getJobById(id: number | string){
+        return this.authHttp.get("/job/by-id/" + id)
+            .map(res => res.json())
+    }
+
     getJobsByClient(clientName: string){
         return this.authHttp.get("/job/by-client/" + clientName)
             .map(res => res.json())
@@ -92,11 +97,11 @@ export class ApiService {
         let headers = new Headers({"Content-Type": "application/json"});
         let options = new RequestOptions({headers: headers});
 
-        return this.authHttp.put("/rate-card/173869/279195", body, options)
+        return this.authHttp.put("/rate-card/", body, options)
             .map(res => res.json())
     }
 
-    getBillRates(templateId: number) {
+    getBillRates(templateId: number | string) {
         return this.authHttp.get("/rate-card/" + templateId)
             .map(res => res.json())
     }

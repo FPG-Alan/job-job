@@ -66,7 +66,7 @@ rateCardRouter.put("/:project/", function (req, res) {
         .send(newRate)
         .end(function (response) {
             // TODO: handle err
-            console.log(response)
+            console.log(response);
             res.send(response.body);
         });
 

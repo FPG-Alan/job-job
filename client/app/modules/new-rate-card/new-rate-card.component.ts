@@ -9,6 +9,8 @@ import {CommonService} from "../../services/common.service";
 })
 export class NewRateCardComponent implements OnInit {
 
+    exampleJob: any = null;
+    exampleRates: any[] = [];
     templateCards: any[] = [];
 
     constructor(private apiService: ApiService,
@@ -16,6 +18,20 @@ export class NewRateCardComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.apiService
+            .getJobById(183141)
+            .subscribe(
+                res => {
+                    this.exampleJob = res;
+                    this.apiService
+                        .getBillRates(this.exampleJob.id)
+                        .subscribe(
+                            res => this.exampleRates = res.data,
+                            err => this.commonService.handleError(err)
+                        )
+                },
+                err => this.commonService.handleError(err)
+            );
         this.apiService
             .getJobsByClient("1-FPG-REFERENCE")
             .subscribe(
@@ -31,6 +47,7 @@ export class NewRateCardComponent implements OnInit {
             .subscribe(
                 res => {
                     console.log(res);
+                    let templateRates = res.data;
                     // for each job's rate
                     // filter where job.role == temp.role
                     // filter where job.discipline == temp.role
@@ -43,13 +60,5 @@ export class NewRateCardComponent implements OnInit {
                 },
                 err => this.commonService.handleError(err)
             );
-
-
-        // this.apiService
-        //     .updateBillRates()
-        //     .subscribe(
-        //         res => console.log(res),
-        //         err => this.commonService.handleError(err)
-        //     );
     }
 }

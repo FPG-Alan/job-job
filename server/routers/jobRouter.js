@@ -45,6 +45,18 @@ jobRouter.post("/", function (req, res) {
         });
 });
 
+jobRouter.get("/by-id/:id", function (req, res) {
+    unirest.get(apiKeys.dev.url + "projects/" + req.params.id)
+        .headers({
+            "Content-Type": "application/json",
+            "auth": apiKeys.dev.keys
+        })
+        .end(function (response) {
+            // TODO: handle err
+            res.send(response.body);
+        });
+});
+
 jobRouter.get("/by-client/:client", function (req, res) {
     unirest.get(apiKeys.dev.url + "projects?with_archived=true&per_page=100000")
         .headers({
