@@ -47,28 +47,37 @@ rateCardRouter.get("/:project", function (req, res) {
         })
         .end(function (response) {
             // TODO: handle err
-            console.log(response.body);
             res.send(response.body);
         });
 });
 
-
-rateCardRouter.put("/:project/", function (req, res) {
-    var newRate = {
-        rate: 1000.50
-    }; // test
-    unirest.put(tenKApiKeys.dev.url + "projects/" + req.params.project +
-        "/bill_rates/")
-        .headers({
-            "Content-Type": "application/json",
-            "auth": tenKApiKeys.dev.keys
-        })
-        .send(newRate)
-        .end(function (response) {
-            // TODO: handle err
-            console.log(response);
-            res.send(response.body);
-        });
+rateCardRouter.put("/:project", function (req, res) {
+    var rates = req.body.rates || [];
+    var resCounts = 0;
+    for (var r in rates) {
+        unirest.put(tenKApiKeys.dev.url + "projects/" + req.params.project +
+            "/bill_rates/" + rates[r].id)
+            .headers({
+                "Content-Type": "application/json",
+                "auth": tenKApiKeys.dev.keys
+            })
+            .send({
+                rate: rates[r].rate
+            })
+            .end(function (response) {
+                // TODO: handle err
+                resCounts++;
+                console.log("Bill rates updating progress:", resCounts, "/", rates.length);
+                if (resCounts >= rates.length) {
+                    res.json({
+                        id: req.params.project,
+                        newRates: rates
+                    });
+                    console.log(response);
+                    console.log("Bill rates update for job", req.params.project, "DONE!");
+                }
+            });
+    }
 
 });
 
