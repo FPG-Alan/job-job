@@ -31,9 +31,8 @@ export class DisplayJobsComponent implements OnInit {
             .subscribe(
                 result => {
                     this.jobs = result.data;
-                    this.onFilterSearchChange(""); // TODO: can be stored in localStorage
+                    this.onFilterSearchChange(""); // TODO: input can be stored in localStorage
                     this.sortTable("name");
-                    console.log(this.jobs);
                 },
                 err => this.commonService.handleError(err),
                 () => this.loading = false
@@ -78,35 +77,33 @@ export class DisplayJobsComponent implements OnInit {
             }
         }
 
-        this.displayedJobs.sort((a: any, b: any) => {
-            if (this.sortCategory == "name") {
-                if (this.sortOrder == "descending") {
-                    return this.compareString(a.name, b.name);
-                } else {
-                    return this.compareString(b.name, a.name);
+        // only sort if the list hasn't been sorted yet
+        // the default is descending, so just reverse the list to ascending
+        if (this.sortOrder == "descending") {
+            this.displayedJobs.sort((a: any, b: any) => {
+                if (this.sortCategory == "name") {
+                    return this.compareStrings(a.name, b.name);
+                } else if (this.sortCategory == "client") {
+                    let result = this.compareStrings(a.client, b.client);
+                    // more consistency; compare with names if no client exists
+                    return result == 0 ? this.compareStrings(a.name, b.name) : result;
                 }
-            } else if (this.sortCategory == "client") {
-                if (this.sortOrder == "descending") {
-                    return this.compareString(a.client, b.client);
-                } else {
-                    return this.compareString(b.client, a.client);
-                }
-            }
-        });
+            });
+        } else if (this.sortOrder == "ascending") {
+            this.displayedJobs = this.displayedJobs.reverse();
+        }
     }
 
-    compareString(a: string, b: string) {
+    compareStrings(a: string, b: string) {
         if (!a) a = "";
         if (!b) b = "";
         // compare to see if the 1st string is larger than the 2nd
+        // TODO: lowercase each string
         if (a < b) {
-            console.log(a, b, "returned -1");
             return -1;
         } else if (a > b) {
-            console.log(a, b, "returned 1");
             return 1;
         } else {
-            console.log(a, b, "returned 0");
             return 0;
         }
     }
