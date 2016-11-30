@@ -102,8 +102,7 @@
 
     <!--Rate Card Selector-->
     <app-rate-card-selector
-            [newJob]="returnedTenKJob"
-            (onRateUpdated)="onRateUpdated(e)"
+            (onRateUpdated)="onRateUpdated($event)"
             #rateCardSelector>
     </app-rate-card-selector>
 
@@ -144,27 +143,42 @@
 <div class="ui modal" id="confirm-new-job">
     <i class="close icon"></i>
     <div class="header">
-        Setting up your project in Box...
+        Almost there!
     </div>
     <div class="content">
         <!--TODO: display message representing current action-->
         <div class="ui active centered inline loader"></div>
+
+        <h4 class="ui header">Processing rate card...</h4>
         <div class="ui fluid steps">
-            <div class="step {{processingStates.client}}">
+            <div class="step {{rateCardProcessingState}}">
+                <i class="money icon"
+                   [class.red]="rateCardProcessingState == 'failed'"
+                   [class.remove]="rateCardProcessingState == 'failed'"></i>
+                <div class="content">
+                    <div class="title">Rate Card</div>
+                    <div class="description">Copying bill rates over from template rate card</div>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="ui header">Creating Folders in Box...</h4>
+        <div class="ui fluid steps">
+            <div class="step {{boxProcessingStates.client}}">
                 <i class="users icon"></i>
                 <div class="content">
                     <div class="title">Client</div>
                     <div class="description">Finding a folder<br>with the client's name</div>
                 </div>
             </div>
-            <div class="step {{processingStates.brand}}">
+            <div class="step {{boxProcessingStates.brand}}">
                 <i class="trademark icon"></i>
                 <div class="content">
                     <div class="title">Brand</div>
                     <div class="description">Finding a folder<br>with the brand name</div>
                 </div>
             </div>
-            <div class="step {{processingStates.job}}">
+            <div class="step {{boxProcessingStates.job}}">
                 <i class="suitcase icon"></i>
                 <div class="content">
                     <div class="title">Job</div>

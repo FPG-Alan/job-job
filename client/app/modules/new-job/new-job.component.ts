@@ -17,7 +17,7 @@ declare var $;
 })
 export class NewJobComponent implements OnInit, OnDestroy {
 
-    @ViewChild(RateCardSelectorComponent)
+    @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
 
     submitted = false;
@@ -34,8 +34,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
     };
     generating = false; // for loader to appear on the Generated Name field
     usingFinalName = true;
-
-    returnedTenKJob: any = null; // for rate card selector
 
     constructor(private router: Router,
                 private commonService: CommonService,
@@ -179,8 +177,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         }
     }
 
-    onRateUpdated(e: any) {
-        console.log("RATE UPDATED!", e);
+    onRateUpdated(processingState: string) {
+        this.servicesCount++;
+        this.rateCardProcessingState = processingState || "";
     }
 
     onSubmit(form: NgForm) {
@@ -194,7 +193,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
             this.apiService.createNewJob(this.job, submittedName)
                 .subscribe(
                     res => {
-                        console.log(res);
+                        this.rateCardSelectorComponent.newJob = res;
                         this.startFinalConfirmation();
                     },
                     err => this.commonService.handleError(err)
@@ -240,68 +239,40 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.updateFinalName();
     }
 
+
     /*****************************
      * FINAL CONFIRMATION SCREEN *
      *****************************/
-    startFinalConfirmation() {
+    rateCardProcessingState = "disabled";
+    boxProcessingStates: any = {
+        client: "disabled",
+        brand: "disabled",
+        job: "disabled"
+    };
+    servicesCount: number = 0; // TODO: start timeInterval on when to stop
+    maxServicesCount: number = 2; // current number of features on the modal
+
+    private startFinalConfirmation() {
+        this.rateCardProcessingState = "disabled";
+        this.boxProcessingStates = {
+            client: "disabled",
+            brand: "disabled",
+            job: "disabled"
+        };
+        this.servicesCount = 0;
+
         // TODO: checkboxes opting user on these services
-        // TODO: start timeInterval on when to stop
         // open modal for the workflow
         $("#confirm-new-job")
             .modal("show");
+        this.rateCardProcessingState = "active";
         this.rateCardSelectorComponent.updateBillRates();
         this.createNewFolder(null, "client");
 
-        // } else {
-        //     this.resetModels();
-        //     this.commonService.notifyMessage(
-        //         "success",
-        //         "Sweet!",
-        //         "Successfully created a new job"
-        //     );
-        //     this.router.navigate(["/"]);
-        // }
-    }
-
-    /*******************
-     * BOX INTEGRATION *
-     *******************/
-    /* the integration needs a full job object (due to 10Kft not saving Brands)
-     and also needs the final name that gets submitted (generated name or custom name?)
-     */
-
-    processingStates: any = {
-        client: "disabled",
-        brand: "disabled",
-        job: "disabled",
-    };
-
-    createNewFolder(parentFolderId: string, type: string) {
-        // NOTE: feature is currently only for projects with clients
-        // also check if the type is empty
-        if (this.commonService.isEmptyString(this.job.client.name) ||
-            this.commonService.isEmptyString(type)) {
-            return;
-        } else {
-            var folderName = "";
-            var nextType = "";
-
-            if (type == "client") {
-                this.processingStates.client = "active";
-                folderName = this.job.client.name;
-                // there are cases where brand name is empty
-                nextType = !this.commonService.isEmptyString(this.job.brand) ? "brand" : "job";
-            } else if (type == "brand") {
-                this.processingStates.brand = "active";
-                folderName = this.job.brand;
-                nextType = "job";
-            } else if (type == "job") {
-                this.processingStates.job = "active";
-                folderName = this.usingFinalName ? this.finalName.result : this.job.name;
-                nextType = "confirm";
-            } else if (type == "confirm") {
-                // TODO: put this in a separate function
-                // TODO: create an overlay animation above the steps when done
+        // TODO: create an overlay animation above the steps when done
+        // TODO: put this in a separate function
+        let timeInterval = setInterval(() => {
+            if (this.servicesCount >= this.maxServicesCount) {
                 setTimeout(() => {
                     this.resetModels();
                     $("#confirm-new-job")
@@ -313,15 +284,53 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     );
                     this.router.navigate(["/"]);
                 }, 1000);
+                clearInterval(timeInterval);
+            }
+        }, 500)
+    }
+
+
+    /*******************
+     * BOX INTEGRATION *
+     *******************/
+    /* the integration needs a full job object (due to 10Kft not saving Brands)
+     and also needs the final name that gets submitted (generated name or custom name?)
+     */
+    createNewFolder(parentFolderId: string, type: string) {
+        // NOTE: feature is currently only for projects with clients
+        // also check if the type is empty
+        if (this.commonService.isEmptyString(this.job.client.name) ||
+            this.commonService.isEmptyString(type)) {
+            this.servicesCount++;
+            return;
+        } else {
+            var folderName = "";
+            var nextType = "";
+
+            if (type == "client") {
+                this.boxProcessingStates.client = "active";
+                folderName = this.job.client.name;
+                // there are cases where brand name is empty
+                nextType = !this.commonService.isEmptyString(this.job.brand) ? "brand" : "job";
+            } else if (type == "brand") {
+                this.boxProcessingStates.brand = "active";
+                folderName = this.job.brand;
+                nextType = "job";
+            } else if (type == "job") {
+                this.boxProcessingStates.job = "active";
+                folderName = this.usingFinalName ? this.finalName.result : this.job.name;
+                nextType = "confirm";
+            } else {
+                this.servicesCount++;
                 return;
-            } else return;
+            }
 
             // recursive folder creation
             if (!this.commonService.isEmptyString(folderName)) {
                 this.apiService.createNewFolder(folderName, parentFolderId)
                     .subscribe(
                         res => {
-                            this.processingStates[type] = "completed";
+                            this.boxProcessingStates[type] = "completed";
                             let parentId = res.id;
                             this.createNewFolder(parentId, nextType);
                         },
@@ -329,7 +338,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             this.resetModels();
                             $("#confirm-new-job").modal("hide");
                             this.commonService.handleError(err);
-                            // TODO: take the user the the Job's detail page
+                            this.servicesCount++;
                         }
                     );
             }

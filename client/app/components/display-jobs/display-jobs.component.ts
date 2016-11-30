@@ -31,9 +31,8 @@ export class DisplayJobsComponent implements OnInit {
             .subscribe(
                 result => {
                     this.jobs = result.data;
-                    this.onFilterSearchChange(""); // TODO: can be stored in localStorage
+                    this.onFilterSearchChange(""); // TODO: input can be stored in localStorage
                     this.sortTable("name");
-                    console.log(this.jobs);
                 },
                 err => this.commonService.handleError(err),
                 () => this.loading = false

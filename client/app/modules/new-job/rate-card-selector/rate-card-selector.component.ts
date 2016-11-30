@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
+import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 import {ApiService} from "../../../services/api.service";
 import {CommonService} from "../../../services/common.service";
 
@@ -9,8 +9,8 @@ import {CommonService} from "../../../services/common.service";
 })
 export class RateCardSelectorComponent implements OnInit {
 
-    @Output() onRateUpdated = new EventEmitter<any>();
-    @Input() newJob: any;
+    @Output() onRateUpdated = new EventEmitter<string>();
+    newJob: any = null;
     newJobDefaultRates: any[] = [];
     templateId: number = null;
     templateCards: any[] = [];
@@ -29,7 +29,6 @@ export class RateCardSelectorComponent implements OnInit {
     }
 
     updateBillRates() {
-        console.log(this.newJob);
         if (this.newJob && this.templateId) {
             this.apiService
                 .getBillRates(this.newJob.id)
@@ -40,6 +39,8 @@ export class RateCardSelectorComponent implements OnInit {
                     },
                     err => this.commonService.handleError(err)
                 );
+        } else {
+            this.onRateUpdated.emit("disabled");
         }
     }
 
@@ -75,19 +76,18 @@ export class RateCardSelectorComponent implements OnInit {
                                 }
                             }
                         }
-                        console.log(toUpdateRates);
+                        console.log("To override:", toUpdateRates);
 
                         this.apiService.updateBillRates(this.newJob.id, toUpdateRates)
                             .subscribe(
-                                res => {
-                                    console.log(res);
-                                    this.ngOnInit();
-                                },
-                                err => this.commonService.handleError(err)
+                                res => this.onRateUpdated.emit("completed"),
+                                err => this.onRateUpdated.emit("failed")
                             );
                     },
                     err => this.commonService.handleError(err)
                 );
+        } else {
+            this.onRateUpdated.emit("failed");
         }
     }
 }
