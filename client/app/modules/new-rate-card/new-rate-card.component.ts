@@ -49,10 +49,10 @@ export class NewRateCardComponent implements OnInit {
                     res => {
                         let templateRates = res.data;
 
-                        // for each job's rate
+                        // for each current rate
                         //      filter where curr.role == temp.role
                         //      filter where curr.discipline == temp.role
-                        //      filter where curr.rate !== temp.role
+                        //      filter where curr.rate != temp.rate
                         let toUpdateRates = []; // the rates that we will update
                         for (let currRate of this.currentRates) {
                             let newRates = templateRates.filter(function (tempRate) {
