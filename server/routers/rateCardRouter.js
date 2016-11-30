@@ -67,13 +67,12 @@ rateCardRouter.put("/:project", function (req, res) {
             .end(function (response) {
                 // TODO: handle err
                 resCounts++;
-                console.log("Bill rates updating progress:", resCounts, "/", rates.length);
+                console.log("Bill rates updating progress (", rates[resCounts-1].rate, "):", resCounts, "/", rates.length);
                 if (resCounts >= rates.length) {
                     res.json({
                         id: req.params.project,
                         newRates: rates
                     });
-                    console.log(response);
                     console.log("Bill rates update for job", req.params.project, "DONE!");
                 }
             });

@@ -47,25 +47,24 @@ export class NewRateCardComponent implements OnInit {
                 .getBillRates(templateId)
                 .subscribe(
                     res => {
-                        console.log(res);
                         let templateRates = res.data;
+
                         // for each job's rate
-                        // filter where curr.role == temp.role
-                        // filter where curr.discipline == temp.role
-                        // filter where curr.rate !== temp.role
-                        // get the job.id from each result
+                        //      filter where curr.role == temp.role
+                        //      filter where curr.discipline == temp.role
+                        //      filter where curr.rate !== temp.role
                         let toUpdateRates = []; // the rates that we will update
                         for (let currRate of this.currentRates) {
-                            let newRates = templateRates.filter(function(tempRate){
+                            let newRates = templateRates.filter(function (tempRate) {
                                 return (tempRate.role_id == currRate.role_id) &&
                                     (tempRate.discipline_id == currRate.discipline_id) &&
                                     (parseFloat(tempRate.rate) != parseFloat(currRate.rate))
                             });
-                            if (newRates.length != 0){
+                            if (newRates.length != 0) {
                                 // update bill rate where
                                 //      id = curr.id
                                 //      rate = matched.rate
-                                for (let n of newRates){
+                                for (let n of newRates) {
                                     toUpdateRates.push({
                                         id: currRate.id,
                                         rate: parseFloat(n.rate)
@@ -77,7 +76,10 @@ export class NewRateCardComponent implements OnInit {
 
                         this.apiService.updateBillRates(this.currentJob.id, toUpdateRates)
                             .subscribe(
-                                res => console.log(res),
+                                res => {
+                                    console.log(res);
+                                    this.ngOnInit();
+                                },
                                 err => this.commonService.handleError(err)
                             );
                     },
