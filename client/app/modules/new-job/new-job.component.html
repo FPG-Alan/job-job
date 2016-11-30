@@ -9,6 +9,7 @@
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
       novalidate>
+
     <!--Final Generated Name-->
     <div class="inline fields">
         <div class="read-only ten wide field">
@@ -36,17 +37,7 @@
             </div>
         </div>
     </div>
-    <!--Job Name-->
-    <div class="required field" [class.error]="submitted && !name.valid">
-        <label>Job Name</label>
-        <input type="text"
-               autofocus
-               required
-               [(ngModel)]="job.name"
-               (ngModelChange)="this.submitted = false; onJobNameChange();"
-               name="name"
-               #name="ngModel">
-    </div>
+
     <!--Client & Brand-->
     <div class="two fields">
         <div class="field" id="client-select-field">
@@ -65,7 +56,6 @@
         <div class="field" id="brand-select-field">
             <label>Brand (optional)</label>
             <select class="ui search dropdown selection" name="brand"
-                    [disabled]="!job.client.brands || job.client.brands.length == 0"
                     [(ngModel)]="job.brand"
                     (ngModelChange)="this.submitted = false; onBrandChange()">
                 <option value=" ">(no brand)</option>
@@ -75,6 +65,19 @@
             </select>
         </div>
     </div>
+
+    <!--Job Name-->
+    <div class="required field" [class.error]="submitted && !name.valid">
+        <label>Job Name</label>
+        <input type="text"
+               autofocus
+               required
+               [(ngModel)]="job.name"
+               (ngModelChange)="this.submitted = false; onJobNameChange();"
+               name="name"
+               #name="ngModel">
+    </div>
+
     <!--Start and End Dates-->
     <div class="two fields">
         <div class="required field" [class.error]="!startDate.valid">
@@ -97,9 +100,15 @@
         </div>
     </div>
 
+    <!--Rate Card Selector-->
+    <app-rate-card-selector
+            [newJob]="returnedTenKJob"
+            (onRateUpdated)="onRateUpdated(e)"
+            #rateCardSelector>
+    </app-rate-card-selector>
+
     <!--TODO: remaining features
         projectStatus select
-        rateCard select
         serviceType (toggle or select or radial)
         description text area
         tags (form/list display like cakebook's ingredients; be careful of enter button)
@@ -132,7 +141,7 @@
 
 
 <!--Box Integration-->
-<div class="ui modal" id="create-box-folder">
+<div class="ui modal" id="confirm-new-job">
     <i class="close icon"></i>
     <div class="header">
         Setting up your project in Box...

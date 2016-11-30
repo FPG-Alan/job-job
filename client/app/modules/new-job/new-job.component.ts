@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from "@angular/core";
+import {Component, OnInit, OnDestroy, ViewChild} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {Job} from "../../classes/job";
@@ -6,6 +6,7 @@ import {Client} from "../../classes/client";
 import {CommonService} from "../../services/common.service";
 import {ApiService} from "../../services/api.service";
 import {DatePipe} from "@angular/common";
+import {RateCardSelectorComponent} from "./rate-card-selector/rate-card-selector.component";
 
 declare var $;
 
@@ -15,6 +16,9 @@ declare var $;
     styleUrls: ['./new-job.component.scss']
 })
 export class NewJobComponent implements OnInit, OnDestroy {
+
+    @ViewChild(RateCardSelectorComponent)
+    private rateCardSelectorComponent: RateCardSelectorComponent;
 
     submitted = false;
     job: Job;
@@ -30,6 +34,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
     };
     generating = false; // for loader to appear on the Generated Name field
     usingFinalName = true;
+
+    returnedTenKJob: any = null; // for rate card selector
 
     constructor(private router: Router,
                 private commonService: CommonService,
@@ -66,8 +72,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
         // avoid duplicate modals
         $("#confirm-reset-job").modal("hide");
         $("#confirm-reset-job").remove();
-        $("#create-box-folder").modal("hide");
-        $("#create-box-folder").remove();
+        $("#confirm-new-job").modal("hide");
+        $("#confirm-new-job").remove();
     }
 
 
@@ -173,6 +179,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
         }
     }
 
+    onRateUpdated(e: any) {
+        console.log("RATE UPDATED!", e);
+    }
+
     onSubmit(form: NgForm) {
         if (form.valid && !this.submitted) {
             // validation set to submitted to avoid spamming
@@ -185,18 +195,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 .subscribe(
                     res => {
                         console.log(res);
-
-                        if (!this.commonService.isEmptyString(this.job.client.name)) {
-                            this.startCreateBoxFolder();
-                        } else {
-                            this.resetModels();
-                            this.commonService.notifyMessage(
-                                "success",
-                                "Sweet!",
-                                "Successfully created a new job"
-                            );
-                            this.router.navigate(["/"]);
-                        }
+                        this.startFinalConfirmation();
                     },
                     err => this.commonService.handleError(err)
                 );
@@ -241,27 +240,41 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.updateFinalName();
     }
 
+    /*****************************
+     * FINAL CONFIRMATION SCREEN *
+     *****************************/
+    startFinalConfirmation() {
+        // TODO: checkboxes opting user on these services
+        // TODO: start timeInterval on when to stop
+        // open modal for the workflow
+        $("#confirm-new-job")
+            .modal("show");
+        this.rateCardSelectorComponent.updateBillRates();
+        this.createNewFolder(null, "client");
+
+        // } else {
+        //     this.resetModels();
+        //     this.commonService.notifyMessage(
+        //         "success",
+        //         "Sweet!",
+        //         "Successfully created a new job"
+        //     );
+        //     this.router.navigate(["/"]);
+        // }
+    }
 
     /*******************
      * BOX INTEGRATION *
      *******************/
-        // basically the integration needs a full job object (due to 10Kft not saving Brands),
-        // and also needs the final name that gets submitted (generated name or custom name?)
+    /* the integration needs a full job object (due to 10Kft not saving Brands)
+     and also needs the final name that gets submitted (generated name or custom name?)
+     */
 
-    processingStates:any = {
+    processingStates: any = {
         client: "disabled",
         brand: "disabled",
         job: "disabled",
     };
-
-    startCreateBoxFolder() {
-        if (!this.commonService.isEmptyString(this.job.client.name)) {
-            // open modal for the workflow
-            $("#create-box-folder")
-                .modal("show");
-            this.createNewFolder(null, "client");
-        }
-    }
 
     createNewFolder(parentFolderId: string, type: string) {
         // NOTE: feature is currently only for projects with clients
@@ -291,7 +304,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 // TODO: create an overlay animation above the steps when done
                 setTimeout(() => {
                     this.resetModels();
-                    $("#create-box-folder")
+                    $("#confirm-new-job")
                         .modal("hide");
                     this.commonService.notifyMessage(
                         "success",
@@ -314,7 +327,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                         },
                         err => {
                             this.resetModels();
-                            $("#create-box-folder").modal("hide");
+                            $("#confirm-new-job").modal("hide");
                             this.commonService.handleError(err);
                             // TODO: take the user the the Job's detail page
                         }
