@@ -28,6 +28,8 @@ rateCardRouter.get("/:project", function (req, res) {
 rateCardRouter.put("/:project", function (req, res) {
     var rates = req.body.rates || [];
     var resCounts = 0;
+
+    res.write("[");
     for (var r in rates) {
         unirest.put(tenKApiKeys.dev.url + "projects/" + req.params.project +
             "/bill_rates/" + rates[r].id)
@@ -41,13 +43,13 @@ rateCardRouter.put("/:project", function (req, res) {
             .end(function (response) {
                 // TODO: handle err
                 resCounts++;
-                console.log("Bill rates updating progress (", rates[resCounts-1].rate, "):", resCounts, "/", rates.length);
+                console.log("Bill rates updating progress (", rates[resCounts - 1].rate, "):", resCounts, "/", rates.length);
+
                 if (resCounts >= rates.length) {
-                    res.json({
-                        id: req.params.project,
-                        newRates: rates
-                    });
+                    res.end(JSON.stringify(response.body) + "]");
                     console.log("Bill rates update for job", req.params.project, "DONE!");
+                } else {
+                    res.write(JSON.stringify(response.body) + ",");
                 }
             });
     }

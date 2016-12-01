@@ -1,6 +1,6 @@
 {
   "name": "job-job",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
@@ -40,6 +40,7 @@
   "devDependencies": {
     "@types/jasmine": "^2.2.30",
     "@types/node": "^6.0.42",
+    "angular-cli": "^1.0.0-beta.21",
     "codelyzer": "1.0.0-beta.1",
     "concurrently": "^3.1.0",
     "jasmine-core": "2.4.1",
