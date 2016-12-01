@@ -1,3 +1,61 @@
-<p>
-  jobs works!
-</p>
+<div class="ui clearing basic segment">
+    <h1 class="ui left floated header">Jobs</h1>
+    <a class="ui right floated button" routerLink="/jobs/new">
+        <i class="icons">
+            <i class="suitcase icon"></i>
+            <i class="corner add icon"></i>
+        </i>
+        Create New Job
+    </a>
+</div>
+
+<!--Filtering by Client-->
+<div class="ui fluid multiple search selection dropdown">
+    <input type="hidden" name="client" (change)="onFilterSearchChange(searchInput.value)" #searchInput>
+    <i class="filter search icon"
+       (click)="searchInput.value = ''">
+        <!--leave the "search" class so it puts the icon in the right place-->
+    </i>
+    <input class="search">
+    <div class="default text">Filter by Client...</div>
+    <div class="menu">
+        <div class="item" *ngFor="let c of clients">{{c?.name}}</div>
+    </div>
+</div>
+
+<!--Display Area-->
+<div class="ui basic no-padding segment" [class.loading]="loading">
+    <table class="ui yellow compact selectable sortable celled table"
+           *ngIf="displayedJobs?.length > 0">
+        <thead>
+        <tr>
+            <th [class.sorted]="sortCategory == 'name'"
+                [class.ascending]="sortOrder == 'ascending'"
+                [class.descending]="sortOrder == 'descending'"
+                (click)="sortTable('name')">
+                Job Name
+            </th>
+            <th [class.sorted]="sortCategory == 'client'"
+                [class.ascending]="sortOrder == 'ascending'"
+                [class.descending]="sortOrder == 'descending'"
+                (click)="sortTable('client')">
+                Client
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let j of displayedJobs"
+            [routerLink]="['/jobs/details', j?.id]">
+            <td>{{j?.name | characterLimit: 35}}</td>
+            <td>{{j?.client}}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div *ngIf="displayedJobs === null || displayedJobs?.length == 0"
+         class="ui warning message">
+        <div class="header">
+            No jobs found
+        </div>
+    </div>
+</div>

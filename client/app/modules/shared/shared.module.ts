@@ -4,11 +4,12 @@ import {CommonService} from "../../services/common.service";
 import {AuthService} from "../../services/auth.service";
 import {ApiService} from "../../services/api.service";
 import {IntegrationsService} from "../../services/integrations.service";
+import {CharacterLimitPipe} from "../../pipes/character-limit.pipe";
 
 @NgModule({
     imports: [CommonModule],
-    declarations: [/* Declare components and pipes */],
-    exports: [/* Export them */]
+    declarations: [CharacterLimitPipe],
+    exports: [CharacterLimitPipe]
 })
 export class SharedModule {
 
