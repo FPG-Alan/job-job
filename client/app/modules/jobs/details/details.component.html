@@ -3,7 +3,8 @@
         <div class="content">
             {{job.name}}
             <div class="sub header">
-
+                {{job.starts_at | date: "E, MMM d, y"}} -
+                {{job.ends_at| date: "E, MMM d, y"}}
             </div>
         </div>
     </h2>
@@ -11,8 +12,7 @@
         <label>id: </label>{{job.id}}
     </div>
     <div>
-        <label>name: </label>
-        <input [(ngModel)]="job.name" placeholder="name"/>
+        <label>client: </label><{{job.client}}
     </div>
     <button (click)="goBack()">Back</button>
 </div>

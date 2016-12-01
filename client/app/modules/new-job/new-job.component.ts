@@ -282,7 +282,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
                         "Sweet!",
                         "Successfully created a new job"
                     );
-                    this.router.navigate(["/"]);
+                    this.router.navigate([
+                        "/jobs/details",
+                        this.rateCardSelectorComponent.newJob.id
+                     ]);
                 }, 1000);
                 clearInterval(timeInterval);
             }
