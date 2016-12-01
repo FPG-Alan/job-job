@@ -1,18 +1,17 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
-import {HttpModule} from "@angular/http";
+import {JobsComponent} from "./jobs.component";
+import {routing} from "./jobs.routing";
 import {SharedModule} from "../shared/shared.module";
-import {LoginComponent} from "./login.component";
-import {routing} from "./login.routing";
+import { DetailsComponent } from './details/details.component';
 
 @NgModule({
     imports: [
         CommonModule,
-        HttpModule,
         SharedModule.forRoot(),
         routing
     ],
-    declarations: [LoginComponent]
+    declarations: [JobsComponent, DetailsComponent]
 })
-export class LoginModule {
+export class JobsModule {
 }

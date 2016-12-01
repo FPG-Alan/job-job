@@ -4,7 +4,7 @@ import {FormsModule} from "@angular/forms";
 import {SharedModule} from "../shared/shared.module";
 import {NewJobComponent} from "./new-job.component";
 import {routing} from "./new-job.routing";
-import { RateCardSelectorComponent } from './rate-card-selector/rate-card-selector.component';
+import {RateCardSelectorComponent} from "./rate-card-selector/rate-card-selector.component";
 
 @NgModule({
     imports: [
