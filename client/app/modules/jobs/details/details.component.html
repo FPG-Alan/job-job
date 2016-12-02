@@ -1,4 +1,8 @@
-<div *ngIf="job">
+<script src="../../../app.component.ts"></script><a class="ui button" routerLink="/jobs">
+    <i class="chevron left icon"></i>Back
+</a>
+
+<div *ngIf="job" style="margin-top: 1em">
     <h2 class="ui header">
         <div class="content">
             {{job.name}}
@@ -44,5 +48,18 @@
             Cancel
         </span>
     </div>
-    <app-rate-card-selector *ngIf="selectingRateCard"></app-rate-card-selector>
+    <div class="ui form"
+         *ngIf="selectingRateCard">
+        <app-rate-card-selector
+                [newJob]="job"
+                (onRateUpdated)="onRateUpdated($event)"
+                #rateCardSelector>
+        </app-rate-card-selector>
+        <div class="ui divider"></div>
+        <div class="ui right floated positive button"
+             [class.loading]="rateCardProcessingState == 'loading'"
+             (click)="rateCardProcessingState = 'loading'; rateCardSelectorComponent.updateBillRates();">
+            Submit
+        </div>
+    </div>
 </div>

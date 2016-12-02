@@ -1,0 +1,10 @@
+label {
+    font-weight: bold;
+}
+
+// apply these when rate card field is alone by itself
+// still looks good if overriden with the default style
+.ui.form {
+    margin-bottom: 0.5em !important;
+    margin-top: 0.5em !important;
+}

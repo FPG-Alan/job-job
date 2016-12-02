@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter} from "@angular/core";
+import {Component, OnInit, Output, EventEmitter, Input} from "@angular/core";
 import {ApiService} from "../../../../services/api.service";
 import {CommonService} from "../../../../services/common.service";
 
@@ -12,7 +12,7 @@ declare var $;
 export class RateCardSelectorComponent implements OnInit {
 
     @Output() onRateUpdated = new EventEmitter<string>();
-    newJob: any = null;
+    @Input() newJob: any = null;
     newJobDefaultRates: any[] = [];
     templateId: number = null;
     templateCards: any[] = [];
