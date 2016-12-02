@@ -8,9 +8,9 @@ export const routes: Routes = [
     {
         path: "jobs",
         children: [
-            {path: "", component: JobsComponent, pathMatch: "full"},
-            {path: "details/:id", component: DetailsComponent},
-            {path: "new", component: NewJobComponent}
+            {path: "", component: JobsComponent, pathMatch: "full", data: {title: "Jobs"}},
+            {path: "details/:id", component: DetailsComponent, data: {title: "Job Details"}},
+            {path: "new", component: NewJobComponent, data: {title: "New Job"}}
         ],
         canActivate: [AuthGuard]
     }
