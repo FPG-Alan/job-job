@@ -9,9 +9,40 @@
         </div>
     </h2>
     <div>
-        <label>id: </label>{{job.id}}
+        <label>ID: </label>{{job.id}}
     </div>
     <div>
-        <label>client: </label>{{job.client}}
+        <label>Client: </label>
+        <span *ngIf="!commonService.isEmptyString(job.client)">{{job.client}}</span>
+        <span *ngIf="commonService.isEmptyString(job.client)">N/A</span>
     </div>
+    <div>
+        <label>Link to 10,000ft project: </label>
+        <a target="_blank" href="https://vnext.10000ft.com/viewproject?id={{job.id}}">
+            https://vnext.10000ft.com/viewproject?id={{job.id}}
+        </a>
+    </div>
+    <div>
+        <label>Link to Box folder: </label>(coming soon)
+    </div>
+    <div>
+        <label>Link to Trello board: </label>(coming soon)
+    </div>
+    <div>
+        <label>Link to Slack channel: </label>(coming soon)
+    </div>
+
+    <div class="ui divider"></div>
+
+    <div class="ui button" (click)="selectingRateCard = !selectingRateCard">
+        <span *ngIf="!selectingRateCard">
+            <i class="money icon"></i>
+            Select Rate Card
+        </span>
+        <span *ngIf="selectingRateCard">
+            <i class="remove icon"></i>
+            Cancel
+        </span>
+    </div>
+    <app-rate-card-selector *ngIf="selectingRateCard"></app-rate-card-selector>
 </div>

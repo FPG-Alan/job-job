@@ -2,7 +2,7 @@ import {Routes, RouterModule} from "@angular/router";
 import {JobsComponent} from "./jobs.component";
 import {AuthGuard} from "../../services/auth.guard";
 import {DetailsComponent} from "./details/details.component";
-import {NewJobComponent} from "../new-job/new-job.component";
+import {NewJobComponent} from "./new-job/new-job.component";
 
 export const routes: Routes = [
     {

@@ -11,6 +11,7 @@ import {CommonService} from "../../../services/common.service";
 export class DetailsComponent implements OnInit {
 
     job: any;
+    selectingRateCard: boolean = false;
 
     constructor(private apiService: ApiService,
                 private commonService: CommonService,

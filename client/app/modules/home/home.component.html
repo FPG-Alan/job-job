@@ -1,10 +1,3 @@
-<a class="ui button" routerLink="/new-job">
-    <i class="icons">
-        <i class="suitcase icon"></i>
-        <i class="corner add icon"></i>
-    </i>
-    Create New Job
-</a>
 <a class="ui button" routerLink="/new-client">
     <i class="icons">
       <i class="users icon"></i>
@@ -13,10 +6,9 @@
     Create New Client
 </a>
 
-<div class="ui three item pointing menu">
+<div class="ui three item menu">
     <a class="item"
-       (click)="activeMenuTab='jobs'"
-       [class.active]="activeMenuTab=='jobs'">
+       routerLink="/jobs">
         <i class="suitcase icon"></i>Jobs
     </a>
     <a class="item"
@@ -31,6 +23,5 @@
     </a>
 </div>
 
-<app-display-jobs *ngIf="activeMenuTab=='jobs'"></app-display-jobs>
 <app-display-clients *ngIf="activeMenuTab=='clients'"></app-display-clients>
 <app-display-users *ngIf="activeMenuTab=='users'"></app-display-users>

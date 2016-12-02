@@ -1,10 +1,10 @@
 import {Component, OnInit, OnDestroy, ViewChild} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
-import {Job} from "../../classes/job";
-import {Client} from "../../classes/client";
-import {CommonService} from "../../services/common.service";
-import {ApiService} from "../../services/api.service";
+import {Job} from "../../../classes/job";
+import {Client} from "../../../classes/client";
+import {CommonService} from "../../../services/common.service";
+import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
 import {RateCardSelectorComponent} from "./rate-card-selector/rate-card-selector.component";
 
@@ -12,8 +12,8 @@ declare var $;
 
 @Component({
     selector: 'app-new-job',
-    templateUrl: './new-job.component.html',
-    styleUrls: ['./new-job.component.scss']
+    templateUrl: 'new-job.component.html',
+    styleUrls: ['new-job.component.scss']
 })
 export class NewJobComponent implements OnInit, OnDestroy {
 
