@@ -4,12 +4,13 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "start": "ng build --prod && app.js",
+    "start": "app.js",
     "develop": "nodemon app.js",
     "lint": "tslint \"client/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update",
-    "e2e": "protractor"
+    "e2e": "protractor",
+    "postinstall": "ng build"
   },
   "private": true,
   "dependencies": {
