@@ -1,6 +1,6 @@
 var express = require("express"),
     dotenv = process.env.NODE_ENV == "production"
-        ? null
+        ? null // Heroku already has its own way of reading config vars
         : require('dotenv').config(), // read .env file (.gitignore-d)
     path = require("path"),
     bodyParser = require("body-parser"),
