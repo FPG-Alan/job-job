@@ -12,6 +12,11 @@
     "e2e": "protractor",
     "postinstall": "ng build --prod"
   },
+  "engines": {
+    "node": ">= 5.4.1 < 6"
+  },
+  "author": "David Thong Nguyen",
+  "main": "app.js",
   "private": true,
   "dependencies": {
     "@angular/common": "~2.1.0",
