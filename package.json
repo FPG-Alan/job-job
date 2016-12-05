@@ -4,7 +4,7 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "start": "app.js",
+    "start": "node app.js",
     "develop": "nodemon app.js",
     "lint": "tslint \"client/**/*.ts\"",
     "test": "ng test",
