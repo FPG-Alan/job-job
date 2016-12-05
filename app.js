@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({extended: false})); // parse application/x-www-fo
 app.use(bodyParser.json()); // parse application/json
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/job-job"); // connect to database
 
+console.log(process.env.MONGODB_URI);
 
 // Import routers
 var userRouter = require("./server/routers/userRouter");
