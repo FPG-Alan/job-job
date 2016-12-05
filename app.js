@@ -1,5 +1,5 @@
 var express = require("express"),
-    dotenv = require('dotenv').config(),
+    dotenv = require('dotenv').config(), // read .env file (.gitignore-d)
     path = require("path"),
     bodyParser = require("body-parser"),
     mongoose = require("mongoose"),
@@ -12,7 +12,6 @@ var express = require("express"),
 
 
 // Settings
-require('dotenv').config(); // read .env file (.gitignore-d)
 app.use(bodyParser.urlencoded({extended: false})); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json()); // parse application/json
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/job-job"); // connect to database
