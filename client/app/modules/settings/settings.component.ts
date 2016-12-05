@@ -33,7 +33,7 @@ export class SettingsComponent implements OnInit {
     navigateBoxAuth() {
         this.authenticatingBox = true;
 
-        let encodedRedirect = encodeURIComponent("http://localhost:3000/auth/box");
+        let encodedRedirect = encodeURIComponent(window.location.hostname + "/auth/box");
         let child = window.open("https://fancypantsgroup.app.box.com/api/oauth2/authorize" +
             "?response_type=code" +
             "&client_id=lz5d03ybnt9kc77bhwib4b4kc2i3e6kf" +
