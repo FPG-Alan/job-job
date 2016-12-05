@@ -1,5 +1,7 @@
 var express = require("express"),
-    dotenv = require('dotenv').config(), // read .env file (.gitignore-d)
+    dotenv = process.env.NODE_ENV == "production"
+        ? null
+        : require('dotenv').config(), // read .env file (.gitignore-d)
     path = require("path"),
     bodyParser = require("body-parser"),
     mongoose = require("mongoose"),
