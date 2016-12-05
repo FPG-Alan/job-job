@@ -5,7 +5,13 @@
            [routerLinkActiveOptions]="{exact: true}"
            class="item">
             <i class="home icon"></i>Home</a>
-        <a routerLink="/settings" routerLinkActive="active" class="item">
+        <a routerLink="/jobs"
+           routerLinkActive="active"
+           class="item">
+            <i class="suitcase icon"></i>Jobs</a>
+        <a routerLink="/settings"
+           routerLinkActive="active"
+           class="item">
             <i class="cogs icon"></i>Settings</a>
         <a class="item" (click)="authService.logout()">
             <i class="sign out icon"></i>Log Out</a>
@@ -21,6 +27,11 @@
        class="item"
        (click)="toggleSidebar()">
         <i class="home icon"></i>Home</a>
+    <a routerLink="/jobs"
+       routerLinkActive="active"
+       class="item"
+       (click)="toggleSidebar()">
+        <i class="suitcase icon"></i>Jobs</a>
     <a routerLink="/settings"
        routerLinkActive="active"
        class="item"

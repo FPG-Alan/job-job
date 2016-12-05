@@ -27,33 +27,37 @@ rateCardRouter.get("/:project", function (req, res) {
 
 rateCardRouter.put("/:project", function (req, res) {
     var rates = req.body.rates || [];
-    var resCounts = 0;
 
-    res.write("[");
-    for (var r in rates) {
-        unirest.put(tenKApiKeys.dev.url + "projects/" + req.params.project +
-            "/bill_rates/" + rates[r].id)
-            .headers({
-                "Content-Type": "application/json",
-                "auth": tenKApiKeys.dev.keys
-            })
-            .send({
-                rate: rates[r].rate
-            })
-            .end(function (response) {
-                // TODO: handle err
-                resCounts++;
-                console.log("Bill rates updating progress (", rates[resCounts - 1].rate, "):", resCounts, "/", rates.length);
+    if (rates.length > 0) {
+        var resCounts = 0;
 
-                if (resCounts >= rates.length) {
-                    res.end(JSON.stringify(response.body) + "]");
-                    console.log("Bill rates update for job", req.params.project, "DONE!");
-                } else {
-                    res.write(JSON.stringify(response.body) + ",");
-                }
-            });
+        res.write("[");
+        for (var r in rates) {
+            unirest.put(tenKApiKeys.dev.url + "projects/" + req.params.project +
+                "/bill_rates/" + rates[r].id)
+                .headers({
+                    "Content-Type": "application/json",
+                    "auth": tenKApiKeys.dev.keys
+                })
+                .send({
+                    rate: rates[r].rate
+                })
+                .end(function (response) {
+                    // TODO: handle err
+                    resCounts++;
+                    console.log("Bill rates updating progress (", rates[resCounts - 1].rate, "):", resCounts, "/", rates.length);
+
+                    if (resCounts >= rates.length) {
+                        res.end(JSON.stringify(response.body) + "]");
+                        console.log("Bill rates update for job", req.params.project, "DONE!");
+                    } else {
+                        res.write(JSON.stringify(response.body) + ",");
+                    }
+                });
+        }
+    } else {
+        res.json([])
     }
-
 });
 
 module.exports = rateCardRouter;

@@ -14,11 +14,6 @@ export class ApiService {
     /*********
      * USERS *
      *********/
-    getAllUsers() {
-        return this.authHttp.get("/user/all")
-            .map(res => <User[]> res.json());
-    }
-
     getMyUser(userId: string) {
         return this.authHttp.get("/user/?id=" + userId)
             .map(res => <User> res.json())

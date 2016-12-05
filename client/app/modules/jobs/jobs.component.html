@@ -1,3 +1,14 @@
+<div class="ui clearing basic segment">
+    <h1 class="ui left floated header">Jobs</h1>
+    <a class="ui right floated button" routerLink="/jobs/new">
+        <i class="icons">
+            <i class="suitcase icon"></i>
+            <i class="corner add icon"></i>
+        </i>
+        Create New Job
+    </a>
+</div>
+
 <!--Filtering by Client-->
 <div class="ui fluid multiple search selection dropdown">
     <input type="hidden" name="client" (change)="onFilterSearchChange(searchInput.value)" #searchInput>
@@ -13,8 +24,8 @@
 </div>
 
 <!--Display Area-->
-<div class="ui basic segment" [class.loading]="loading">
-    <table class="ui sortable celled table"
+<div class="ui basic no-padding segment" [class.loading]="loading">
+    <table class="ui yellow compact selectable sortable celled table"
            *ngIf="displayedJobs?.length > 0">
         <thead>
         <tr>
@@ -33,8 +44,9 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let j of displayedJobs">
-            <td>{{j?.name}}</td>
+        <tr *ngFor="let j of displayedJobs"
+            [routerLink]="['/jobs/details', j?.id]">
+            <td>{{j?.name | characterLimit: 35}}</td>
             <td>{{j?.client}}</td>
         </tr>
         </tbody>

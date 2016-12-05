@@ -1,16 +1,16 @@
 import {Component, OnInit} from "@angular/core";
+import {Client} from "../../classes/client";
 import {ApiService} from "../../services/api.service";
 import {CommonService} from "../../services/common.service";
-import {Client} from "../../classes/client";
 
 declare var $;
 
 @Component({
-    selector: 'app-display-jobs',
-    templateUrl: './display-jobs.component.html',
-    styleUrls: ['./display-jobs.component.scss']
+    selector: 'app-jobs',
+    templateUrl: './jobs.component.html',
+    styleUrls: ['./jobs.component.scss']
 })
-export class DisplayJobsComponent implements OnInit {
+export class JobsComponent implements OnInit {
 
     jobs: any[] = [];
     displayedJobs: any[] = [];
@@ -98,7 +98,8 @@ export class DisplayJobsComponent implements OnInit {
         if (!a) a = "";
         if (!b) b = "";
         // compare to see if the 1st string is larger than the 2nd
-        // TODO: lowercase each string
+        a = a.toLowerCase();
+        b = b.toLowerCase();
         if (a < b) {
             return -1;
         } else if (a > b) {

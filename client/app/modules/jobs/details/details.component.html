@@ -1,0 +1,65 @@
+<script src="../../../app.component.ts"></script><a class="ui button" routerLink="/jobs">
+    <i class="chevron left icon"></i>Back
+</a>
+
+<div *ngIf="job" style="margin-top: 1em">
+    <h2 class="ui header">
+        <div class="content">
+            {{job.name}}
+            <div class="sub header">
+                {{job.starts_at | date: "E, MMM d, y"}} -
+                {{job.ends_at| date: "E, MMM d, y"}}
+            </div>
+        </div>
+    </h2>
+    <div>
+        <label>ID: </label>{{job.id}}
+    </div>
+    <div>
+        <label>Client: </label>
+        <span *ngIf="!commonService.isEmptyString(job.client)">{{job.client}}</span>
+        <span *ngIf="commonService.isEmptyString(job.client)">N/A</span>
+    </div>
+    <div>
+        <label>Link to 10,000ft project: </label>
+        <a target="_blank" href="https://vnext.10000ft.com/viewproject?id={{job.id}}">
+            https://vnext.10000ft.com/viewproject?id={{job.id}}
+        </a>
+    </div>
+    <div>
+        <label>Link to Box folder: </label>(coming soon)
+    </div>
+    <div>
+        <label>Link to Trello board: </label>(coming soon)
+    </div>
+    <div>
+        <label>Link to Slack channel: </label>(coming soon)
+    </div>
+
+    <div class="ui divider"></div>
+
+    <div class="ui button" (click)="selectingRateCard = !selectingRateCard">
+        <span *ngIf="!selectingRateCard">
+            <i class="money icon"></i>
+            Select Rate Card
+        </span>
+        <span *ngIf="selectingRateCard">
+            <i class="remove icon"></i>
+            Cancel
+        </span>
+    </div>
+    <div class="ui form"
+         *ngIf="selectingRateCard">
+        <app-rate-card-selector
+                [newJob]="job"
+                (onRateUpdated)="onRateUpdated($event)"
+                #rateCardSelector>
+        </app-rate-card-selector>
+        <div class="ui divider"></div>
+        <div class="ui right floated positive button"
+             [class.loading]="rateCardProcessingState == 'loading'"
+             (click)="rateCardProcessingState = 'loading'; rateCardSelectorComponent.updateBillRates();">
+            Submit
+        </div>
+    </div>
+</div>

@@ -3,11 +3,11 @@ import {Client} from "../../classes/client";
 import {ApiService} from "../../services/api.service";
 
 @Component({
-    selector: 'app-display-clients',
-    templateUrl: './display-clients.component.html',
-    styleUrls: ['./display-clients.component.scss']
+    selector: 'app-clients',
+    templateUrl: './clients.component.html',
+    styleUrls: ['./clients.component.scss']
 })
-export class DisplayClientsComponent implements OnInit {
+export class ClientsComponent implements OnInit {
 
     clients: Client[] = [];
 
@@ -21,5 +21,4 @@ export class DisplayClientsComponent implements OnInit {
                 err => console.log(err)
             );
     }
-
 }

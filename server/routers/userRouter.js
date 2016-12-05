@@ -3,13 +3,6 @@ var userRouter = express.Router();
 
 var User = require("../models/user");
 
-userRouter.get("/all", function (req, res) {
-    User.find({}, function (err, users) {
-        // need admin access to access this
-        res.status(500).send({header: 'Couldn\'t retrieve all users'});
-    });
-});
-
 userRouter.get("/", function (req, res) {
     User.findOne({userId: req.query.id}, function (err, user) {
         if (err) {
