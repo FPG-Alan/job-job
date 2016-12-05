@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {Params, ActivatedRoute} from "@angular/router";
 import {ApiService} from "../../../services/api.service";
 import {CommonService} from "../../../services/common.service";
-import {RateCardSelectorComponent} from "../new-job/rate-card-selector/rate-card-selector.component";
+import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
 
 @Component({
     selector: 'app-details',

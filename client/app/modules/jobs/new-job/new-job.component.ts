@@ -6,7 +6,7 @@ import {Client} from "../../../classes/client";
 import {CommonService} from "../../../services/common.service";
 import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
-import {RateCardSelectorComponent} from "./rate-card-selector/rate-card-selector.component";
+import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
 
 declare var $;
 

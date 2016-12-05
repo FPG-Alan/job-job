@@ -1,16 +1,16 @@
 import {Component, OnInit} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
-import {Client} from "../../classes/client";
-import {CommonService} from "../../services/common.service";
-import {ApiService} from "../../services/api.service";
+import {Client} from "../../../classes/client";
+import {CommonService} from "../../../services/common.service";
+import {ApiService} from "../../../services/api.service";
 
 declare var $;
 
 @Component({
     selector: 'app-new-client',
-    templateUrl: './new-client.component.html',
-    styleUrls: ['./new-client.component.scss']
+    templateUrl: 'new-client.component.html',
+    styleUrls: ['new-client.component.scss']
 })
 export class NewClientComponent implements OnInit {
 
