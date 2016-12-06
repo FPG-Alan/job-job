@@ -30,7 +30,8 @@ jobRouter.post("/", function (req, res) {
         "client": req.body.job.client.name,
         "starts_at": req.body.job.startDate,
         "ends_at": req.body.job.endDate,
-        "project_code": req.body.job.code
+        "project_code": req.body.job.code,
+        "project_state": "Confirmed"
     };
     unirest.post(apiKeys.dev.url + "projects")
         .headers({
