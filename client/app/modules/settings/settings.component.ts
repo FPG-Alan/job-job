@@ -45,6 +45,10 @@ export class SettingsComponent implements OnInit {
                         "&client_id=" + authParams.clientId +
                         "&redirect_uri=" + encodedRedirect +
                         "&state=" + this.user.userId, '', 'toolbar=0,status=0,width=626,height=436');
+                    if (!child) {
+                        this.authenticatingBox = false;
+                        return;
+                    }
                     // manipulate UI on child window close
                     let timer = setInterval(() => {
                         if (child.closed) {
