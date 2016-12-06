@@ -1,15 +1,12 @@
 var express = require('express');
+var dotenv = process.env.NODE_ENV == "production"
+    ? null : require('dotenv').config();
 var boxIntegrationRouter = express.Router();
 
 var Token = require("../models/token");
 
-// Initialize SDK
-var BoxSDK = require('box-node-sdk');
-var sdk = new BoxSDK({
-    clientID: process.env.BOX_CLIENT_ID,
-    clientSecret: process.env.BOX_CLIENT_SECRET
-});
-
+// init Box SDK
+var sdk = require("../keys/boxSdkSetup");
 var invalidTokenError = {
     header: "Token is invalid or expired",
     message: "Please go to Settings and re-authenticate Box"
@@ -31,7 +28,7 @@ boxIntegrationRouter.post("/", function (req, res) {
                     token.save();
 
                     var box = sdk.getBasicClient(newTokenInfo.accessToken);
-                    var parentFolderId = req.body.parentFolderId || process.env.BOX_ROOT_FOLDER;
+                    var parentFolderId = req.body.parentFolderId || process.env.BOX_ROOT_FOLDER_DEV;
                     var sameNameFound = false;
 
                     box.folders.getItems(parentFolderId, {fields: "name,type,url"}, function (err, data) {

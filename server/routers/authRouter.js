@@ -1,15 +1,25 @@
 var express = require('express');
+var dotenv = process.env.NODE_ENV == "production"
+    ? null : require('dotenv').config();
 var path = require("path");
 var authRouter = express.Router();
 
 var User = require("../models/user");
 var Token = require("../models/token");
 
-// Initialize SDK
-var BoxSDK = require('box-node-sdk');
-var sdk = new BoxSDK({
-    clientID: process.env.BOX_CLIENT_ID,
-    clientSecret: process.env.BOX_CLIENT_SECRET
+// init Box SDK
+var keys = require("../keys/boxKeys");
+var sdk = require("../keys/boxSdkSetup");
+
+authRouter.get("/box/auth-params", function (req, res) {
+    var env = process.env.NODE_ENV;
+    var params = env == "development"
+        ? {clientId: keys.dev.id, redirectUri: keys.dev.redirectUri, env:"dev"}
+        : env == "production"
+        ? {clientId: keys.prod.id, redirectUri: keys.prod.redirectUri, env:"prod"}
+        : null;
+
+    res.json(params);
 });
 
 authRouter.get("/box", function (req, res) {

@@ -11,6 +11,14 @@ export class ApiService {
     constructor(private authHttp: AuthHttp) {
     }
 
+    /************
+     * SETTINGS *
+     ************/
+    getBoxAuthParams(){
+        return this.authHttp.get("/auth/box/auth-params")
+            .map(res => res.json());
+    }
+
     /*********
      * USERS *
      *********/

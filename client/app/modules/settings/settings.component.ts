@@ -27,31 +27,40 @@ export class SettingsComponent implements OnInit {
             .subscribe(
                 res => this.user = res,
                 err => this.commonService.handleError(err)
-            )
+            );
     }
 
     navigateBoxAuth() {
         this.authenticatingBox = true;
+        let authParams = null;
+        this.apiService.getBoxAuthParams()
+            .subscribe(
+                res => {
+                    authParams = res;
+                    if (!authParams) return;
 
-        let encodedRedirect = encodeURIComponent("https://" + window.location.hostname + "/auth/box");
-        let child = window.open("https://fancypantsgroup.app.box.com/api/oauth2/authorize" +
-            "?response_type=code" +
-            "&client_id=lz5d03ybnt9kc77bhwib4b4kc2i3e6kf" +
-            "&redirect_uri=" + encodedRedirect +
-            "&state=" + this.user.userId, '', 'toolbar=0,status=0,width=626,height=436');
-        // manipulate UI on child window close
-        let timer = setInterval(() => {
-            if (child.closed) {
-                clearInterval(timer);
-                this.authenticatingBox = false;
-                // get user again and check if Box is authenticated
-                this.apiService.getMyUser(this.localProfile.user_id)
-                    .subscribe(
-                        res => this.user = res,
-                        err => this.commonService.handleError(err)
-                    )
-            }
-        }, 500);
+                    let encodedRedirect = encodeURIComponent(authParams.redirectUri);
+                    let child = window.open("https://fancypantsgroup.app.box.com/api/oauth2/authorize" +
+                        "?response_type=code" +
+                        "&client_id=" + authParams.clientId +
+                        "&redirect_uri=" + encodedRedirect +
+                        "&state=" + this.user.userId, '', 'toolbar=0,status=0,width=626,height=436');
+                    // manipulate UI on child window close
+                    let timer = setInterval(() => {
+                        if (child.closed) {
+                            clearInterval(timer);
+                            this.authenticatingBox = false;
+                            // get user again and check if Box is authenticated
+                            this.apiService.getMyUser(this.localProfile.user_id)
+                                .subscribe(
+                                    res => this.user = res,
+                                    err => this.commonService.handleError(err)
+                                )
+                        }
+                    }, 500);
 
+                },
+                err => console.log(err)
+            );
     }
 }
