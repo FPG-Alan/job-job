@@ -8,8 +8,9 @@ var User = require("../models/user");
 var Token = require("../models/token");
 
 // init Box SDK
-var keys = require("../keys/boxKeys");
-var sdk = require("../keys/boxSdkSetup");
+var keys = require("../integrations/boxKeys");
+var sdk = require("../integrations/boxSetup");
+
 
 authRouter.get("/box/auth-params", function (req, res) {
     var env = process.env.NODE_ENV;
@@ -25,7 +26,7 @@ authRouter.get("/box/auth-params", function (req, res) {
 authRouter.get("/box", function (req, res) {
     // TODO: hash query.state for security
     // TODO: rewrite horrible callback pyramids
-    if (req.query.code && req.query.state) {
+    if (req.query.code && req.query.state && sdk) {
         sdk.getTokensAuthorizationCodeGrant(req.query.code, null, function (err, tokenInfo) {
             if (err) res.redirect('/');
 

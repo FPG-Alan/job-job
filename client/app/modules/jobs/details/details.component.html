@@ -12,6 +12,8 @@
             </div>
         </div>
     </h2>
+
+    <h3 class="ui header">Details</h3>
     <div>
         <label>ID: </label>{{job.id}}
     </div>
@@ -38,6 +40,7 @@
 
     <div class="ui divider"></div>
 
+    <h3 class="ui header">Edit Job</h3>
     <div class="ui button" (click)="selectingRateCard = !selectingRateCard">
         <span *ngIf="!selectingRateCard">
             <i class="money icon"></i>

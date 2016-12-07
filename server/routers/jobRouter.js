@@ -2,21 +2,14 @@ var express = require('express');
 var unirest = require('unirest');
 var jobRouter = express.Router();
 
-var apiKeys = {
-    "dev": {
-        "url": "https://vnext-api.10000ft.com/api/v1/",
-        "keys": process.env.TEN_K_TOKEN_DEV
-    },
-    "prod": {
-        "url": "https://api.10000ft.com/api/v1/"
-    }
-};
+var tenKApiKeys = require("../integrations/tenKFtSetup");
+
 
 jobRouter.get("/all", function (req, res) {
-    unirest.get(apiKeys.dev.url + "projects?with_archived=true&per_page=100000")
+    unirest.get(tenKApiKeys.apiUrl + "projects?with_archived=true&per_page=100000")
         .headers({
             "Content-Type": "application/json",
-            "auth": apiKeys.dev.keys
+            "auth": tenKApiKeys.keys
         })
         .end(function (response) {
             // TODO: handle err
@@ -31,13 +24,13 @@ jobRouter.post("/", function (req, res) {
         "starts_at": req.body.job.startDate,
         "ends_at": req.body.job.endDate,
         "project_code": req.body.job.code,
-        "project_state": "Confirmed"
+        "project_state": "Tentative"
     };
-    unirest.post(apiKeys.dev.url + "projects")
+    unirest.post(tenKApiKeys.apiUrl + "projects")
         .headers({
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "auth": apiKeys.dev.keys
+            "auth": tenKApiKeys.keys
         })
         .send(newProject)
         .end(function (response) {
@@ -47,10 +40,10 @@ jobRouter.post("/", function (req, res) {
 });
 
 jobRouter.get("/by-id/:id", function (req, res) {
-    unirest.get(apiKeys.dev.url + "projects/" + req.params.id)
+    unirest.get(tenKApiKeys.apiUrl + "projects/" + req.params.id)
         .headers({
             "Content-Type": "application/json",
-            "auth": apiKeys.dev.keys
+            "auth": tenKApiKeys.keys
         })
         .end(function (response) {
             // TODO: handle err
@@ -59,10 +52,10 @@ jobRouter.get("/by-id/:id", function (req, res) {
 });
 
 jobRouter.get("/by-client/:client", function (req, res) {
-    unirest.get(apiKeys.dev.url + "projects?with_archived=true&per_page=100000")
+    unirest.get(tenKApiKeys.apiUrl + "projects?with_archived=true&per_page=100000")
         .headers({
             "Content-Type": "application/json",
-            "auth": apiKeys.dev.keys
+            "auth": tenKApiKeys.keys
         })
         .end(function (response) {
             // TODO: handle err

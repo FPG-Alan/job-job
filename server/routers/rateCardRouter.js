@@ -2,22 +2,15 @@ var express = require('express');
 var unirest = require('unirest');
 var rateCardRouter = express.Router();
 
-var tenKApiKeys = {
-    "dev": {
-        "url": "https://vnext-api.10000ft.com/api/v1/",
-        "keys": process.env.TEN_K_TOKEN_DEV
-    },
-    "prod": {
-        "url": "https://api.10000ft.com/api/v1/"
-    }
-};
+var tenKApiKeys = require("../integrations/tenKFtSetup");
+
 
 rateCardRouter.get("/:project", function (req, res) {
-    unirest.get(tenKApiKeys.dev.url + "projects/" + req.params.project + "/bill_rates" +
+    unirest.get(tenKApiKeys.apiUrl + "projects/" + req.params.project + "/bill_rates" +
         "?per_page=100000")
         .headers({
             "Content-Type": "application/json",
-            "auth": tenKApiKeys.dev.keys
+            "auth": tenKApiKeys.keys
         })
         .end(function (response) {
             // TODO: handle err
@@ -33,11 +26,11 @@ rateCardRouter.put("/:project", function (req, res) {
 
         res.write("[");
         for (var r in rates) {
-            unirest.put(tenKApiKeys.dev.url + "projects/" + req.params.project +
+            unirest.put(tenKApiKeys.apiUrl + "projects/" + req.params.project +
                 "/bill_rates/" + rates[r].id)
                 .headers({
                     "Content-Type": "application/json",
-                    "auth": tenKApiKeys.dev.keys
+                    "auth": tenKApiKeys.keys
                 })
                 .send({
                     rate: rates[r].rate
