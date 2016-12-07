@@ -1,5 +1,5 @@
 <a class="ui button" routerLink="/jobs">
-    <i class="chevron left icon"></i>Back
+    <i class="chevron left icon"></i>Back to List
 </a>
 
 <h1>
@@ -54,7 +54,15 @@
             </select>
         </div>
         <div class="field" id="brand-select-field">
-            <label>Brand (optional)</label>
+            <label>
+                Brand (can't find it?
+                <a id="new-brand-popup"><i class="fitted add icon"></i>add new</a>
+                <div class="ui special popup">
+                    <div class="header">Custom Header</div>
+                    <div class="ui button">Click Me</div>
+                </div>
+                )
+            </label>
             <select class="ui search dropdown selection" name="brand"
                     [(ngModel)]="job.brand"
                     (ngModelChange)="this.submitted = false; onBrandChange()">
@@ -139,7 +147,10 @@
 </div>
 
 
-<!--Box Integration-->
+<!---->
+
+
+<!--Final Confirmation Screen-->
 <div class="ui modal" id="confirm-new-job">
     <i class="close icon"></i>
     <div class="header">
