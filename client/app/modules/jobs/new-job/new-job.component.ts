@@ -43,6 +43,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
     ngOnInit() {
         $('.ui.checkbox').checkbox();
         $('.ui.search.dropdown.selection').dropdown();
+        $("#new-brand-popup").popup({
+            on: 'click'
+        });
 
         // SESSION STORAGE: check for prefilled or saved fields
         let savedJob = sessionStorage.getItem("saved_job_fields");
@@ -95,6 +98,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     err => this.commonService.handleError(err)
                 )
         }
+    }
+
+    addNewBrandModal(){
+
     }
 
     updateFinalName() {

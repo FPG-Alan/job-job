@@ -2,11 +2,11 @@ var dotenv = process.env.NODE_ENV == "production"
     ? null : require('dotenv').config();
 
 var dev = {
-    apiUrl: "https://vnext-api.10000ft.com/api/v1/",
+    apiUrl: process.env.TEN_K_API_DEV,
     keys: process.env.TEN_K_TOKEN_DEV
 };
 var prod = {
-    apiUrl: "https://vnext-api.10000ft.com/api/v1/",
+    apiUrl: process.env.TEN_K_API_PROD,
     keys: process.env.TEN_K_TOKEN_PROD
 };
 
