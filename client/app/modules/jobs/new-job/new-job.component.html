@@ -55,17 +55,28 @@
         </div>
         <div class="field" id="brand-select-field">
             <label>
-                Brand (can't find it?
-                <a id="new-brand-popup"><i class="fitted add icon"></i>add new</a>
-                <div class="ui special popup">
-                    <div class="header">Custom Header</div>
-                    <div class="ui button">Click Me</div>
-                </div>
-                )
+                Brand
+                <span [class.hidden]="commonService.isEmptyString(job?.client?.name)">
+                    (can't find it?
+                    <a id="new-brand-popup"><i class="add icon"></i>add new</a>
+                    <div class="ui popup" id="new-brand-popup-form">
+                        <div class="ui input">
+                          <input type="text" placeholder="enter new brand" #newBrandInput>
+                        </div>
+                        <div class="ui positive button"
+                             (click)="addNewBrand(newBrandInput.value); newBrandInput.value = ''">Save</div>
+                        <div class="ui button" (click)="addNewBrand('')">Cancel</div>
+                    </div>
+                    )
+                </span>
+                <span [class.hidden]="!commonService.isEmptyString(job?.client?.name)">
+                    (needs client)
+                </span>
             </label>
-            <select class="ui search dropdown selection" name="brand"
+            <select class="ui search dropdown selection"
                     [(ngModel)]="job.brand"
-                    (ngModelChange)="this.submitted = false; onBrandChange()">
+                    (ngModelChange)="this.submitted = false; onBrandChange()"
+                    name="brand">
                 <option value=" ">(no brand)</option>
                 <option *ngFor="let b of job.client.brands; let i = index"
                         [value]="b">{{b}}

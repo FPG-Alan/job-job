@@ -23,7 +23,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
     submitted = false;
     job: Job;
     clients: Client[] = [];
-    brands: string[] = [];
     finalName: any = {
         result: "",
         clientCode: "",
@@ -41,10 +40,12 @@ export class NewJobComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        $('.ui.checkbox').checkbox();
-        $('.ui.search.dropdown.selection').dropdown();
+        $(".ui.checkbox").checkbox();
+        $(".ui.search.dropdown.selection").dropdown();
         $("#new-brand-popup").popup({
-            on: 'click'
+            on: "click",
+            closable: false,
+            lastResort: "right center"
         });
 
         // SESSION STORAGE: check for prefilled or saved fields
@@ -56,9 +57,11 @@ export class NewJobComponent implements OnInit, OnDestroy {
             $("#client-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.client.name)
                 ? "(no client)"
                 : this.job.client.name;
-            $("#brand-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.finalName.brand)
+            $("#brand-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.brand)
                 ? "(no brand)"
-                : this.finalName.brand;
+                : this.job.brand;
+            console.log(this.job.brand);
+            console.log($("#brand-select-field div.text")[0].innerText);
         } else {
             this.resetModels();
         }
@@ -96,12 +99,35 @@ export class NewJobComponent implements OnInit, OnDestroy {
                         this.generating = false;
                     },
                     err => this.commonService.handleError(err)
-                )
+                );
         }
     }
 
-    addNewBrandModal(){
-
+    addNewBrand(brand: string) {
+        if (!this.commonService.isEmptyString(this.job.client.name)
+            && !this.commonService.isEmptyString(brand)) {
+            this.apiService
+                .addNewBrand(this.job.client.name, brand)
+                .subscribe(
+                    res => {
+                        console.log(res);
+                        this.job.client.brands.push(brand);
+                        this.job.brand = brand;
+                        this.onBrandChange();
+                        $("#brand-select-field div.text")[0].innerText = brand;
+                        this.commonService.notifyMessage(
+                            "success",
+                            "Sweet!",
+                            "Added a new brand for client: "
+                            + "\"" + this.job.client.name + "\""
+                        );
+                        $("#new-brand-popup").popup("hide");
+                    },
+                    err => this.commonService.handleError(err)
+                );
+        } else {
+            $("#new-brand-popup").popup("hide");
+        }
     }
 
     updateFinalName() {
@@ -292,7 +318,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     this.router.navigate([
                         "/jobs/details",
                         this.rateCardSelectorComponent.newJob.id
-                     ]);
+                    ]);
                 }, 1000);
                 clearInterval(timeInterval);
             }

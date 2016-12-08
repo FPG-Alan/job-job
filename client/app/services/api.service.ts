@@ -14,7 +14,7 @@ export class ApiService {
     /************
      * SETTINGS *
      ************/
-    getBoxAuthParams(){
+    getBoxAuthParams() {
         return this.authHttp.get("/auth/box/auth-params")
             .map(res => res.json());
     }
@@ -57,6 +57,18 @@ export class ApiService {
     getClientProjectCount(clientName: string, year: string) {
         return this.authHttp.get("/client/count-by-year/" + clientName + "/" + year)
             .map(res => res.json())
+    }
+
+    addNewBrand(clientName: string, brand: string) {
+        let body = {
+            client: clientName,
+            brand: brand
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/client/brand", body, options)
+            .map(res => res.json());
     }
 
 

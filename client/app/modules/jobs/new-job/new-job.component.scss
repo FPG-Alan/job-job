@@ -2,6 +2,10 @@
     margin-bottom: 5px !important;
 }
 
+#new-brand-popup-form > * {
+    margin-bottom: 0.25em;
+}
+
 // override loader color in a dimmer (set to white by default)
 #create-box-folder .ui.loader:after {
     border-color: #767676 transparent transparent !important;

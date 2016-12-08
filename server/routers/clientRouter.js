@@ -81,7 +81,39 @@ clientRouter.post("/", function (req, res) {
     })
 });
 
-function isBlank (str) {
+
+clientRouter.post("/brand", function (req, res) {
+    Client.findOne({name: req.body.client}, function (err, client) {
+        if (client) {
+            if (!client.brands || client.brands.length == 0) {
+                client.brands = []
+            }
+            if (client.brands.indexOf(req.body.brand) == -1) {
+                client.brands.push(req.body.brand);
+                client.save(function (err, client) {
+                    if (err) {
+                        res.status(500).send({header: 'Couldn\'t save new client'});
+                    }
+                    console.log("Added new Brand: " + req.body.brand);
+                    res.json(client);
+                });
+            } else {
+                res.status(500).send({
+                    header: 'Brand name already exists',
+                    message: 'Please try a different name'
+                });
+            }
+        }
+        else {
+            res.status(500).send({
+                header: 'Couldn\'t add a new brand',
+                message: 'Please try a different name'
+            });
+        }
+    })
+});
+
+function isBlank(str) {
     return (!str || /^\s*$/.test(str));
 }
 
