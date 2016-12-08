@@ -60,8 +60,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
             $("#brand-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.brand)
                 ? "(no brand)"
                 : this.job.brand;
-            console.log(this.job.brand);
-            console.log($("#brand-select-field div.text")[0].innerText);
         } else {
             this.resetModels();
         }
