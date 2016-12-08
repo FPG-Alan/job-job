@@ -28,8 +28,8 @@
 
     <div>
         <label>Tags: </label>
-        <span>{{job?.tags?.data | json}}</span>
-        <span *ngIf="!jobs.tags || !jobs.tags.data || jobs?.tags?.data?.length == 0">
+        <span *ngIf="job?.tags?.data?.length > 0">{{job?.tags?.data | json}}</span>
+        <span *ngIf="!job.tags || !job.tags.data || job?.tags?.data?.length == 0">
             N/A</span>
     </div>
 
