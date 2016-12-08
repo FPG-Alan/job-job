@@ -9,14 +9,35 @@
 
 
 <!--Display Area-->
-<ul *ngIf="clients !== null && clients.length > 0">
-    <li *ngFor="let c of clients">
-        {{c.name + " (" + c.shortCode + ")"}}
-    </li>
-</ul>
+<div class="ui basic no-padding segment">
+           *ngIf="clients?.length > 0">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Short Code</th>
+            <th>Brands</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let c of clients">
+            <td>{{c?.name}}</td>
+            <td>{{c?.shortCode}}</td>
+            <td>
+                <div class="ui list">
+                    <div class="item"
+                         *ngFor="let brand of c?.brands">
+                        {{brand}}
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-<div *ngIf="clients === null || clients.length == 0" class="ui warning message">
-    <div class="header">
-        No clients found
+    <div *ngIf="clients === null || clients?.length == 0"
+         class="ui warning message">
+        <div class="header">
+            No clients found
+        </div>
     </div>
 </div>

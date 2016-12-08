@@ -5,32 +5,36 @@
     </a>
 </div>
 
-<form #f="ngForm">
+<form class="ui form" #f="ngForm">
     <!--Filtering by Client-->
-    <select multiple="" class="ui fluid multiple search selection dropdown"
-            [(ngModel)]="clientFilterInput"
-            (ngModelChange)="onFilterSearchChange()"
-            name="clientFilter"
-            #clientFilter="ngModel">
-        <!--disabled will prevent selection of empty string tags-->
-        <option value="" disabled="true">Filter by Client...</option>
-        <option *ngFor="let c of clients;"
-                [value]="c.name">{{c.name}}
-        </option>
-    </select>
+    <div class="field">
+        <select multiple="" class="ui fluid multiple search selection dropdown"
+                [(ngModel)]="clientFilterInput"
+                (ngModelChange)="onFilterSearchChange()"
+                name="clientFilter"
+                #clientFilter="ngModel">
+            <!--disabled will prevent selection of empty string tags-->
+            <option value="" disabled="true">Filter by Client...</option>
+            <option *ngFor="let c of clients;"
+                    [value]="c.name">{{c.name}}
+            </option>
+        </select>
+    </div>
 
-    <!--Filtering by Tag-->
-    <select multiple="" class="ui fluid multiple search selection dropdown"
-            [(ngModel)]="tagFilterInput"
-            (ngModelChange)="onFilterSearchChange()"
-            name="tagFilter"
-            #tagFilter="ngModel">
-        <!--disabled will prevent selection of empty string tags-->
-        <option value="" disabled="true">Filter by Tag...</option>
-        <option *ngFor="let t of tags;"
-                [value]="t.name">{{t.name}}
-        </option>
-    </select>
+    <div class="field">
+        <!--Filtering by Tag-->
+        <select multiple="" class="ui fluid multiple search selection dropdown"
+                [(ngModel)]="tagFilterInput"
+                (ngModelChange)="onFilterSearchChange()"
+                name="tagFilter"
+                #tagFilter="ngModel">
+            <!--disabled will prevent selection of empty string tags-->
+            <option value="" disabled="true">Filter by Tag...</option>
+            <option *ngFor="let t of tags;"
+                    [value]="t.name">{{t.name}}
+            </option>
+        </select>
+    </div>
 </form>
 
 <!--Display Area-->
