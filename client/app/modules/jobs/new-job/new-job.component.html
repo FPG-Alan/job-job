@@ -145,14 +145,18 @@
                     <div class="ui positive button"
                          (click)="addNewTag(newTagInput.value); newTagInput.value = ''">Save
                     </div>
-                    <div class="ui button" (click)="addNewBrand('')">Cancel</div>
+                    <div class="ui button" (click)="addNewTag('')">Cancel</div>
                 </div>
                 )
             </label>
-            <select multiple="" class="ui fluid search selection dropdown">
-                <option value="">(select tags)</option>
-                <option *ngFor="let t of job.tags;"
-                        [value]="t">{{t}}
+            <select multiple="" class="ui fluid search selection dropdown"
+                    [(ngModel)]="job.tags"
+                    name="tags"
+                    #tagSelect="ngModel">
+                <!--disabled will prevent selection of empty string tags-->
+                <option value="" disabled="true">(select tags)</option>
+                <option *ngFor="let t of tags;"
+                        [value]="t.name">{{t.name}}
                 </option>
             </select>
         </div>

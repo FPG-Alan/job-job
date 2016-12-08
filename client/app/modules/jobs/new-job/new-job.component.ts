@@ -23,6 +23,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
     submitted = false;
     job: Job;
     clients: Client[] = [];
+    tags: any[] = [];
     finalName: any = {
         result: "",
         clientCode: "",
@@ -66,6 +67,11 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.apiService.getAllClients()
             .subscribe(
                 res => this.clients = res,
+                err => this.commonService.handleError(err)
+            );
+        this.apiService.getAllTags()
+            .subscribe(
+                res => this.tags = res,
                 err => this.commonService.handleError(err)
             );
     }
@@ -130,12 +136,19 @@ export class NewJobComponent implements OnInit, OnDestroy {
 
     addNewTag(tag: string) {
         if (!this.commonService.isEmptyString(tag)) {
-            $("#new-tag-popup").popup("hide");
+            this.apiService
+                .addNewTag(tag)
+                .subscribe(
+                    res => {
+                        this.tags.push(res);
+                        $("#new-tag-popup").popup("hide");
+                    },
+                    err => this.commonService.handleError(err)
+                );
         } else {
             $("#new-tag-popup").popup("hide");
         }
     }
-
 
     updateFinalName() {
         // reinitiating as an empty string to make sure it's not a null addition
@@ -262,7 +275,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         let endDate = new Date(startDate.getTime() + (7 * 24 * 60 * 60 * 1000));
         let strEndDate = datePipe.transform(endDate.toString(), "yyyy-MM-dd");
         let newClient = new Client("", "", "", []);
-        this.job = new Job("", newClient, "", null, "", "", "", "", null,
+        this.job = new Job("", newClient, "", null, "", "", "", "", [],
             strStartDate, strEndDate, []);
 
         this.finalName = {

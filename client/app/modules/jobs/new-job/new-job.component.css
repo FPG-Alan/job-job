@@ -1,7 +1,7 @@
 .ui.form .inline.fields .field {
   margin-bottom: 5px !important; }
 
-.ui.pop > * {
+.ui.popup > * {
   margin-bottom: 0.25em; }
 
 #create-box-folder .ui.loader:after {

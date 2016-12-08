@@ -122,6 +122,27 @@ export class ApiService {
             .map(res => res.json())
     }
 
+    /******************
+     * TAGS/PRODUCERS *
+     ******************/
+    getAllTags() {
+        return this.authHttp.get("/tag/all")
+            .map(res => res.json())
+    }
+
+    addNewTag(tag: string) {
+        let body = {tag: tag};
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/tag", body, options)
+            .map(res => res.json())
+    }
+
+    attachTagToProject(){
+        // TODO
+    }
+
 
     /*******************
      * BOX INTEGRATION *

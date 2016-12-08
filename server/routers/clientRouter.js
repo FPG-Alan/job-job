@@ -11,6 +11,7 @@ clientRouter.get("/all", function (req, res) {
     Client.find({}, function (err, clients) {
         if (err) {
             res.status(500).send({header: 'Couldn\'t retrieve all clients!'});
+            return;
         }
         res.json(clients);
     });
