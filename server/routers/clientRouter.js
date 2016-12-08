@@ -16,13 +16,17 @@ clientRouter.get("/all", function (req, res) {
     });
 });
 
-clientRouter.get("/count-by-year/:client/:year", function (req, res) {
-    Client.findOne({name: req.params.client}, function (err, client) {
+clientRouter.get("/count-by-year", function (req, res) {
+    if (!req.query.client || !req.query.year) {
+        res.status(500).send({header: 'Need to specify Client and Year'});
+        return;
+    }
+    Client.findOne({name: req.query.client}, function (err, client) {
         if (err) {
             console.log(err);
             res.status(500).send({header: 'Couldn\'t find client!'});
         } else {
-            unirest.get(tenKApiKeys.apiUrl + "projects?from=" + req.params.year + "-01-01"
+            unirest.get(tenKApiKeys.apiUrl + "projects?from=" + req.query.year + "-01-01"
                 + " with_archived=true&per_page=100000")
                 .headers({
                     "Content-Type": "application/json",
@@ -36,7 +40,7 @@ clientRouter.get("/count-by-year/:client/:year", function (req, res) {
                         var year = new Date(proj.starts_at).getFullYear();
                         if (!isBlank(proj.client) && !isBlank(client.name)) {
                             return proj.client.toLowerCase() == client.name.toLowerCase()
-                                && year == req.params.year;
+                                && year == req.query.year;
                         }
                         return false;
                     });

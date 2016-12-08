@@ -42,7 +42,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
     ngOnInit() {
         $(".ui.checkbox").checkbox();
         $(".ui.search.dropdown.selection").dropdown();
-        $("#new-brand-popup").popup({
+        $(".popup-trigger").popup({
             on: "click",
             closable: false,
             lastResort: "right center"
@@ -127,6 +127,15 @@ export class NewJobComponent implements OnInit, OnDestroy {
             $("#new-brand-popup").popup("hide");
         }
     }
+
+    addNewTag(tag: string) {
+        if (!this.commonService.isEmptyString(tag)) {
+            $("#new-tag-popup").popup("hide");
+        } else {
+            $("#new-tag-popup").popup("hide");
+        }
+    }
+
 
     updateFinalName() {
         // reinitiating as an empty string to make sure it's not a null addition
