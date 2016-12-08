@@ -25,6 +25,14 @@
         <span *ngIf="!commonService.isEmptyString(job.client)">{{job.client}}</span>
         <span *ngIf="commonService.isEmptyString(job.client)">N/A</span>
     </div>
+
+    <div>
+        <label>Tags: </label>
+        <span>{{job?.tags?.data | json}}</span>
+        <span *ngIf="!jobs.tags || !jobs.tags.data || jobs?.tags?.data?.length == 0">
+            N/A</span>
+    </div>
+
     <div>
         <label>Link to 10,000ft project: </label>
         <a target="_blank" href="https://vnext.10000ft.com/viewproject?id={{job.id}}">

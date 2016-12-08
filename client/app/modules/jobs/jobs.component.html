@@ -5,24 +5,8 @@
     </a>
 </div>
 
-<!--Filtering by Client-->
 <form #f="ngForm">
-    <!--<div class="ui fluid multiple search selection dropdown">-->
-        <!--<input type="hidden" name="client"-->
-               <!--[(ngModel)]="clientFilterInput"-->
-               <!--(change)="onFilterSearchChange(searchInput.value)"-->
-               <!--#searchInput="ngModel">-->
-        <!--<i class="filter search icon"-->
-           <!--(click)="searchInput.value = ''">-->
-            <!--&lt;!&ndash;leave the "search" class so it puts the icon in the right place&ndash;&gt;-->
-        <!--</i>-->
-        <!--<input class="search">-->
-        <!--<div class="default text">Filter by Client...</div>-->
-        <!--<div class="menu">-->
-            <!--<div class="item" *ngFor="let c of clients">{{c?.name}}</div>-->
-        <!--</div>-->
-    <!--</div>-->
-
+    <!--Filtering by Client-->
     <select multiple="" class="ui fluid multiple search selection dropdown"
             [(ngModel)]="clientFilterInput"
             (ngModelChange)="onFilterSearchChange()"
@@ -35,6 +19,7 @@
         </option>
     </select>
 
+    <!--Filtering by Tag-->
     <select multiple="" class="ui fluid multiple search selection dropdown"
             [(ngModel)]="tagFilterInput"
             (ngModelChange)="onFilterSearchChange()"

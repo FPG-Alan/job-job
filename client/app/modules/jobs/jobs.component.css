@@ -1,4 +1,7 @@
 .ui.selectable.table tr:hover {
   cursor: pointer; }
 
+form select {
+  margin-bottom: 0.25em !important; }
+
 /*# sourceMappingURL=jobs.component.css.map */
