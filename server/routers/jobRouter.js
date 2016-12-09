@@ -13,6 +13,7 @@ jobRouter.get("/all", function (req, res) {
         })
         .end(function (response) {
             // TODO: handle err
+            console.log(response.body);
             res.send(response.body);
         });
 });
@@ -37,6 +38,7 @@ jobRouter.post("/", function (req, res) {
         .send(newProject)
         .end(function (response) {
             // TODO: handle err
+            console.log(response.body);
             res.send(response.body);
         });
 });
@@ -49,6 +51,7 @@ jobRouter.get("/by-id/:id", function (req, res) {
         })
         .end(function (response) {
             // TODO: handle err
+            console.log(response.body);
             res.send(response.body);
         });
 });
@@ -61,6 +64,7 @@ jobRouter.get("/by-client/:client", function (req, res) {
         })
         .end(function (response) {
             // TODO: handle err
+            console.log(response.body);
             var jobs = response.body.data.filter(function(job){
                 if (!isBlank(job.client) && !isBlank(req.params.client)) {
                     return job.client.toLowerCase() == req.params.client.toLowerCase();
