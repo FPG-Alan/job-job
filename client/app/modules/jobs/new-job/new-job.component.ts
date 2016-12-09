@@ -48,6 +48,11 @@ export class NewJobComponent implements OnInit, OnDestroy {
             closable: false,
             lastResort: "right center"
         });
+        $("#new-client-popup").popup({
+            on: "click",
+            closable: true,
+            lastResort: "right center"
+        });
 
         // SESSION STORAGE: check for prefilled or saved fields
         let savedJob = sessionStorage.getItem("saved_job_fields");

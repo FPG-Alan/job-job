@@ -39,7 +39,18 @@
     <!--Client & Brand-->
     <div class="two fields">
         <div class="field" id="client-select-field">
-            <label>Client</label>
+            <label>Client
+                (can't find it?
+                <a id="new-client-popup" class="popup-trigger">
+                    <i class="help circle icon"></i>check me out
+                </a>
+                <div class="ui popup">
+                    You can go <a routerLink="/clients/new">here</a> to create a new Client.
+                    We save most fields, so don't worry about going off to a different page.
+                    Come back here when you're done~ :D
+                </div>
+                )
+            </label>
             <select class="ui search dropdown selection"
                     [(ngModel)]="job.client"
                     (ngModelChange)="this.submitted = false; onClientChange()"
