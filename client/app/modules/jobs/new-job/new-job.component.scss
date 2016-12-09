@@ -7,7 +7,7 @@
 }
 
 // override loader color in a dimmer (set to white by default)
-#create-box-folder .ui.loader:after {
+#confirm-new-job .ui.loader:after {
     border-color: #767676 transparent transparent !important;
 }
 

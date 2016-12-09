@@ -4,7 +4,7 @@
 .ui.popup > * {
   margin-bottom: 0.25em; }
 
-#create-box-folder .ui.loader:after {
+#confirm-new-job .ui.loader:after {
   border-color: #767676 transparent transparent !important; }
 
 input[readonly]:focus {

@@ -199,14 +199,20 @@
 
 
 <!--Final Confirmation Screen-->
-<div class="ui modal" id="confirm-new-job">
+<div class="ui long modal" id="confirm-new-job">
     <i class="close icon"></i>
     <div class="header">
         Almost there!
     </div>
     <div class="content">
         <!--TODO: display message representing current action-->
-        <div class="ui active centered inline loader"></div>
+        <div class="ui active centered inline loader"
+             *ngIf="!canEndConfirm"></div>
+        <h2 class="ui center aligned icon header"
+            *ngIf="canEndConfirm">
+            <i class="green circular checkmark icon"></i>
+            Done
+        </h2>
 
         <h4 class="ui header">Processing rate card...</h4>
         <div class="ui fluid steps">
@@ -246,8 +252,14 @@
             </div>
         </div>
     </div>
-    <!--<div class="actions">-->
-    <!--<div class="ui positive button"><i class="checkmark icon"></i>I'm sure!</div>-->
-    <!--<div class="ui negative button"><i class="remove icon"></i>Nope</div>-->
-    <!--</div>-->
+    <div class="actions">
+        <a class="ui button" routerLink="/jobs">
+            <i class="chevron left icon"></i>Back to List
+        </a>
+        <div class="ui positive button"
+             [class.disabled]="!canEndConfirm"
+             (click)="endFinalConfirmation()">
+            Check It Out<i class="chevron right icon"></i>
+        </div>
+    </div>
 </div>

@@ -304,6 +304,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
     };
     servicesCount: number = 0; // TODO: start timeInterval on when to stop
     maxServicesCount: number = 2; // current number of features on the modal
+    canEndConfirm = false;
 
     private startFinalConfirmation() {
         this.rateCardProcessingState = "disabled";
@@ -317,7 +318,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
         // TODO: checkboxes opting user on these services
         // open modal for the workflow
         $("#confirm-new-job")
-            .modal("show");
+            .modal({closable: false})
+            .modal();
+
+        $("#confirm-new-job").modal("show");
         this.rateCardProcessingState = "active";
         this.rateCardSelectorComponent.updateBillRates();
         this.createNewFolder(null, "client");
@@ -328,21 +332,34 @@ export class NewJobComponent implements OnInit, OnDestroy {
             if (this.servicesCount >= this.maxServicesCount) {
                 setTimeout(() => {
                     this.resetModels();
-                    $("#confirm-new-job")
-                        .modal("hide");
-                    this.commonService.notifyMessage(
-                        "success",
-                        "Sweet!",
-                        "Successfully created a new job"
-                    );
-                    this.router.navigate([
-                        "/jobs/details",
-                        this.rateCardSelectorComponent.newJob.id
-                    ]);
+                    this.canEndConfirm = true;
                 }, 1000);
+                setTimeout(() => {
+                    $("#confirm-new-job").modal("refresh");
+                }, 1100);
                 clearInterval(timeInterval);
             }
         }, 500)
+    }
+
+    endFinalConfirmation() {
+        if (this.canEndConfirm) {
+            $("#confirm-new-job")
+                .modal({
+                    onHidden: () => {
+                        this.commonService.notifyMessage(
+                            "success",
+                            "Sweet!",
+                            "Successfully created a new job"
+                        );
+                        this.router.navigate([
+                            "/jobs/details",
+                            this.rateCardSelectorComponent.newJob.id
+                        ]);
+                    }
+                })
+                .modal("hide");
+        }
     }
 
 
