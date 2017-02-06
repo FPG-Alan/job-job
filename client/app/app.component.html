@@ -52,7 +52,9 @@
 </div>
 
 
-<div class="pusher ui container">
+<div class="ui"
+     [class.container]="authService.authenticated()"
+     [class.pusher]="authService.authenticated()">
     <router-outlet></router-outlet>
 </div>
 
