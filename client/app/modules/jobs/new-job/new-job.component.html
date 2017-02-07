@@ -211,7 +211,7 @@
 
 <!--Final Confirmation Screen-->
 <div class="ui long modal" id="confirm-new-job">
-    <i class="close icon"></i>
+    <!--<i class="close icon"></i>-->
     <div class="header">
         Almost there!
     </div>
@@ -224,6 +224,20 @@
             <i class="green circular checkmark icon"></i>
             Done
         </h2>
+        <h3 class="ui center aligned small header" *ngIf="confirmedJobInfo?.boxId">
+            <span>
+                10,000 Project URL:
+                <a target="_blank" href="https://vnext.10000ft.com/viewproject?id={{confirmedJobInfo.tenKId}}">
+                    {{"https://vnext.10000ft.com/viewproject?id=" + confirmedJobInfo.tenKId | characterLimit: 35}}
+                </a>
+            </span><br>
+            <span *ngIf="confirmedJobInfo?.boxId">
+                Box Folder URL:
+                <a target="_blank" href="https://fancypantsgroup.app.box.com/files/0/f/{{confirmedJobInfo.boxId}}">
+                    {{"https://fancypantsgroup.app.box.com/files/0/f/" + confirmedJobInfo.boxId | characterLimit: 35}}
+                </a>
+            </span>
+        </h3>
 
         <h4 class="ui header">Processing rate card...</h4>
         <div class="ui fluid steps">

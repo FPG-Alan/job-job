@@ -252,6 +252,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 .subscribe(
                     res => {
                         this.rateCardSelectorComponent.newJob = res;
+                        this.confirmedJobInfo.tenKId = res.id
                         this.startFinalConfirmation();
                     },
                     err => this.commonService.handleError(err)
@@ -310,6 +311,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
     servicesCount: number = 0; // TODO: start timeInterval on when to stop
     maxServicesCount: number = 2; // current number of features on the modal
     canEndConfirm = false;
+    confirmedJobInfo = {
+        boxId: null,
+        tenKId: null
+    }; // TODO: replace this when we have personalized data model
 
     private startFinalConfirmation() {
         this.rateCardProcessingState = "disabled";
@@ -323,10 +328,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
         // TODO: checkboxes opting user on these services
         // open modal for the workflow
         $("#confirm-new-job")
-            .modal({closable: false})
-            .modal();
-
-        $("#confirm-new-job").modal("show");
+            .modal("setting", "closable", false)
+            .modal("show");
         this.rateCardProcessingState = "active";
         this.rateCardSelectorComponent.updateBillRates();
         this.createNewFolder(null, "client");
@@ -408,6 +411,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 this.apiService.createNewFolder(folderName, parentFolderId)
                     .subscribe(
                         res => {
+                            if (type == "job") {
+                                console.log(res);
+                                this.confirmedJobInfo.boxId = res.id;
+                            }
                             this.boxProcessingStates[type] = "completed";
                             let parentId = res.id;
                             this.createNewFolder(parentId, nextType);
