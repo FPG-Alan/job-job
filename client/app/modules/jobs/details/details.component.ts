@@ -37,7 +37,7 @@ export class DetailsComponent implements OnInit {
 
     onRateUpdated(state: any) {
         this.selectingRateCard = false;
-        this.rateCardProcessingState = "disabled"
+        this.rateCardProcessingState = "disabled";
         if (state == "completed") {
             this.commonService.notifyMessage(
                 "success",

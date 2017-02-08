@@ -39,7 +39,7 @@
 
 <!--Display Area-->
 <div class="ui basic no-padding segment" [class.loading]="loading">
-    <table class="ui yellow compact selectable sortable celled table"
+    <table class="ui yellow compact sortable celled table"
            *ngIf="displayedJobs?.length > 0">
         <thead>
         <tr>
@@ -58,9 +58,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let j of displayedJobs"
-            [routerLink]="['/jobs/details', j?.id]">
-            <td>{{j?.name | characterLimit: 35}}</td>
+        <tr *ngFor="let j of displayedJobs">
+            <td class="selectable"><a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit: 35}}</a></td>
             <td>{{j?.client}}</td>
         </tr>
         </tbody>

@@ -28,7 +28,8 @@
 
     <div>
         <label>Tags: </label>
-        <span *ngIf="job?.tags?.data?.length > 0">{{job?.tags?.data | json}}</span>
+        <span *ngFor="let tag of job?.tags?.data; let isLast=last">
+            {{tag.value}}{{isLast ? "" : ", "}}</span>
         <span *ngIf="!job.tags || !job.tags.data || job?.tags?.data?.length == 0">
             N/A</span>
     </div>
