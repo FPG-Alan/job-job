@@ -59,7 +59,7 @@
         </thead>
         <tbody>
         <tr *ngFor="let j of displayedJobs">
-            <td class="selectable"><a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit: 35}}</a></td>
+            <td class="ui selectable"><a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit: 35}}</a></td>
             <td>{{j?.client}}</td>
         </tr>
         </tbody>
