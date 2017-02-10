@@ -16,7 +16,7 @@ export class AuthService {
         autoclose: true
     };
     lock = new Auth0Lock('1CD38zBzoOUTvLzrWlredXlx0Q1IRJNJ', 'davefpg.auth0.com', this.options);
-    user: User = new User("", "", "", false);
+    user: User = new User("", "", "", false, false);
 
     constructor(private router: Router,
                 private commonService: CommonService,

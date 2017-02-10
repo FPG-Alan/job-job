@@ -20,6 +20,12 @@ export class NewJobComponent implements OnInit, OnDestroy {
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
 
+    public serviceTypes = [
+        {value: 'site', display: 'Site'},
+        {value: 'banner', display: 'Banner'},
+        {value: "", display: "Neither"}
+    ];
+
     submitted = false;
     job: Job;
     clients: Client[] = [];
@@ -252,7 +258,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 .subscribe(
                     res => {
                         this.rateCardSelectorComponent.newJob = res;
-                        this.confirmedJobInfo.tenKId = res.id
+                        this.confirmedJobInfo.tenKId = res.id;
                         this.startFinalConfirmation();
                     },
                     err => this.commonService.handleError(err)
@@ -333,6 +339,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.rateCardProcessingState = "active";
         this.rateCardSelectorComponent.updateBillRates();
         this.createNewFolder(null, "client");
+        this.copyBoard(this.job.serviceType);
 
         // TODO: create an overlay animation above the steps when done
         // TODO: put this in a separate function
@@ -428,5 +435,18 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     );
             }
         }
+    }
+
+    /**********************
+     * TRELLO INTEGRATION *
+     **********************/
+    copyBoard(serviceType) {
+        this.apiService.copyBoard(serviceType)
+            .subscribe(
+                res => {
+                    console.log("done copying Trello board");
+                },
+                err => {}
+            )
     }
 }

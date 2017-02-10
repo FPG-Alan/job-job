@@ -12,7 +12,7 @@ import {User} from "../../classes/user";
 export class SettingsComponent implements OnInit {
 
     localProfile: any;
-    user: User = new User("", "", "", false);
+    user: User = new User("", "", "", false, false);
     authenticatingBox = false;
     authenticatingTrello = false;
 

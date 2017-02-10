@@ -135,6 +135,19 @@
             #rateCardSelector>
     </app-rate-card-selector>
 
+    <!--Service Type-->
+    <div class="grouped fields">
+        <label>Service Type</label>
+        <div class="field">
+            <div class="radio" *ngFor="let serviceType of serviceTypes">
+                <label>
+                    <input type="radio" name="gender" [(ngModel)]="job.serviceType" [value]="serviceType.value">
+                    {{serviceType.display}}
+                </label>
+            </div>
+        </div>
+    </div>
+
     <!--Description-->
     <div class="field">
         <label>Description</label>
@@ -204,9 +217,6 @@
         <div class="ui negative button"><i class="remove icon"></i>Nope</div>
     </div>
 </div>
-
-
-<!---->
 
 
 <!--Final Confirmation Screen-->
