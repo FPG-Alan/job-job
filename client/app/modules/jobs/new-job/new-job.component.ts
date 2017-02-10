@@ -339,7 +339,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.rateCardProcessingState = "active";
         this.rateCardSelectorComponent.updateBillRates();
         this.createNewFolder(null, "client");
-        this.copyBoard(this.job.serviceType);
+        if (!this.commonService.isEmptyString(this.job.serviceType)) {
+            this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.job.serviceType);
+        }
 
         // TODO: create an overlay animation above the steps when done
         // TODO: put this in a separate function
@@ -440,13 +442,15 @@ export class NewJobComponent implements OnInit, OnDestroy {
     /**********************
      * TRELLO INTEGRATION *
      **********************/
-    copyBoard(serviceType) {
-        this.apiService.copyBoard(serviceType)
+    copyBoard(boardName, serviceType) {
+        this.apiService.copyBoard(boardName, serviceType)
             .subscribe(
                 res => {
                     console.log("done copying Trello board");
                 },
-                err => {}
+                err => {
+                    this.commonService.handleError(err);
+                }
             )
     }
 }

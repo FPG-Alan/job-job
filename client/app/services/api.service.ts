@@ -169,7 +169,7 @@ export class ApiService {
     /**********************
      * TRELLO INTEGRATION *
      **********************/
-    copyBoard(serviceType: string) {
+    copyBoard(boardName: string, serviceType: string) {
         // get user info to retrieve security tokens
         let userId = "";
         let localProfile = JSON.parse(localStorage.getItem("profile"));
@@ -177,6 +177,7 @@ export class ApiService {
 
         let body = {
             userId: userId,
+            boardName: boardName,
             serviceType: serviceType
         };
         let headers = new Headers({"Content-Type": "application/json"});
