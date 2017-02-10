@@ -7,7 +7,6 @@ export class Job {
                 public brand: string,
                 public code: string,
                 public status: string,
-                public rateCard: string,
                 public serviceType: string,
                 public description: string,
                 public tags: any[],

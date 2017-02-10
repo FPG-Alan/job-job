@@ -287,7 +287,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         let endDate = new Date(startDate.getTime() + (7 * 24 * 60 * 60 * 1000));
         let strEndDate = datePipe.transform(endDate.toString(), "yyyy-MM-dd");
         let newClient = new Client("", "", "", []);
-        this.job = new Job("", newClient, "", null, "", "", "", "", [],
+        this.job = new Job("", newClient, "", null, "", "", "", [],
             strStartDate, strEndDate, []);
 
         this.finalName = {
