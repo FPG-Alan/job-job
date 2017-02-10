@@ -16,19 +16,9 @@ var boxSdk = require("../integrations/boxSetup");
 authRouter.get("/box/auth-params", function (req, res) {
     var env = process.env.NODE_ENV;
     var params = env == "development"
-        ? {clientId: boxKeys.dev.id, redirectUri: boxKeys.dev.redirectUri, env:"dev"}
+        ? {clientId: boxKeys.dev.id, redirectUri: boxKeys.dev.redirectUri, env: "dev"}
         : env == "production"
-        ? {clientId: boxKeys.prod.id, redirectUri: boxKeys.prod.redirectUri, env:"prod"}
-        : null;
-    res.json(params);
-});
-
-authRouter.get("/trello/auth-params", function (req, res) {
-    var env = process.env.NODE_ENV;
-    var params = env == "development"
-        ? {appKey: process.env.TRELLO_KEY_DEV, redirectUri: process.env.TRELLO_REDIRECT_URL_DEV, env:"dev"}
-        : env == "production"
-        ? {appKey: process.env.TRELLO_KEY_DEV, redirectUri: process.env.TRELLO_REDIRECT_URL_PROD, env:"prod"}
+        ? {clientId: boxKeys.prod.id, redirectUri: boxKeys.prod.redirectUri, env: "prod"}
         : null;
     res.json(params);
 });
@@ -38,6 +28,7 @@ authRouter.get("/trello/auth-params", function (req, res) {
 authRouter.get("/box", function (req, res) {
     // TODO: hash query.state for security
     // TODO: rewrite horrible callback pyramids
+    // this is the auth callback URL which contains the token/code in the query
     if (req.query.code && req.query.state && boxSdk) {
         boxSdk.getTokensAuthorizationCodeGrant(req.query.code, null, function (err, tokenInfo) {
             if (err) res.redirect('/');
@@ -84,7 +75,41 @@ authRouter.get("/box", function (req, res) {
 });
 
 authRouter.get("/trello", function (req, res) {
-    console.log(req.query);
+    if (req.query.userId) {
+        if (!req.query.token) {
+            res.sendFile(path.join(__dirname + '/../views/trello_auth.html'));
+        } else {
+            Token.findOne({userId: req.query.userId, provider: "trello"}, function (err, token) {
+
+                var newToken = {};
+                if (!token) { // token object doesn't exist; making a new one
+                    newToken = new Token({
+                        userId: req.query.userId,
+                        provider: "trello",
+                        tokenInfo: {token: req.query.token}
+                    });
+                } else { // token object exists; overwriting
+                    newToken = token;
+                    newToken.tokenInfo = {token: req.query.token};
+                }
+
+                newToken.save(function (err, token) {
+                    User.findOne({userId: req.query.userId}, function (err, user) {
+                        if (user) {
+                            user.trelloAuthenticated = true;
+                            user.save(function (err, user) {
+                                res.sendFile(path.join(__dirname + '/../views/success.html'));
+                            });
+                        } else {
+                            res.sendFile(path.join(__dirname + '/../views/success.html'));
+                        }
+                    });
+                });
+            });
+        }
+    } else {
+        res.sendFile(path.join(__dirname + '/../views/success.html'));
+    }
 });
 
 module.exports = authRouter;

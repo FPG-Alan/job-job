@@ -14,8 +14,8 @@ export class ApiService {
     /************
      * SETTINGS *
      ************/
-    getBoxAuthParams() {
-        return this.authHttp.get("/auth/box/auth-params")
+    getAuthParams(integration: string) {
+        return this.authHttp.get("/auth/" + integration + "/auth-params")
             .map(res => res.json());
     }
 
@@ -139,7 +139,7 @@ export class ApiService {
             .map(res => res.json())
     }
 
-    attachTagToProject(){
+    attachTagToProject() {
         // TODO
     }
 
@@ -163,5 +163,13 @@ export class ApiService {
 
         return this.authHttp.post("/box", body, options)
             .map(res => res.json());
+    }
+
+
+    /**********************
+     * TRELLO INTEGRATION *
+     **********************/
+    copyBoard(){
+        
     }
 }
