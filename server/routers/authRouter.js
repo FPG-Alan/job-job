@@ -8,26 +8,38 @@ var User = require("../models/user");
 var Token = require("../models/token");
 
 // init Box SDK
-var keys = require("../integrations/boxKeys");
-var sdk = require("../integrations/boxSetup");
+var boxKeys = require("../integrations/boxKeys");
+var boxSdk = require("../integrations/boxSetup");
 
 
+// get auth params (e.g. app keys, redirect URL, prod/dev environment, etc.)
 authRouter.get("/box/auth-params", function (req, res) {
     var env = process.env.NODE_ENV;
     var params = env == "development"
-        ? {clientId: keys.dev.id, redirectUri: keys.dev.redirectUri, env:"dev"}
+        ? {clientId: boxKeys.dev.id, redirectUri: boxKeys.dev.redirectUri, env:"dev"}
         : env == "production"
-        ? {clientId: keys.prod.id, redirectUri: keys.prod.redirectUri, env:"prod"}
+        ? {clientId: boxKeys.prod.id, redirectUri: boxKeys.prod.redirectUri, env:"prod"}
         : null;
-
     res.json(params);
 });
 
+authRouter.get("/trello/auth-params", function (req, res) {
+    var env = process.env.NODE_ENV;
+    var params = env == "development"
+        ? {appKey: process.env.TRELLO_KEY_DEV, redirectUri: process.env.TRELLO_REDIRECT_URL_DEV, env:"dev"}
+        : env == "production"
+        ? {appKey: process.env.TRELLO_KEY_DEV, redirectUri: process.env.TRELLO_REDIRECT_URL_PROD, env:"prod"}
+        : null;
+    res.json(params);
+});
+
+
+// save tokens into database
 authRouter.get("/box", function (req, res) {
     // TODO: hash query.state for security
     // TODO: rewrite horrible callback pyramids
-    if (req.query.code && req.query.state && sdk) {
-        sdk.getTokensAuthorizationCodeGrant(req.query.code, null, function (err, tokenInfo) {
+    if (req.query.code && req.query.state && boxSdk) {
+        boxSdk.getTokensAuthorizationCodeGrant(req.query.code, null, function (err, tokenInfo) {
             if (err) res.redirect('/');
 
             if (tokenInfo) {
@@ -69,6 +81,10 @@ authRouter.get("/box", function (req, res) {
     } else {
         res.redirect('/');
     }
+});
+
+authRouter.get("/trello", function (req, res) {
+    console.log(req.query);
 });
 
 module.exports = authRouter;
