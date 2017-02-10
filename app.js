@@ -27,6 +27,7 @@ var tagRouter = require("./server/routers/tagRouter");
 var authRouter = require("./server/routers/authRouter");
 // Import routers for integrations
 var boxIntegrationRouter = require("./server/routers/boxIntegrationRouter");
+var trelloIntegrationRouter = require("./server/routers/trelloIntegrationRouter");
 
 // API routers
 app.use("/user", authenticate, userRouter);
@@ -37,6 +38,7 @@ app.use("/tag", authenticate, tagRouter);
 app.use("/auth", authRouter);
 // API routers for integrations
 app.use("/box", authenticate, boxIntegrationRouter);
+app.use("/trello", authenticate, trelloIntegrationRouter);
 
 
 // Resource loading
