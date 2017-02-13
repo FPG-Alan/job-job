@@ -296,7 +296,8 @@
         <h4 class="ui header">Copying Trello board...</h4>
         <div class="ui fluid steps">
             <div class="step {{trelloProcessingState}}">
-                <i class="trello icon"
+                <i class="icon"
+                   [class.trello]="trelloProcessingState != 'failed'"
                    [class.red]="trelloProcessingState == 'failed'"
                    [class.remove]="trelloProcessingState == 'failed'"></i>
                 <div class="content">
