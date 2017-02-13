@@ -5,3 +5,9 @@ form > * { margin-bottom: 0.25em !important }
         cursor: pointer;
     }
 }
+
+@media (max-width: 767px) {
+    .ui.table tbody tr td.selectable > a:not(.ui) {
+        padding: 0;
+    }
+}
