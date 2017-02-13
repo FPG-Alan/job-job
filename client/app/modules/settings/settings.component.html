@@ -23,5 +23,18 @@
                (click)="navigateBoxAuth()">Authenticated</a>
         </td>
     </tr>
+    <tr>
+        <td><img class="ui logo image" src="assets/logos/trello_logo.png"></td>
+        <td>Organize and prioritize your projects in a fun, flexible and rewarding way</td>
+        <td class="right aligned">
+            <a class="ui button"
+               *ngIf="!user.trelloAuthenticated"
+               [class.loading]="authenticatingTrello"
+               (click)="navigateTrelloAuth()">Authenticate Trello</a>
+            <a class="ui positive button"
+               *ngIf="user.trelloAuthenticated"
+               (click)="navigateTrelloAuth()">Authenticated</a>
+        </td>
+    </tr>
     </tbody>
 </table>

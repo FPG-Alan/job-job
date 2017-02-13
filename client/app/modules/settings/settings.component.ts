@@ -12,8 +12,9 @@ import {User} from "../../classes/user";
 export class SettingsComponent implements OnInit {
 
     localProfile: any;
-    user: User = new User("", "", "", false);
+    user: User = new User("", "", "", false, false);
     authenticatingBox = false;
+    authenticatingTrello = false;
 
     constructor(private authService: AuthService,
                 private commonService: CommonService,
@@ -33,7 +34,7 @@ export class SettingsComponent implements OnInit {
     navigateBoxAuth() {
         this.authenticatingBox = true;
         let authParams = null;
-        this.apiService.getBoxAuthParams()
+        this.apiService.getAuthParams("box")
             .subscribe(
                 res => {
                     authParams = res;
@@ -66,5 +67,28 @@ export class SettingsComponent implements OnInit {
                 },
                 err => console.log(err)
             );
+    }
+
+    navigateTrelloAuth() {
+        this.authenticatingTrello = true;
+
+        let child = window.open("/auth/trello?userId=" + this.user.userId, '', 'toolbar=0,status=0,width=626,height=436');
+        if (!child) {
+            this.authenticatingTrello = false;
+            return;
+        }
+        // manipulate UI on child window close
+        let timer = setInterval(() => {
+            if (child.closed) {
+                clearInterval(timer);
+                this.authenticatingTrello = false;
+                // get user again and check if Trello is authenticated
+                this.apiService.getMyUser(this.localProfile.user_id)
+                    .subscribe(
+                        res => this.user = res,
+                        err => this.commonService.handleError(err)
+                    )
+            }
+        }, 500);
     }
 }

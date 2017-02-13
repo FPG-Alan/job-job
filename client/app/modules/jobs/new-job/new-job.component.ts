@@ -20,6 +20,12 @@ export class NewJobComponent implements OnInit, OnDestroy {
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
 
+    public serviceTypes = [
+        {value: 'site', display: 'Site'},
+        {value: 'banner', display: 'Banner'},
+        {value: "", display: "Neither"}
+    ];
+
     submitted = false;
     job: Job;
     clients: Client[] = [];
@@ -252,7 +258,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 .subscribe(
                     res => {
                         this.rateCardSelectorComponent.newJob = res;
-                        this.confirmedJobInfo.tenKId = res.id
+                        this.confirmedJobInfo.tenKId = res.id;
                         this.startFinalConfirmation();
                     },
                     err => this.commonService.handleError(err)
@@ -281,7 +287,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         let endDate = new Date(startDate.getTime() + (7 * 24 * 60 * 60 * 1000));
         let strEndDate = datePipe.transform(endDate.toString(), "yyyy-MM-dd");
         let newClient = new Client("", "", "", []);
-        this.job = new Job("", newClient, "", null, "", "", "", "", [],
+        this.job = new Job("", newClient, "", null, "", "", "", [],
             strStartDate, strEndDate, []);
 
         this.finalName = {
@@ -308,12 +314,14 @@ export class NewJobComponent implements OnInit, OnDestroy {
         brand: "disabled",
         job: "disabled"
     };
+    trelloProcessingState = "disabled";
     servicesCount: number = 0; // TODO: start timeInterval on when to stop
-    maxServicesCount: number = 2; // current number of features on the modal
+    maxServicesCount: number = 3; // current number of features on the modal
     canEndConfirm = false;
     confirmedJobInfo = {
         boxId: null,
-        tenKId: null
+        tenKId: null,
+        trelloId: null
     }; // TODO: replace this when we have personalized data model
 
     private startFinalConfirmation() {
@@ -333,6 +341,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.rateCardProcessingState = "active";
         this.rateCardSelectorComponent.updateBillRates();
         this.createNewFolder(null, "client");
+        if (!this.commonService.isEmptyString(this.job.serviceType)) {
+            this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.job.serviceType);
+        } else { this.servicesCount++; }
 
         // TODO: create an overlay animation above the steps when done
         // TODO: put this in a separate function
@@ -412,7 +423,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     .subscribe(
                         res => {
                             if (type == "job") {
-                                console.log(res);
                                 this.confirmedJobInfo.boxId = res.id;
                             }
                             this.boxProcessingStates[type] = "completed";
@@ -420,13 +430,30 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             this.createNewFolder(parentId, nextType);
                         },
                         err => {
-                            this.resetModels();
-                            $("#confirm-new-job").modal("hide");
                             this.commonService.handleError(err);
                             this.servicesCount++;
                         }
                     );
             }
         }
+    }
+
+    /**********************
+     * TRELLO INTEGRATION *
+     **********************/
+    copyBoard(boardName, serviceType) {
+        this.trelloProcessingState = "active";
+        this.apiService.copyBoard(boardName, serviceType)
+            .subscribe(
+                res => {
+                    this.trelloProcessingState= "completed";
+                    this.confirmedJobInfo.trelloId = res.id;
+                },
+                err => {
+                    this.trelloProcessingState = "failed";
+                    this.commonService.handleError(err);
+                },
+                () => this.servicesCount++
+            )
     }
 }

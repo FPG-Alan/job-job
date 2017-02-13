@@ -8,26 +8,29 @@ var User = require("../models/user");
 var Token = require("../models/token");
 
 // init Box SDK
-var keys = require("../integrations/boxKeys");
-var sdk = require("../integrations/boxSetup");
+var boxKeys = require("../integrations/boxKeys");
+var boxSdk = require("../integrations/boxSetup");
 
 
+// get auth params (e.g. app keys, redirect URL, prod/dev environment, etc.)
 authRouter.get("/box/auth-params", function (req, res) {
     var env = process.env.NODE_ENV;
     var params = env == "development"
-        ? {clientId: keys.dev.id, redirectUri: keys.dev.redirectUri, env:"dev"}
+        ? {clientId: boxKeys.dev.id, redirectUri: boxKeys.dev.redirectUri, env: "dev"}
         : env == "production"
-        ? {clientId: keys.prod.id, redirectUri: keys.prod.redirectUri, env:"prod"}
+        ? {clientId: boxKeys.prod.id, redirectUri: boxKeys.prod.redirectUri, env: "prod"}
         : null;
-
     res.json(params);
 });
 
+
+// save tokens into database
 authRouter.get("/box", function (req, res) {
     // TODO: hash query.state for security
     // TODO: rewrite horrible callback pyramids
-    if (req.query.code && req.query.state && sdk) {
-        sdk.getTokensAuthorizationCodeGrant(req.query.code, null, function (err, tokenInfo) {
+    // this is the auth callback URL which contains the token/code in the query
+    if (req.query.code && req.query.state && boxSdk) {
+        boxSdk.getTokensAuthorizationCodeGrant(req.query.code, null, function (err, tokenInfo) {
             if (err) res.redirect('/');
 
             if (tokenInfo) {
@@ -68,6 +71,44 @@ authRouter.get("/box", function (req, res) {
         });
     } else {
         res.redirect('/');
+    }
+});
+
+authRouter.get("/trello", function (req, res) {
+    if (req.query.userId) {
+        if (!req.query.token) {
+            res.sendFile(path.join(__dirname + '/../views/trello_auth.html'));
+        } else {
+            Token.findOne({userId: req.query.userId, provider: "trello"}, function (err, token) {
+
+                var newToken = {};
+                if (!token) { // token object doesn't exist; making a new one
+                    newToken = new Token({
+                        userId: req.query.userId,
+                        provider: "trello",
+                        tokenInfo: {token: req.query.token}
+                    });
+                } else { // token object exists; overwriting
+                    newToken = token;
+                    newToken.tokenInfo = {token: req.query.token};
+                }
+
+                newToken.save(function (err, token) {
+                    User.findOne({userId: req.query.userId}, function (err, user) {
+                        if (user) {
+                            user.trelloAuthenticated = true;
+                            user.save(function (err, user) {
+                                res.sendFile(path.join(__dirname + '/../views/success.html'));
+                            });
+                        } else {
+                            res.sendFile(path.join(__dirname + '/../views/success.html'));
+                        }
+                    });
+                });
+            });
+        }
+    } else {
+        res.sendFile(path.join(__dirname + '/../views/success.html'));
     }
 });
 

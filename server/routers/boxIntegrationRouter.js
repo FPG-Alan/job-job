@@ -46,7 +46,7 @@ boxIntegrationRouter.post("/", function (req, res) {
                             });
                         }
                         // find folder if it exists
-                        if (data.total_count > 0) {
+                        if (data && data.total_count > 0) {
                             for (var i = 0; i < data.total_count; i++) {
                                 var currItem = data.entries[i];
                                 if (currItem.type == "folder" && currItem.name == req.body.folderName) {

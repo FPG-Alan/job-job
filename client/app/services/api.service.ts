@@ -14,8 +14,8 @@ export class ApiService {
     /************
      * SETTINGS *
      ************/
-    getBoxAuthParams() {
-        return this.authHttp.get("/auth/box/auth-params")
+    getAuthParams(integration: string) {
+        return this.authHttp.get("/auth/" + integration + "/auth-params")
             .map(res => res.json());
     }
 
@@ -139,7 +139,7 @@ export class ApiService {
             .map(res => res.json())
     }
 
-    attachTagToProject(){
+    attachTagToProject() {
         // TODO
     }
 
@@ -162,6 +162,28 @@ export class ApiService {
         let options = new RequestOptions({headers: headers});
 
         return this.authHttp.post("/box", body, options)
+            .map(res => res.json());
+    }
+
+
+    /**********************
+     * TRELLO INTEGRATION *
+     **********************/
+    copyBoard(boardName: string, serviceType: string) {
+        // get user info to retrieve security tokens
+        let userId = "";
+        let localProfile = JSON.parse(localStorage.getItem("profile"));
+        if (localProfile) userId = localProfile.user_id;
+
+        let body = {
+            userId: userId,
+            boardName: boardName,
+            serviceType: serviceType
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/trello", body, options)
             .map(res => res.json());
     }
 }
