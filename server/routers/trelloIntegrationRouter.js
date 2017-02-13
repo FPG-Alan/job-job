@@ -18,7 +18,7 @@ var invalidTokenError = {
 
 trelloIntegrationRouter.post("/", function (req, res) {
     Token.findOne({userId: req.body.userId, provider: "trello"}, function (err, token) {
-        if (err) {
+        if (err || !token.tokenInfo.token) {
             res.statusCode.send(invalidTokenError);
         } else {
             var newBoard = {
@@ -32,14 +32,12 @@ trelloIntegrationRouter.post("/", function (req, res) {
                 prefs_permissionLevel: "org"
             };
 
-            // TODO: find token
             unirest.post(apiUrl + "boards" +
                 "?key=" + apiKey +
-                "&token=...")
+                "&token=" + token.tokenInfo.token)
                 .headers({
                     "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    "auth": tenKApiKeys.keys
+                    "Content-Type": "application/json"
                 })
                 .send(newBoard)
                 .end(function (response) {
@@ -48,6 +46,7 @@ trelloIntegrationRouter.post("/", function (req, res) {
                         console.log(response);
                     }
                     res.send(response.body);
+                    console.log("Created new Trello board:", req.body.boardName);
                 });
         }
     });

@@ -314,12 +314,14 @@ export class NewJobComponent implements OnInit, OnDestroy {
         brand: "disabled",
         job: "disabled"
     };
+    trelloProcessingState = "disabled";
     servicesCount: number = 0; // TODO: start timeInterval on when to stop
-    maxServicesCount: number = 2; // current number of features on the modal
+    maxServicesCount: number = 3; // current number of features on the modal
     canEndConfirm = false;
     confirmedJobInfo = {
         boxId: null,
-        tenKId: null
+        tenKId: null,
+        trelloId: null
     }; // TODO: replace this when we have personalized data model
 
     private startFinalConfirmation() {
@@ -341,7 +343,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.createNewFolder(null, "client");
         if (!this.commonService.isEmptyString(this.job.serviceType)) {
             this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.job.serviceType);
-        }
+        } else { this.servicesCount++; }
 
         // TODO: create an overlay animation above the steps when done
         // TODO: put this in a separate function
@@ -421,7 +423,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     .subscribe(
                         res => {
                             if (type == "job") {
-                                console.log(res);
                                 this.confirmedJobInfo.boxId = res.id;
                             }
                             this.boxProcessingStates[type] = "completed";
@@ -429,8 +430,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             this.createNewFolder(parentId, nextType);
                         },
                         err => {
-                            this.resetModels();
-                            $("#confirm-new-job").modal("hide");
                             this.commonService.handleError(err);
                             this.servicesCount++;
                         }
@@ -443,14 +442,18 @@ export class NewJobComponent implements OnInit, OnDestroy {
      * TRELLO INTEGRATION *
      **********************/
     copyBoard(boardName, serviceType) {
+        this.trelloProcessingState = "active";
         this.apiService.copyBoard(boardName, serviceType)
             .subscribe(
                 res => {
-                    console.log("done copying Trello board");
+                    this.trelloProcessingState= "completed";
+                    this.confirmedJobInfo.trelloId = res.id;
                 },
                 err => {
+                    this.trelloProcessingState = "failed";
                     this.commonService.handleError(err);
-                }
+                },
+                () => this.servicesCount++
             )
     }
 }
