@@ -12,11 +12,12 @@ jobRouter.get("/all", function (req, res) {
             "auth": tenKApiKeys.keys
         })
         .end(function (response) {
-            // TODO: handle err
             if (response.status !== 200) {
+                res.status(500).send({header: "Error retrieving job list"});
                 console.log(response);
+            } else {
+                res.send(response.body);
             }
-            res.send(response.body);
         });
 });
 
@@ -39,11 +40,12 @@ jobRouter.post("/", function (req, res) {
         })
         .send(newProject)
         .end(function (response) {
-            // TODO: handle err
             if (response.status !== 200) {
+                res.status(500).send({header: "Error creating a project in 10,000ft"});
                 console.log(response);
+            } else {
+                res.send(response.body);
             }
-            res.send(response.body);
         });
 });
 
@@ -54,11 +56,12 @@ jobRouter.get("/by-id/:id", function (req, res) {
             "auth": tenKApiKeys.keys
         })
         .end(function (response) {
-            // TODO: handle err
             if (response.status !== 200) {
+                res.status(500).send({header: "Could not retrieve by project", message: "Project might not exist"});
                 console.log(response);
+            } else {
+                res.send(response.body);
             }
-            res.send(response.body);
         });
 });
 
@@ -69,11 +72,12 @@ jobRouter.get("/by-client/:client", function (req, res) {
             "auth": tenKApiKeys.keys
         })
         .end(function (response) {
-            // TODO: handle err
             if (response.status !== 200) {
+                res.status(500).send({header: "Could not find projects by client name"});
                 console.log(response);
+                return;
             }
-            var jobs = response.body.data.filter(function(job){
+            var jobs = response.body.data.filter(function (job) {
                 if (!isBlank(job.client) && !isBlank(req.params.client)) {
                     return job.client.toLowerCase() == req.params.client.toLowerCase();
                 }
@@ -83,7 +87,7 @@ jobRouter.get("/by-client/:client", function (req, res) {
         });
 });
 
-function isBlank (str) {
+function isBlank(str) {
     return (!str || /^\s*$/.test(str));
 }
 

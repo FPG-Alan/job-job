@@ -41,12 +41,14 @@ trelloIntegrationRouter.post("/", function (req, res) {
                 })
                 .send(newBoard)
                 .end(function (response) {
-                    // TODO: handle err
                     if (response.status !== 200) {
+                        res.status(500).send({header: "Failed to copy Trello board"});
                         console.log(response);
+                    } else {
+                        res.send(response.body);
+                        console.log("Created new Trello board:", req.body.boardName);
                     }
-                    res.send(response.body);
-                    console.log("Created new Trello board:", req.body.boardName);
+
                 });
         }
     });

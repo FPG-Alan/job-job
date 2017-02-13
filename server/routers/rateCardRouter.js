@@ -13,8 +13,12 @@ rateCardRouter.get("/:project", function (req, res) {
             "auth": tenKApiKeys.keys
         })
         .end(function (response) {
-            // TODO: handle err
-            res.send(response.body);
+            if (response.status !== 200) {
+                res.status(500).send({header: "Failed to retrieve bill rates"});
+                console.log(response);
+            } else {
+                res.send(response.body);
+            }
         });
 });
 
@@ -36,15 +40,19 @@ rateCardRouter.put("/:project", function (req, res) {
                     rate: rates[r].rate
                 })
                 .end(function (response) {
-                    // TODO: handle err
-                    resCounts++;
-                    console.log("Bill rates updating progress (", rates[resCounts - 1].rate, "):", resCounts, "/", rates.length);
-
-                    if (resCounts >= rates.length) {
-                        res.end(JSON.stringify(response.body) + "]");
-                        console.log("Bill rates update for job", req.params.project, "DONE!");
+                    if (response.status !== 200) {
+                        res.status(500).send({header: "Failed to update bill rates"});
+                        console.log(response);
                     } else {
-                        res.write(JSON.stringify(response.body) + ",");
+                        resCounts++;
+                        console.log("Bill rates updating progress (", rates[resCounts - 1].rate, "):", resCounts, "/", rates.length);
+
+                        if (resCounts >= rates.length) {
+                            res.end(JSON.stringify(response.body) + "]");
+                            console.log("Bill rates update for job", req.params.project, "DONE!");
+                        } else {
+                            res.write(JSON.stringify(response.body) + ",");
+                        }
                     }
                 });
         }
