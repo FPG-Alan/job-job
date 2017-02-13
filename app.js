@@ -51,9 +51,17 @@ app.get('/', function (req, res) {
 });
 
 // Error handling
-app.use(function (err, req, res, next) {
+app.use(function handleError(err, req, res, next) {
     if (401 == err.status) { // unauthorized
-        res.redirect('/')
+        console.log("error: 401 Unauthorized");
+        res.redirect('/');
+        return;
+    } else {
+        console.error(err.stack);
+
+        res.statusCode.send({
+            header: "Server error"
+        });
     }
 });
 
