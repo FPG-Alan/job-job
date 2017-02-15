@@ -52,12 +52,12 @@
 
     <div class="ui divider"></div>
     <div class="ui right floated large buttons">
-        <button type="submit" class="ui positive button"
-                [disabled]="!form.form.valid || submitted"><i class="checkmark icon"></i>Submit
-        </button>
-        <div class="or"></div>
         <button type="button" class="ui negative button"
                 (click)="resetModels()"><i class="refresh icon"></i>Clear
+        </button>
+        <div class="or"></div>
+        <button type="submit" class="ui positive button"
+                [disabled]="!form.form.valid || submitted"><i class="checkmark icon"></i>Submit
         </button>
     </div>
 
