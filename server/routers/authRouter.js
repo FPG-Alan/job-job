@@ -1,4 +1,5 @@
 var express = require('express');
+var unirest = require('unirest');
 var dotenv = process.env.NODE_ENV == "production"
     ? null : require('dotenv').config();
 var path = require("path");
@@ -109,6 +110,28 @@ authRouter.get("/trello", function (req, res) {
         }
     } else {
         res.sendFile(path.join(__dirname + '/../views/success.html'));
+    }
+});
+
+authRouter.get("/slack", function (req, res) {
+    if (req.query.code && req.query.state && req.query.redirect_url) {
+        unirest.get(process.env.SLACK_API_URL + "oauth.access" +
+            "?client_id=" + process.env.SLACK_CLIENT_ID +
+            "&client_secret=" + process.env.SLACK_CLIENT_SECRET +
+            "&code=" + req.query.code +
+            "&redirect_url=" + req.query.redirect_url)
+            .headers({
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            })
+            .end(function (response) {
+                if (response.status !== 200) {
+                    console.log(response);
+                } else {
+                    console.log("Successfully retrieved token", response.body)
+                    // TODO: save token to database
+                }
+            })
     }
 });
 
