@@ -22,7 +22,8 @@ userRouter.post("/", function (req, res) {
                 name: req.body.name,
                 email: req.body.email,
                 boxAuthenticated: req.body.boxAuthenticated,
-                trelloAuthenticated: req.body.trelloAuthenticated
+                trelloAuthenticated: req.body.trelloAuthenticated,
+                slackAuthenticated: req.body.slackAuthenticated
             });
             newUser.save(function (err, newUser) {
                 if (err) {

@@ -12,9 +12,10 @@ import {User} from "../../classes/user";
 export class SettingsComponent implements OnInit {
 
     localProfile: any;
-    user: User = new User("", "", "", false, false);
+    user: User = new User("", "", "", false, false, false);
     authenticatingBox = false;
     authenticatingTrello = false;
+    authenticatingSlack = false;
 
     constructor(private authService: AuthService,
                 private commonService: CommonService,
@@ -90,5 +91,42 @@ export class SettingsComponent implements OnInit {
                     )
             }
         }, 500);
+    }
+
+    navigateSlackAuth() {
+        this.authenticatingSlack = true;
+        let authParams = null;
+        this.apiService.getAuthParams("slack")
+            .subscribe(
+                res => {
+                    authParams = res;
+                    if (!authParams) return;
+
+                    let encodedRedirect = encodeURIComponent(authParams.redirectUri);
+                    let child = window.open("https://slack.com/oauth/authorize" +
+                        "?client_id=" + authParams.clientId +
+                        "&scope=" + "channels:write" +
+                        "&redirect_uri=" + encodedRedirect +
+                        "&state=" + this.user.userId +
+                        "&team=" + authParams.teamId, '', 'toolbar=0,status=0,width=626,height=436');
+                    if (!child) {
+                        this.authenticatingSlack = false;
+                        return;
+                    }
+                    // manipulate UI on child window close
+                    let timer = setInterval(() => {
+                        if (child.closed) {
+                            clearInterval(timer);
+                            this.authenticatingSlack = false;
+                            // get user again and check if Box is authenticated
+                            this.apiService.getMyUser(this.localProfile.user_id)
+                                .subscribe(
+                                    res => this.user = res,
+                                    err => this.commonService.handleError(err)
+                                )
+                        }
+                    }, 500);
+                },
+                err => console.log(err))
     }
 }

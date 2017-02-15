@@ -3,6 +3,7 @@ export class User {
                 public name: string,
                 public email: string,
                 public boxAuthenticated: Boolean,
-                public trelloAuthenticated: Boolean) {
+                public trelloAuthenticated: Boolean,
+                public slackAuthenticated: Boolean) {
     }
 }

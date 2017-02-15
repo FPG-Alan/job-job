@@ -24,6 +24,22 @@ authRouter.get("/box/auth-params", function (req, res) {
     res.json(params);
 });
 
+authRouter.get("/slack/auth-params", function (req, res) {
+    var env = process.env.NODE_ENV;
+    var params = env == "development" ? {
+        clientId: process.env.SLACK_CLIENT_ID,
+        redirectUri: process.env.SLACK_REDIRECT_URI_DEV,
+        teamId: process.env.SLACK_TEAM_ID,
+        env: "dev"
+    } : env == "production" ? {
+        clientId: process.env.SLACK_CLIENT_ID,
+        redirectUri: process.env.SLACK_REDIRECT_URI_PROD,
+        teamId: process.env.SLACK_TEAM_ID,
+        env: "prod"
+    } : null;
+    res.json(params);
+});
+
 
 // save tokens into database
 authRouter.get("/box", function (req, res) {
@@ -81,7 +97,6 @@ authRouter.get("/trello", function (req, res) {
             res.sendFile(path.join(__dirname + '/../views/trello_auth.html'));
         } else {
             Token.findOne({userId: req.query.userId, provider: "trello"}, function (err, token) {
-
                 var newToken = {};
                 if (!token) { // token object doesn't exist; making a new one
                     newToken = new Token({
@@ -114,12 +129,12 @@ authRouter.get("/trello", function (req, res) {
 });
 
 authRouter.get("/slack", function (req, res) {
-    if (req.query.code && req.query.state && req.query.redirect_url) {
+    if (req.query.code && req.query.state) {
+        // TODO: check state if match user
         unirest.get(process.env.SLACK_API_URL + "oauth.access" +
             "?client_id=" + process.env.SLACK_CLIENT_ID +
             "&client_secret=" + process.env.SLACK_CLIENT_SECRET +
-            "&code=" + req.query.code +
-            "&redirect_url=" + req.query.redirect_url)
+            "&code=" + req.query.code)
             .headers({
                 "Accept": "application/json",
                 "Content-Type": "application/json"
@@ -128,10 +143,36 @@ authRouter.get("/slack", function (req, res) {
                 if (response.status !== 200) {
                     console.log(response);
                 } else {
-                    console.log("Successfully retrieved token", response.body)
-                    // TODO: save token to database
+                    Token.findOne({userId: req.query.state, provider: "slack"}, function (err, token) {
+                        var newToken = {};
+                        if (!token) { // token object doesn't exist; making a new one
+                            newToken = new Token({
+                                userId: req.query.state,
+                                provider: "slack",
+                                tokenInfo: response.body
+                            });
+                        } else { // token object exists; overwriting
+                            newToken = token;
+                            newToken.tokenInfo = response.body;
+                        }
+
+                        newToken.save(function (err, token) {
+                            User.findOne({userId: req.query.state}, function (err, user) {
+                                if (user) {
+                                    user.slackAuthenticated = true;
+                                    user.save(function (err, user) {
+                                        res.sendFile(path.join(__dirname + '/../views/success.html'));
+                                    });
+                                } else {
+                                    res.sendFile(path.join(__dirname + '/../views/success.html'));
+                                }
+                            });
+                        });
+                    });
                 }
-            })
+            });
+    } else {
+        res.sendFile(path.join(__dirname + '/../views/success.html'));
     }
 });
 
