@@ -25,6 +25,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         {value: 'banner', display: 'Banner'},
         {value: "", display: "Neither"}
     ];
+    createSlackChannelToggle = "no";
 
     submitted = false;
     job: Job;
@@ -315,13 +316,15 @@ export class NewJobComponent implements OnInit, OnDestroy {
         job: "disabled"
     };
     trelloProcessingState = "disabled";
+    slackProcessingState = "disabled";
     servicesCount: number = 0; // TODO: start timeInterval on when to stop
-    maxServicesCount: number = 3; // current number of features on the modal
+    maxServicesCount: number = 4; // current number of features on the modal
     canEndConfirm = false;
     confirmedJobInfo = {
         boxId: null,
         tenKId: null,
-        trelloId: null
+        trelloId: null,
+        slackId: null
     }; // TODO: replace this when we have personalized data model
 
     private startFinalConfirmation() {
@@ -338,11 +341,15 @@ export class NewJobComponent implements OnInit, OnDestroy {
         $("#confirm-new-job")
             .modal("setting", "closable", false)
             .modal("show");
+        // rate card progress UI
         this.rateCardProcessingState = "active";
         this.rateCardSelectorComponent.updateBillRates();
         this.createNewFolder(null, "client");
         if (!this.commonService.isEmptyString(this.job.serviceType)) {
             this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.job.serviceType);
+        } else { this.servicesCount++; }
+        if (this.createSlackChannelToggle == "yes") {
+            this.createNewChannel(this.usingFinalName ? this.finalName.result : this.job.name);
         } else { this.servicesCount++; }
 
         // TODO: create an overlay animation above the steps when done
@@ -446,7 +453,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.apiService.copyBoard(boardName, serviceType)
             .subscribe(
                 res => {
-                    this.trelloProcessingState= "completed";
+                    this.trelloProcessingState = "completed";
                     this.confirmedJobInfo.trelloId = res.id;
                 },
                 err => {
@@ -455,5 +462,14 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 },
                 () => this.servicesCount++
             )
+    }
+
+    /*********************
+     * SLACK INTEGRATION *
+     *********************/
+    createNewChannel(channelName) {
+        console.log("should create Slack channel");
+
+        this.servicesCount++;
     }
 }

@@ -129,25 +129,6 @@
         </div>
     </div>
 
-    <!--Rate Card Selector-->
-    <app-rate-card-selector
-            (onRateUpdated)="onRateUpdated($event)"
-            #rateCardSelector>
-    </app-rate-card-selector>
-
-    <!--Service Type-->
-    <div class="grouped fields">
-        <label>Service Type</label>
-        <div class="field">
-            <div class="radio" *ngFor="let serviceType of serviceTypes">
-                <label>
-                    <input type="radio" name="gender" [(ngModel)]="job.serviceType" [value]="serviceType.value">
-                    {{serviceType.display}}
-                </label>
-            </div>
-        </div>
-    </div>
-
     <!--Description-->
     <div class="field">
         <label>Description</label>
@@ -158,32 +139,70 @@
         </textarea>
     </div>
 
+
+    <br><br>
     <!--Tags-->
-    <div class="ui form">
-        <div class="field">
-            <label>Tags/Producers (can't find yours?
-                <a id="new-tag-popup" class="popup-trigger"><i class="add icon"></i>add new</a>
-                <div class="ui popup" id="new-tag-popup-form">
-                    <div class="ui input">
-                        <input type="text" placeholder="(enter new tag)" #newTagInput>
-                    </div>
-                    <div class="ui positive button"
-                         (click)="addNewTag(newTagInput.value); newTagInput.value = ''">Save
-                    </div>
-                    <div class="ui button" (click)="addNewTag('')">Cancel</div>
+    <div class="field">
+        <label>Tags/Producers (can't find yours?
+            <a id="new-tag-popup" class="popup-trigger"><i class="add icon"></i>add new</a>
+            <div class="ui popup" id="new-tag-popup-form">
+                <div class="ui input">
+                    <input type="text" placeholder="(enter new tag)" #newTagInput>
                 </div>
-                )
-            </label>
-            <select multiple="" class="ui fluid search selection dropdown"
-                    [(ngModel)]="job.tags"
-                    name="tags"
-                    #tagSelect="ngModel">
-                <!--disabled will prevent selection of empty string tags-->
-                <option value="" disabled="true">(select tags)</option>
-                <option *ngFor="let t of tags;"
-                        [value]="t.name">{{t.name}}
-                </option>
-            </select>
+                <div class="ui positive button"
+                     (click)="addNewTag(newTagInput.value); newTagInput.value = ''">Save
+                </div>
+                <div class="ui button" (click)="addNewTag('')">Cancel</div>
+            </div>
+            )
+        </label>
+        <select multiple="" class="ui fluid search selection dropdown"
+                [(ngModel)]="job.tags"
+                name="tags"
+                #tagSelect="ngModel">
+            <!--disabled will prevent selection of empty string tags-->
+            <option value="" disabled="true">(select tags)</option>
+            <option *ngFor="let t of tags;"
+                    [value]="t.name">{{t.name}}
+            </option>
+        </select>
+    </div>
+
+    <!--Rate Card Selector-->
+    <app-rate-card-selector
+            (onRateUpdated)="onRateUpdated($event)"
+            #rateCardSelector>
+    </app-rate-card-selector>
+
+    <!--Service Type-->
+    <div class="two fields">
+        <div class="grouped fields">
+            <label>Service Type</label>
+            <div class="field">
+                <div class="radio" *ngFor="let serviceType of serviceTypes">
+                    <label>
+                        <input type="radio" name="type" [(ngModel)]="job.serviceType" [value]="serviceType.value">
+                        {{serviceType.display}}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="grouped fields">
+            <label>Create a Slack Channel?</label>
+            <div class="field">
+                <div class="radio">
+                    <label><input #y type="radio" name="slack" (click)="createSlackChannelToggle='yes'"
+                                  [checked]="createSlackChannelToggle=='yes'"
+                                  value="yes">
+                        Yes</label>
+                </div>
+                <div class="radio">
+                    <label><input #n type="radio" name="slack" (click)="createSlackChannelToggle='no'"
+                                  [checked]="createSlackChannelToggle=='no'"
+                                  value="no">
+                        No</label>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -59,7 +59,7 @@ app.use(function handleError(err, req, res, next) {
     } else {
         console.error(err.stack);
 
-        res.statusCode.send({
+        res.status(500).send({
             header: "Server error"
         });
     }
