@@ -176,7 +176,7 @@
 
     <!--Service Type-->
     <div class="two fields">
-        <div class="grouped fields">
+        <div class="grouped field">
             <label>Service Type</label>
             <div class="field">
                 <div class="radio" *ngFor="let serviceType of serviceTypes">
@@ -187,29 +187,21 @@
                 </div>
             </div>
         </div>
-        <div class="grouped fields">
-            <label>Create a Slack Channel?</label>
-            <div class="field">
-                <div class="radio">
-                    <label><input #y type="radio" name="slack" (click)="createSlackChannelToggle='yes'"
-                                  [checked]="createSlackChannelToggle=='yes'"
-                                  value="yes">
-                        Yes</label>
-                </div>
-                <div class="radio">
-                    <label><input #n type="radio" name="slack" (click)="createSlackChannelToggle='no'"
-                                  [checked]="createSlackChannelToggle=='no'"
-                                  value="no">
-                        No</label>
-                </div>
+        <div class="grouped field">
+            <div class="field" [class.error]="submitted && !name.valid">
+                <label>Slack Channel Name (leave blank to opt out)</label>
+                <input type="text"
+                       placeholder="(~21 characters, only a-z, 0-9, hyphens, underscores)"
+                       [(ngModel)]="slackChannelName"
+                       name="slackChannel"
+                       #slackChannel="ngModel"
+                       maxlength="21">
             </div>
         </div>
     </div>
 
     <!--TODO: remaining features
         projectStatus select
-        serviceType (toggle or select or radial)
-        tags (form/list display like cakebook's ingredients; be careful of enter button)
         phases (not MVP(?))
     -->
     <div class="ui divider"></div>

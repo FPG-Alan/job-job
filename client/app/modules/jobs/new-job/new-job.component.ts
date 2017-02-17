@@ -25,7 +25,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         {value: 'banner', display: 'Banner'},
         {value: "", display: "Neither"}
     ];
-    createSlackChannelToggle = "no";
+    slackChannelName = "";
 
     submitted = false;
     job: Job;
@@ -348,8 +348,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
         if (!this.commonService.isEmptyString(this.job.serviceType)) {
             this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.job.serviceType);
         } else { this.servicesCount++; }
-        if (this.createSlackChannelToggle == "yes") {
-            this.createNewChannel(this.usingFinalName ? this.finalName.result : this.job.name);
+        if (!this.commonService.isEmptyString(this.slackChannelName)) {
+            this.createNewChannel(this.slackChannelName);
         } else { this.servicesCount++; }
 
         // TODO: create an overlay animation above the steps when done
@@ -468,8 +468,18 @@ export class NewJobComponent implements OnInit, OnDestroy {
      * SLACK INTEGRATION *
      *********************/
     createNewChannel(channelName) {
-        console.log("should create Slack channel");
-
-        this.servicesCount++;
+        this.slackProcessingState = "active";
+        this.apiService.createNewChannel(channelName)
+            .subscribe(
+                res => {
+                    this.slackProcessingState = "completed";
+                    this.confirmedJobInfo.slackId = res.channel.id;
+                },
+                err => {
+                    this.slackProcessingState = "failed";
+                    this.commonService.handleError(err);
+                },
+                () => this.servicesCount++
+            );
     }
 }

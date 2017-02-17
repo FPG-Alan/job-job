@@ -16,27 +16,28 @@ var invalidTokenError = {
 
 slackIntegrationRouter.post("/", function (req, res) {
     Token.findOne({userId: req.body.userId, provider: "slack"}, function (err, token) {
-        if (err || !token.tokenInfo.token) {
+        if (err || !token.tokenInfo.access_token) {
             res.statusCode.send(invalidTokenError);
         } else {
-            var newChannel = {
-            };
-
-            unirest.post(apiUrl + "...")
-                .headers({
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                })
-                .send(newChannel)
-                .end(function (response) {
-                    if (response.status !== 200) {
-                        res.status(500).send({header: "Failed to create new Slack channel"});
-                        console.log(response);
-                    } else {
-                        res.send(response.body);
-                        console.log("Created new Slack channel:", "...");
-                    }
-                });
+            if (req.body.channelName) {
+                unirest.post(apiUrl + "channels.create/" +
+                    "?token=" + token.tokenInfo.access_token +
+                    "&name=" + req.body.channelName.toLowerCase())
+                    .headers({
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    })
+                    .end(function (response) {
+                        if (response.status !== 200) {
+                            res.status(500).send({header: "Failed to create new Slack channel"});
+                            console.log(response);
+                        } else {
+                            res.send(response.body);
+                            console.log("Created new Slack channel:", "...");
+                            console.log(response.body);
+                        }
+                    });
+            }
         }
     });
 });
