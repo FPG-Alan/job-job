@@ -259,7 +259,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 .subscribe(
                     res => {
                         this.rateCardSelectorComponent.newJob = res;
-                        this.confirmedJobInfo.tenKId = res.id;
+                        this.confirmInfo.tenKUrl =
+                            "https://vnext.10000ft.com/viewproject?id=" + res.id;
                         this.startFinalConfirmation();
                     },
                     err => this.commonService.handleError(err)
@@ -320,12 +321,11 @@ export class NewJobComponent implements OnInit, OnDestroy {
     servicesCount: number = 0; // TODO: start timeInterval on when to stop
     maxServicesCount: number = 4; // current number of features on the modal
     canEndConfirm = false;
-    confirmedJobInfo = {
-        boxId: null,
-        tenKId: null,
-        trelloId: null,
-        slackId: null
-    }; // TODO: replace this when we have personalized data model
+    confirmInfo = {
+        tenKUrl: null,
+        boxUrl: null,
+        trelloUrl: null
+    }; // TODO: replace this when we have custom fields
 
     private startFinalConfirmation() {
         this.rateCardProcessingState = "disabled";
@@ -430,7 +430,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     .subscribe(
                         res => {
                             if (type == "job") {
-                                this.confirmedJobInfo.boxId = res.id;
+                                this.confirmInfo.boxUrl =
+                                    "https://fancypantsgroup.app.box.com/files/0/f/" + res.id;
                             }
                             this.boxProcessingStates[type] = "completed";
                             let parentId = res.id;
@@ -454,7 +455,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
             .subscribe(
                 res => {
                     this.trelloProcessingState = "completed";
-                    this.confirmedJobInfo.trelloId = res.id;
+                    this.confirmInfo.trelloUrl =
+                        "https://trello.com/b/" + res.id;
                 },
                 err => {
                     this.trelloProcessingState = "failed";
@@ -471,10 +473,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.slackProcessingState = "active";
         this.apiService.createNewChannel(channelName)
             .subscribe(
-                res => {
-                    this.slackProcessingState = "completed";
-                    this.confirmedJobInfo.slackId = res.channel.id;
-                },
+                res => this.slackProcessingState = "completed",
                 err => {
                     this.slackProcessingState = "failed";
                     this.commonService.handleError(err);
