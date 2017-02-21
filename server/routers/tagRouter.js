@@ -4,8 +4,6 @@ var tagRouter = express.Router();
 
 var Tag = require("../models/tag");
 
-var tenKApiKeys = require("../integrations/tenKFtSetup");
-
 tagRouter.get("/all", function (req, res) {
     Tag.find({}, function (err, tags) {
         if (err) {
