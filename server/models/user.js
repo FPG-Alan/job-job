@@ -10,7 +10,8 @@ var UserSchema = new Schema({
     name: String,
     email: {type: String, set: toLower, unique: true},
     boxAuthenticated: Boolean,
-    trelloAuthenticated: Boolean
+    trelloAuthenticated: Boolean,
+    slackAuthenticated: Boolean
 }, {
     timestamps: true
 });

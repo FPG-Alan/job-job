@@ -186,4 +186,25 @@ export class ApiService {
         return this.authHttp.post("/trello", body, options)
             .map(res => res.json());
     }
+
+
+    /*********************
+     * SLACK INTEGRATION *
+     *********************/
+    createNewChannel(channelName: string) {
+        // get user info to retrieve security tokens
+        let userId = "";
+        let localProfile = JSON.parse(localStorage.getItem("profile"));
+        if (localProfile) userId = localProfile.user_id;
+
+        let body = {
+            userId: userId,
+            channelName: channelName
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/slack", body, options)
+            .map(res => res.json());
+    }
 }

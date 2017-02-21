@@ -28,6 +28,7 @@ var authRouter = require("./server/routers/authRouter");
 // Import routers for integrations
 var boxIntegrationRouter = require("./server/routers/boxIntegrationRouter");
 var trelloIntegrationRouter = require("./server/routers/trelloIntegrationRouter");
+var slackIntegrationRouter = require("./server/routers/slackIntegrationRouter");
 
 // API routers
 app.use("/user", authenticate, userRouter);
@@ -39,6 +40,7 @@ app.use("/auth", authRouter);
 // API routers for integrations
 app.use("/box", authenticate, boxIntegrationRouter);
 app.use("/trello", authenticate, trelloIntegrationRouter);
+app.use("/slack", authenticate, slackIntegrationRouter);
 
 
 // Resource loading
@@ -59,7 +61,7 @@ app.use(function handleError(err, req, res, next) {
     } else {
         console.error(err.stack);
 
-        res.statusCode.send({
+        res.status(500).send({
             header: "Server error"
         });
     }

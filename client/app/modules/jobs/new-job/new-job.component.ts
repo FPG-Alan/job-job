@@ -25,6 +25,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         {value: 'banner', display: 'Banner'},
         {value: "", display: "Neither"}
     ];
+    slackChannelName = "";
 
     submitted = false;
     job: Job;
@@ -258,7 +259,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 .subscribe(
                     res => {
                         this.rateCardSelectorComponent.newJob = res;
-                        this.confirmedJobInfo.tenKId = res.id;
+                        this.confirmInfo.tenKUrl =
+                            "https://vnext.10000ft.com/viewproject?id=" + res.id;
                         this.startFinalConfirmation();
                     },
                     err => this.commonService.handleError(err)
@@ -315,14 +317,15 @@ export class NewJobComponent implements OnInit, OnDestroy {
         job: "disabled"
     };
     trelloProcessingState = "disabled";
+    slackProcessingState = "disabled";
     servicesCount: number = 0; // TODO: start timeInterval on when to stop
-    maxServicesCount: number = 3; // current number of features on the modal
+    maxServicesCount: number = 4; // current number of features on the modal
     canEndConfirm = false;
-    confirmedJobInfo = {
-        boxId: null,
-        tenKId: null,
-        trelloId: null
-    }; // TODO: replace this when we have personalized data model
+    confirmInfo = {
+        tenKUrl: null,
+        boxUrl: null,
+        trelloUrl: null
+    }; // TODO: replace this when we have custom fields
 
     private startFinalConfirmation() {
         this.rateCardProcessingState = "disabled";
@@ -338,11 +341,15 @@ export class NewJobComponent implements OnInit, OnDestroy {
         $("#confirm-new-job")
             .modal("setting", "closable", false)
             .modal("show");
+        // rate card progress UI
         this.rateCardProcessingState = "active";
         this.rateCardSelectorComponent.updateBillRates();
         this.createNewFolder(null, "client");
         if (!this.commonService.isEmptyString(this.job.serviceType)) {
             this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.job.serviceType);
+        } else { this.servicesCount++; }
+        if (!this.commonService.isEmptyString(this.slackChannelName)) {
+            this.createNewChannel(this.slackChannelName);
         } else { this.servicesCount++; }
 
         // TODO: create an overlay animation above the steps when done
@@ -423,7 +430,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     .subscribe(
                         res => {
                             if (type == "job") {
-                                this.confirmedJobInfo.boxId = res.id;
+                                this.confirmInfo.boxUrl =
+                                    "https://fancypantsgroup.app.box.com/files/0/f/" + res.id;
                             }
                             this.boxProcessingStates[type] = "completed";
                             let parentId = res.id;
@@ -446,8 +454,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.apiService.copyBoard(boardName, serviceType)
             .subscribe(
                 res => {
-                    this.trelloProcessingState= "completed";
-                    this.confirmedJobInfo.trelloId = res.id;
+                    this.trelloProcessingState = "completed";
+                    this.confirmInfo.trelloUrl =
+                        "https://trello.com/b/" + res.id;
                 },
                 err => {
                     this.trelloProcessingState = "failed";
@@ -455,5 +464,21 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 },
                 () => this.servicesCount++
             )
+    }
+
+    /*********************
+     * SLACK INTEGRATION *
+     *********************/
+    createNewChannel(channelName) {
+        this.slackProcessingState = "active";
+        this.apiService.createNewChannel(channelName)
+            .subscribe(
+                res => this.slackProcessingState = "completed",
+                err => {
+                    this.slackProcessingState = "failed";
+                    this.commonService.handleError(err);
+                },
+                () => this.servicesCount++
+            );
     }
 }
