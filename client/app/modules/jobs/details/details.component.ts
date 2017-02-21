@@ -76,11 +76,9 @@ export class DetailsComponent implements OnInit {
         console.log("values:", values);
 
         for (let field of this.customFields) {
-            if (field.data_type == "string" || field.data_type == "selection_list") {
-                field.vals = values.filter(function isSameFieldId(value){
-                    return field.id == value.custom_field_id;
-                });
-            }
+            field.vals = values.filter(function isSameFieldId(value) {
+                return field.id == value.custom_field_id;
+            });
         }
         console.log("Custom fields:", this.customFields);
     }
