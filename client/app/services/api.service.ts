@@ -144,6 +144,21 @@ export class ApiService {
     }
 
 
+    /*****************
+     * CUSTOM FIELDS *
+     *****************/
+    getCustomFields() {
+        return this.authHttp.get("/custom-field")
+            .map(res => res.json())
+    }
+
+
+    getCustomFieldValues(id: number | string) {
+        return this.authHttp.get("/custom-field/values/" + id)
+            .map(res => res.json())
+    }
+
+
     /*******************
      * BOX INTEGRATION *
      *******************/

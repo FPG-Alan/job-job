@@ -16,6 +16,7 @@ export class DetailsComponent implements OnInit {
     job: any;
     selectingRateCard: boolean = false;
     rateCardProcessingState = "disabled";
+    customFields: any;
 
 
     constructor(private apiService: ApiService,
@@ -29,10 +30,11 @@ export class DetailsComponent implements OnInit {
             .subscribe(
                 job => {
                     this.job = job;
-                    console.log(job)
+                    console.log(job);
                 },
                 err => this.commonService.handleError(err)
             );
+        this.getCustomFields();
     }
 
     onRateUpdated(state: any) {
@@ -51,5 +53,34 @@ export class DetailsComponent implements OnInit {
                 "Please check your project in 10,000ft"
             )
         }
+    }
+
+    getCustomFields() {
+        this.apiService.getCustomFields()
+            .subscribe(
+                res => {
+                    this.customFields = res.data;
+                    this.route.params
+                        .switchMap((params: Params) =>
+                            this.apiService.getCustomFieldValues(+params['id']))
+                        .subscribe(
+                            res => this.fillCustomFieldValues(res.data),
+                            err => this.commonService.handleError(err)
+                        );
+                },
+                err => this.commonService.handleError(err)
+            )
+    }
+
+    private fillCustomFieldValues(values: any[]) {
+
+        for (let field of this.customFields) {
+            if (field.data_type == "string" || field.data_type == "selection_list") {
+                field.vals = values.filter(function isSameFieldId(id){
+                    return field.id == id;
+                });
+            }
+        }
+        console.log("Custom fields:", this.customFields);
     }
 }
