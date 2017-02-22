@@ -38,4 +38,51 @@ customFieldRouter.get("/values/:id", function (req, res) {
         });
 });
 
+
+customFieldRouter.post("/values/:id", function (req, res) {
+    var values = req.body.values || [];
+
+    if (values.length > 0) {
+        var resCounts = 0;
+
+        res.write("[");
+        for (var v in values) {
+            if (values[v].custom_field_id) {
+                unirest.post(tenKApiKeys.apiUrl + "projects/" + req.params.id + "/custom_field_values" +
+                    "?custom_field_id=" + values[v].custom_field_id +
+                    "&project_id=" + req.params.id +
+                    "&value=" + values[v].value)
+                    .headers({
+                        "Content-Type": "application/json",
+                        "auth": tenKApiKeys.keys
+                    })
+                    .end(function (response) {
+                        resCounts++;
+                        if (response.status !== 200) {
+                            // TODO: properly catch error
+                            // res.end(JSON.stringify(response.body) + "]");
+                            res.status(500).send({header: "Error create custom field value"});
+                            console.log(response);
+                        } else {
+                            if (resCounts >= values.length) {
+                                res.end(JSON.stringify(response.body) + "]");
+                                console.log("Custom field values for job", req.params.id, "DONE!");
+                            } else {
+                                res.write(JSON.stringify(response.body) + ",");
+                            }
+                        }
+                    });
+            } else {
+                resCounts++;
+                if (resCounts >= values.length) {
+                    res.end("]");
+                    console.log("Custom field values for job", req.params.id, "DONE!");
+                }
+            }
+        }
+    } else {
+        res.json([])
+    }
+});
+
 module.exports = customFieldRouter;

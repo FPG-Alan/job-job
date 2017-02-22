@@ -280,18 +280,27 @@ export class NewJobComponent implements OnInit, OnDestroy {
     /* Call this before creating new custom field values */
     private fillCustomFieldId() {
         for (let value of this.customFieldValues) {
-             let sameNameFields = this.customFields.filter(function isSameFieldName(field) {
+            let sameNameFields = this.customFields.filter(function isSameFieldName(field) {
                 console.log(value.name, field.name);
                 return value.name == field.name;
             });
-            if (sameNameFields.length > 0){
+            if (sameNameFields.length > 0) {
                 value.custom_field_id = sameNameFields[0].id;
             }
         }
     }
 
-    createCustomFieldValues() {
+    private createCustomFieldValues() {
         console.log("Custom Field Values:", this.customFieldValues);
+        this.apiService.createCustomFieldValues(
+            this.rateCardSelectorComponent.newJob.id,
+            this.customFieldValues)
+            .subscribe(
+                res => {
+                    console.log("Custom field values creation success:", res);
+                },
+                err => this.commonService.handleError(err)
+            )
     }
 
 
@@ -385,7 +394,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.resetModels();
                     this.canEndConfirm = true;
-                    
+
                     // push the compiled custom field values
                     this.fillCustomFieldId();
                     this.createCustomFieldValues();

@@ -40,11 +40,12 @@ rateCardRouter.put("/:project", function (req, res) {
                     rate: rates[r].rate
                 })
                 .end(function (response) {
+                    resCounts++;
                     if (response.status !== 200) {
+                        // TODO: properly catch error like in customFieldRouter
                         res.status(500).send({header: "Failed to update bill rates"});
                         console.log(response);
                     } else {
-                        resCounts++;
                         console.log("Bill rates updating progress (", rates[resCounts - 1].rate, "):", resCounts, "/", rates.length);
 
                         if (resCounts >= rates.length) {
