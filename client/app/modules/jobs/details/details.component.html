@@ -40,15 +40,18 @@
             https://vnext.10000ft.com/viewproject?id={{job.id}}
         </a>
     </div>
-    <div>
-        <label>Link to Box folder: </label>(coming soon)
+
+    <!--Custom Fields-->
+    <div *ngFor="let field of customFields">
+        <label>{{field.name}}: </label>
+        <span *ngFor="let val of field?.vals; let isLast=last">
+            <a *ngIf="isUrl(val.value)">{{val.value | characterLimit: 50}}</a>
+            <span *ngIf="!isUrl(val.value)">{{val.value}}</span>
+            {{isLast ? "" : ", "}}
+        </span>
+        <span *ngIf="!field.vals || field?.vals?.length == 0 || !field?.vals[0]?.value">N/A</span>
     </div>
-    <div>
-        <label>Link to Trello board: </label>(coming soon)
-    </div>
-    <div>
-        <label>Link to Slack channel: </label>(coming soon)
-    </div>
+
 
     <div class="ui divider"></div>
 

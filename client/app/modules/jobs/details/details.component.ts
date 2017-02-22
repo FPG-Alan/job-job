@@ -17,6 +17,14 @@ export class DetailsComponent implements OnInit {
     selectingRateCard: boolean = false;
     rateCardProcessingState = "disabled";
     customFields: any;
+    fieldOrder = {
+        "Brand": 0,
+        "Producer": 1,
+        "Rate Card": 2,
+        "Type": 3,
+        "Box Location": 4,
+        "Trello Location": 5
+    };
 
 
     constructor(private apiService: ApiService,
@@ -60,6 +68,8 @@ export class DetailsComponent implements OnInit {
             .subscribe(
                 res => {
                     this.customFields = res.data;
+                    this.sortCustomFields();
+
                     this.route.params
                         .switchMap((params: Params) =>
                             this.apiService.getCustomFieldValues(+params['id']))
@@ -72,14 +82,33 @@ export class DetailsComponent implements OnInit {
             )
     }
 
-    private fillCustomFieldValues(values: any[]) {
-        console.log("values:", values);
+    private sortCustomFields() {
+        for (let field of this.customFields) {
+            field.order = this.fieldOrder[field.name];
+            if (!field.order){
+                field.order = 1000; // put fields with unlisted names last
+            }
+        }
+        this.customFields.sort(function sortByCustomOrder(a, b) {
+            return a.order - b.order
+        });
+        console.log("Sorted Custom Fields:", this.customFields);
+    }
 
+    private fillCustomFieldValues(values: any[]) {
         for (let field of this.customFields) {
             field.vals = values.filter(function isSameFieldId(value) {
                 return field.id == value.custom_field_id;
             });
         }
-        console.log("Custom fields:", this.customFields);
+    }
+
+    isUrl(text: string){
+        if (text) {
+            text = text.trim();
+            return text.indexOf("http") == 0;
+        } else {
+            return false;
+        }
     }
 }
