@@ -29,8 +29,7 @@ jobRouter.post("/", function (req, res) {
         "ends_at": req.body.job.endDate,
         "project_code": req.body.job.code,
         "project_state": "Tentative",
-        "description": req.body.job.description,
-        "tags": req.body.job.tags
+        "description": req.body.job.description
     };
     unirest.post(tenKApiKeys.apiUrl + "projects")
         .headers({

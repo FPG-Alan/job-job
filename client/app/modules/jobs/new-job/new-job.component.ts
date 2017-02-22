@@ -20,17 +20,19 @@ export class NewJobComponent implements OnInit, OnDestroy {
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
 
+    clients: Client[] = [];
+    producers: string[] = [];
     public serviceTypes = [
         {value: 'site', display: 'Site'},
         {value: 'banner', display: 'Banner'},
         {value: "", display: "Neither"}
     ];
     slackChannelName = "";
+    customFields: any;
+    customFieldValues = [];
 
     submitted = false;
     job: Job;
-    clients: Client[] = [];
-    tags: any[] = [];
     finalName: any = {
         result: "",
         clientCode: "",
@@ -81,11 +83,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 res => this.clients = res,
                 err => this.commonService.handleError(err)
             );
-        this.apiService.getAllTags()
-            .subscribe(
-                res => this.tags = res,
-                err => this.commonService.handleError(err)
-            );
+        this.getCustomFields();
     }
 
     ngOnDestroy() {
@@ -143,22 +141,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 );
         } else {
             $("#new-brand-popup").popup("hide");
-        }
-    }
-
-    addNewTag(tag: string) {
-        if (!this.commonService.isEmptyString(tag)) {
-            this.apiService
-                .addNewTag(tag)
-                .subscribe(
-                    res => {
-                        this.tags.push(res);
-                        $("#new-tag-popup").popup("hide");
-                    },
-                    err => this.commonService.handleError(err)
-                );
-        } else {
-            $("#new-tag-popup").popup("hide");
         }
     }
 
@@ -261,11 +243,55 @@ export class NewJobComponent implements OnInit, OnDestroy {
                         this.rateCardSelectorComponent.newJob = res;
                         this.confirmInfo.tenKUrl =
                             "https://vnext.10000ft.com/viewproject?id=" + res.id;
+                        this.customFieldValues.push({
+                            name: "Producer",
+                            value: this.job.producer
+                        }, {
+                            name: "Type",
+                            value: this.job.serviceType
+                        });
                         this.startFinalConfirmation();
                     },
                     err => this.commonService.handleError(err)
                 );
         }
+    }
+
+
+    /*****************
+     * CUSTOM FIELDS *
+     *****************/
+    getCustomFields() {
+        this.apiService.getCustomFields()
+            .subscribe(
+                res => {
+                    this.customFields = res.data;
+                    for (let field of this.customFields) {
+                        if (field.name == "Producer") {
+                            this.producers = field.options;
+                            break;
+                        }
+                    }
+                },
+                err => this.commonService.handleError(err)
+            )
+    }
+
+    /* Call this before creating new custom field values */
+    private fillCustomFieldId() {
+        for (let value of this.customFieldValues) {
+             let sameNameFields = this.customFields.filter(function isSameFieldName(field) {
+                console.log(value.name, field.name);
+                return value.name == field.name;
+            });
+            if (sameNameFields.length > 0){
+                value.custom_field_id = sameNameFields[0].id;
+            }
+        }
+    }
+
+    createCustomFieldValues() {
+        console.log("Custom Field Values:", this.customFieldValues);
     }
 
 
@@ -289,8 +315,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
         let endDate = new Date(startDate.getTime() + (7 * 24 * 60 * 60 * 1000));
         let strEndDate = datePipe.transform(endDate.toString(), "yyyy-MM-dd");
         let newClient = new Client("", "", "", []);
-        this.job = new Job("", newClient, "", null, "", "", "", [],
-            strStartDate, strEndDate, []);
+        this.job = new Job("", newClient, "", null, "", "", "", "",
+            strStartDate, strEndDate);
 
         this.finalName = {
             result: "",
@@ -335,12 +361,12 @@ export class NewJobComponent implements OnInit, OnDestroy {
             job: "disabled"
         };
         this.servicesCount = 0;
-
-        // TODO: checkboxes opting user on these services
         // open modal for the workflow
         $("#confirm-new-job")
             .modal("setting", "closable", false)
             .modal("show");
+        $("#confirm-new-job").modal("refresh"); // TODO: fix modal unscrollable at start
+
         // rate card progress UI
         this.rateCardProcessingState = "active";
         this.rateCardSelectorComponent.updateBillRates();
@@ -359,6 +385,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.resetModels();
                     this.canEndConfirm = true;
+                    
+                    // push the compiled custom field values
+                    this.fillCustomFieldId();
+                    this.createCustomFieldValues();
                 }, 1000);
                 setTimeout(() => {
                     $("#confirm-new-job").modal("refresh");
