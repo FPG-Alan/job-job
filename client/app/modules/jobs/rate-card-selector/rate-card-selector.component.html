@@ -1,10 +1,10 @@
 <div class="field">
     <label>Rate Card</label>
     <select class="ui fluid search dropdown selection"
-            [(ngModel)]="templateId">
+            [(ngModel)]="selectedTemplate">
         <option>(default rate card)</option>
         <option *ngFor="let t of templateCards"
-                [value]="t?.id">{{t?.name}}
+                [value]="t">{{t?.name}}
         </option>
     </select>
 </div>

@@ -45,8 +45,7 @@ rateCardRouter.put("/:project", function (req, res) {
                         res.status(500).end(JSON.stringify({header: "Failed to update bill rates"}) + "]");
                         console.log(response);
                     } else {
-                        console.log("Bill rates updating progress (", rates[resCounts - 1].rate, "):", resCounts, "/", rates.length);
-
+                        // console.log("Bill rates updating progress (", rates[resCounts - 1].rate, "):", resCounts, "/", rates.length);
                         if (resCounts >= rates.length) {
                             res.end(JSON.stringify(response.body) + "]");
                             console.log("Bill rates update for job", req.params.project, "DONE!");

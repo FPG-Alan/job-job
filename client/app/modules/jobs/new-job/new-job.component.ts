@@ -227,6 +227,12 @@ export class NewJobComponent implements OnInit, OnDestroy {
     onRateUpdated(processingState: string) {
         this.servicesCount++;
         this.rateCardProcessingState = processingState || "";
+        if (this.rateCardSelectorComponent.selectedTemplate) {
+            this.customFieldValues.push({
+                name: "Rate Card",
+                value: this.rateCardSelectorComponent.selectedTemplate.name
+            });
+        }
     }
 
     onSubmit(form: NgForm) {
@@ -296,9 +302,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
             this.rateCardSelectorComponent.newJob.id,
             this.customFieldValues)
             .subscribe(
-                res => {
-                    console.log("Custom field values creation success:", res);
-                },
+                res => console.log("Custom field values creation success:", res),
                 err => this.commonService.handleError(err)
             )
     }
