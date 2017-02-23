@@ -20,12 +20,12 @@ export class DetailsComponent implements OnInit {
     customFields: any;
     customFieldValues: any[] = [];
     fieldOrder = {
-        "Brand": 0,
-        "Producer": 1,
-        "Rate Card": 2,
-        "Type": 3,
-        "Box Location": 4,
-        "Trello Location": 5
+        "Brand": 1,
+        "Producer": 2,
+        "Rate Card": 3,
+        "Type": 4,
+        "Box Location": 5,
+        "Trello Location": 6
     };
     rateCardFieldId: number = null;
 
