@@ -23,7 +23,6 @@ var userRouter = require("./server/routers/userRouter");
 var jobRouter = require("./server/routers/jobRouter");
 var clientRouter = require("./server/routers/clientRouter");
 var rateCardRouter = require("./server/routers/rateCardRouter");
-var tagRouter = require("./server/routers/tagRouter");
 var customFieldRouter = require("./server/routers/customFieldRouter");
 var authRouter = require("./server/routers/authRouter");
 // Import routers for integrations
@@ -36,7 +35,6 @@ app.use("/user", authenticate, userRouter);
 app.use("/job", authenticate, jobRouter);
 app.use("/client", authenticate, clientRouter);
 app.use("/rate-card", authenticate, rateCardRouter);
-app.use("/tag", authenticate, tagRouter);
 app.use("/custom-field", authenticate, customFieldRouter);
 app.use("/auth", authRouter);
 // API routers for integrations

@@ -1,5 +1,4 @@
 import {Client} from "./client";
-import {Phase} from "./phase";
 
 export class Job {
     constructor(public name: string,

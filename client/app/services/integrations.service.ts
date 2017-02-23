@@ -6,5 +6,5 @@ export class IntegrationsService {
 
     constructor(private authHttp: AuthHttp) {
     }
-
+    // TODO: bring integrations API calls from api.service
 }

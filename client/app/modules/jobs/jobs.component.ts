@@ -15,12 +15,10 @@ export class JobsComponent implements OnInit {
     jobs: any[] = [];
     displayedJobs: any[] = [];
     clients: Client[] = [];
-    tags: any[] = [];
     loading: boolean = false;
     sortOrder: string = "";
     sortCategory: string = "";
     clientFilterInput = [];
-    tagFilterInput = [];
 
     constructor(private apiService: ApiService,
                 private commonService: CommonService) {
@@ -45,11 +43,6 @@ export class JobsComponent implements OnInit {
                 result => this.clients = result,
                 err => this.commonService.handleError(err)
             );
-        this.apiService.getAllTags()
-            .subscribe(
-                result => this.tags = result,
-                err => this.commonService.handleError(err)
-            );
     }
 
     onFilterSearchChange() {
@@ -65,24 +58,6 @@ export class JobsComponent implements OnInit {
             this.displayedJobs = this.displayedJobs.filter(function (proj) {
                 if (proj.client) {
                     return filteredClients.indexOf(proj.client.toLowerCase()) != -1;
-                }
-                return false;
-            });
-        }
-        // filter by tags
-        if (this.tagFilterInput.length > 0) {
-            let filteredTags = [];
-            for (let t of this.tagFilterInput) {
-                filteredTags.push(t.toLowerCase())
-            }
-            this.displayedJobs = this.displayedJobs.filter(function (proj) {
-                if (proj.tags && proj.tags.data && proj.tags.data.length > 0) {
-                    let tags = proj.tags.data;
-                    for (let t of tags) {
-                        if (t.value && filteredTags.indexOf(t.value.toLowerCase()) != -1) {
-                            return true;
-                        }
-                    }
                 }
                 return false;
             });
