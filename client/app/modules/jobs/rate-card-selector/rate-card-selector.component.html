@@ -4,7 +4,7 @@
             [(ngModel)]="selectedTemplate">
         <option>(default rate card)</option>
         <option *ngFor="let t of templateCards"
-                [value]="t">{{t?.name}}
+                [ngValue]="t">{{t?.name}}
         </option>
     </select>
 </div>

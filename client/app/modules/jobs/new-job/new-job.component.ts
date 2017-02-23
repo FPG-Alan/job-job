@@ -227,7 +227,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
     onRateUpdated(processingState: string) {
         this.servicesCount++;
         this.rateCardProcessingState = processingState || "";
-        if (this.rateCardSelectorComponent.selectedTemplate) {
+        if (this.rateCardSelectorComponent.selectedTemplate
+            && !this.commonService.isEmptyString(
+                this.rateCardSelectorComponent.selectedTemplate.name)) {
+            // prevent undefined
             this.customFieldValues.push({
                 name: "Rate Card",
                 value: this.rateCardSelectorComponent.selectedTemplate.name
@@ -380,7 +383,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
             .modal("show");
         setTimeout(() => {
             $("#confirm-new-job").modal("refresh");
-        }, 100); // TODO: fix modal unscrollable at start
+        }, 500); // fix modal unscrollable at start
 
         // rate card progress UI
         this.rateCardProcessingState = "active";
@@ -440,6 +443,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
      * and also needs the final name that gets submitted (generated name or custom name?)
      */
     createNewFolder(parentFolderId: string, type: string) {
+        $("#confirm-new-job").modal("refresh");
         // NOTE: feature is currently only for projects with clients
         // also check if the type is empty
         if (this.commonService.isEmptyString(this.job.client.name) ||
@@ -465,7 +469,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 nextType = "confirm";
             } else {
                 this.servicesCount++;
-                $("#confirm-new-job").modal("refresh");
                 return;
             }
 
@@ -477,6 +480,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             if (type == "job") {
                                 this.confirmInfo.boxUrl =
                                     "https://fancypantsgroup.app.box.com/files/0/f/" + res.id;
+                                this.customFieldValues.push({
+                                    name: "Box Location",
+                                    value: this.confirmInfo.boxUrl
+                                });
                             }
                             this.boxProcessingStates[type] = "completed";
                             let parentId = res.id;
@@ -503,6 +510,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     this.trelloProcessingState = "completed";
                     this.confirmInfo.trelloUrl =
                         "https://trello.com/b/" + res.id;
+                    this.customFieldValues.push({
+                        name: "Trello Location",
+                        value: this.confirmInfo.trelloUrl
+                    });
                 },
                 err => {
                     this.trelloProcessingState = "failed";

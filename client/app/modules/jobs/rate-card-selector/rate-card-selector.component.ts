@@ -33,7 +33,7 @@ export class RateCardSelectorComponent implements OnInit {
     }
 
     updateBillRates() {
-        if (this.newJob && this.selectedTemplate.id) {
+        if (this.newJob && this.selectedTemplate) {
             this.apiService
                 .getBillRates(this.newJob.id)
                 .subscribe(
