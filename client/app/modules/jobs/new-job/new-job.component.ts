@@ -253,6 +253,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
                         this.confirmInfo.tenKUrl =
                             "https://vnext.10000ft.com/viewproject?id=" + res.id;
                         this.customFieldValues.push({
+                            name: "Brand",
+                            value: this.job.brand
+                        }, {
                             name: "Producer",
                             value: this.job.producer
                         }, {
