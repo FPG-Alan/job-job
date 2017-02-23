@@ -23,8 +23,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
     clients: Client[] = [];
     producers: string[] = [];
     public serviceTypes = [
-        {value: 'site', display: 'Site'},
-        {value: 'banner', display: 'Banner'},
+        {value: 'Site', display: 'Site'},
+        {value: 'Banner', display: 'Banner'},
         {value: "", display: "Neither"}
     ];
     slackChannelName = "";
@@ -374,7 +374,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         $("#confirm-new-job")
             .modal("setting", "closable", false)
             .modal("show");
-        $("#confirm-new-job").modal("refresh"); // TODO: fix modal unscrollable at start
+        setTimeout(() => {
+            $("#confirm-new-job").modal("refresh");
+        }, 100); // TODO: fix modal unscrollable at start
 
         // rate card progress UI
         this.rateCardProcessingState = "active";
@@ -387,7 +389,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
             this.createNewChannel(this.slackChannelName);
         } else { this.servicesCount++; }
 
-        // TODO: create an overlay animation above the steps when done
         // TODO: put this in a separate function
         let timeInterval = setInterval(() => {
             if (this.servicesCount >= this.maxServicesCount) {
@@ -432,7 +433,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
      * BOX INTEGRATION *
      *******************/
     /* the integration needs a full job object (due to 10Kft not saving Brands)
-     and also needs the final name that gets submitted (generated name or custom name?)
+     * and also needs the final name that gets submitted (generated name or custom name?)
      */
     createNewFolder(parentFolderId: string, type: string) {
         // NOTE: feature is currently only for projects with clients
@@ -460,6 +461,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 nextType = "confirm";
             } else {
                 this.servicesCount++;
+                $("#confirm-new-job").modal("refresh");
                 return;
             }
 
@@ -479,6 +481,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                         err => {
                             this.commonService.handleError(err);
                             this.servicesCount++;
+                            $("#confirm-new-job").modal("refresh");
                         }
                     );
             }
@@ -501,7 +504,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     this.trelloProcessingState = "failed";
                     this.commonService.handleError(err);
                 },
-                () => this.servicesCount++
+                () => {
+                    this.servicesCount++;
+                    $("#confirm-new-job").modal("refresh");
+                }
             )
     }
 
@@ -517,7 +523,10 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     this.slackProcessingState = "failed";
                     this.commonService.handleError(err);
                 },
-                () => this.servicesCount++
+                () => {
+                    this.servicesCount++;
+                    $("#confirm-new-job").modal("refresh");
+                }
             );
     }
 }
