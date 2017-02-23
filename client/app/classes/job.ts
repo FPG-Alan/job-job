@@ -1,5 +1,4 @@
 import {Client} from "./client";
-import {Phase} from "./phase";
 
 export class Job {
     constructor(public name: string,
@@ -9,9 +8,8 @@ export class Job {
                 public status: string,
                 public serviceType: string,
                 public description: string,
-                public tags: any[],
+                public producer: string,
                 public startDate: string | Date,
-                public endDate: string | Date,
-                public phases: Phase[]) {
+                public endDate: string | Date) {
     }
 }

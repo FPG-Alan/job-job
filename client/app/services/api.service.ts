@@ -144,6 +144,30 @@ export class ApiService {
     }
 
 
+    /*****************
+     * CUSTOM FIELDS *
+     *****************/
+    getCustomFields() {
+        return this.authHttp.get("/custom-field")
+            .map(res => res.json())
+    }
+
+
+    getCustomFieldValues(id: number | string) {
+        return this.authHttp.get("/custom-field/values/" + id)
+            .map(res => res.json())
+    }
+
+    createCustomFieldValues(id: number | string, values: any[]) {
+        let body = {values: values};
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/custom-field/values/" + id, body, options)
+            .map(res => res.json())
+    }
+
+
     /*******************
      * BOX INTEGRATION *
      *******************/

@@ -141,29 +141,16 @@
 
 
     <br><br>
-    <!--Tags-->
+    <!--Producer-->
     <div class="field">
-        <label>Tags/Producers (can't find yours?
-            <a id="new-tag-popup" class="popup-trigger"><i class="add icon"></i>add new</a>
-            <div class="ui popup" id="new-tag-popup-form">
-                <div class="ui input">
-                    <input type="text" placeholder="(enter new tag)" #newTagInput>
-                </div>
-                <div class="ui positive button"
-                     (click)="addNewTag(newTagInput.value); newTagInput.value = ''">Save
-                </div>
-                <div class="ui button" (click)="addNewTag('')">Cancel</div>
-            </div>
-            )
-        </label>
-        <select multiple="" class="ui fluid search selection dropdown"
-                [(ngModel)]="job.tags"
-                name="tags"
-                #tagSelect="ngModel">
-            <!--disabled will prevent selection of empty string tags-->
-            <option value="" disabled="true">(select tags)</option>
-            <option *ngFor="let t of tags;"
-                    [value]="t.name">{{t.name}}
+        <label>Producer</label>
+        <select class="ui search dropdown selection"
+                [(ngModel)]="job.producer"
+                name="producer">
+            <option value=" ">(no producer)</option>
+            <option *ngFor="let p of producers; let i = index"
+                    [ngValue]="p">
+                {{p}}
             </option>
         </select>
     </div>
@@ -231,7 +218,7 @@
 
 
 <!--Final Confirmation Screen-->
-<div class="ui long modal" id="confirm-new-job">
+<div class="ui scrolling modal" id="confirm-new-job">
     <!--<i class="close icon"></i>-->
     <div class="header">
         Almost there!

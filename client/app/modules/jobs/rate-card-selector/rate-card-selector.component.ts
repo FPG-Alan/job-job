@@ -14,7 +14,7 @@ export class RateCardSelectorComponent implements OnInit {
     @Output() onRateUpdated = new EventEmitter<string>();
     @Input() newJob: any = null;
     newJobDefaultRates: any[] = [];
-    templateId: number = null;
+    selectedTemplate: any = null;
     templateCards: any[] = [];
 
     constructor(private apiService: ApiService,
@@ -33,7 +33,7 @@ export class RateCardSelectorComponent implements OnInit {
     }
 
     updateBillRates() {
-        if (this.newJob && this.templateId) {
+        if (this.newJob && this.selectedTemplate) {
             this.apiService
                 .getBillRates(this.newJob.id)
                 .subscribe(
@@ -49,10 +49,10 @@ export class RateCardSelectorComponent implements OnInit {
     }
 
     applyNewBillRates() {
-        if (this.templateId && this.newJob && this.newJobDefaultRates) {
-            // get all rates with templateId
+        if (this.selectedTemplate.id && this.newJob && this.newJobDefaultRates) {
+            // get all rates with template ID
             this.apiService
-                .getBillRates(this.templateId)
+                .getBillRates(this.selectedTemplate.id)
                 .subscribe(
                     res => {
                         let templateRates = res.data;
