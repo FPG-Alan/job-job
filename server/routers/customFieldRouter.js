@@ -59,9 +59,7 @@ customFieldRouter.post("/values/:id", function (req, res) {
                     .end(function (response) {
                         resCounts++;
                         if (response.status !== 200) {
-                            // TODO: properly catch error
-                            // res.end(JSON.stringify(response.body) + "]");
-                            res.status(500).send({header: "Error create custom field value"});
+                            res.status(500).end(JSON.stringify({header: "Error create custom field value"}) + "]");
                             console.log(response);
                         } else {
                             if (resCounts >= values.length) {
