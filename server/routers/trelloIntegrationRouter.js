@@ -25,8 +25,8 @@ trelloIntegrationRouter.post("/", function (req, res) {
                 name: req.body.boardName,
                 defaultLists: false,
                 idOrganization: "50d4a4c24b33fac54e002c35",
-                idBoardSource: req.body.serviceType == "site" ? siteTemplateBoardId
-                    : req.body.serviceType == "banner" ? bannerTemplateBoardId
+                idBoardSource: req.body.serviceType == "Site" ? siteTemplateBoardId
+                    : req.body.serviceType == "Banner" ? bannerTemplateBoardId
                     : null,
                 keepFromSource: "cards",
                 prefs_permissionLevel: "org"
