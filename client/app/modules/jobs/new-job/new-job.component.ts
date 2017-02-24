@@ -23,9 +23,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
     clients: Client[] = [];
     producers: string[] = [];
     public serviceTypes = [
-        {value: 'Site', display: 'Site'},
-        {value: 'Banner', display: 'Banner'},
-        {value: "", display: "Neither"}
+        {value: 'Site', display: 'Site Template'},
+        {value: 'Banner', display: 'Banner Template'},
+        {value: "", display: "Create your own"}
     ];
     slackChannelName = "";
     customFields: any;

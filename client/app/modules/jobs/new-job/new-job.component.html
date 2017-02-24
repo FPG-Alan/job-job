@@ -11,10 +11,10 @@
       novalidate>
 
     <!--Final Generated Name-->
-    <div class="inline fields">
+    <div class="ui blue segment inline fields" [class.loading]="generating">
         <div class="read-only ten wide field">
             <label>Generated Name</label>
-            <div *ngIf="usingFinalName" class="ui icon input" [class.loading]="generating">
+            <div *ngIf="usingFinalName" class="ui icon input">
                 <input readonly="" type="text"
                        require
                        [(ngModel)]="finalName.result"
@@ -36,9 +36,11 @@
         </div>
     </div>
 
+
+    <br><br>
     <!--Client & Brand-->
     <div class="two fields">
-        <div class="field" id="client-select-field">
+        <div class="required field" id="client-select-field">
             <label>Client
                 (can't find it?
                 <a id="new-client-popup" class="popup-trigger">
@@ -51,7 +53,7 @@
                 </div>
                 )
             </label>
-            <select class="ui search dropdown selection"
+            <select required class="ui search dropdown selection"
                     [(ngModel)]="job.client"
                     (ngModelChange)="this.submitted = false; onClientChange()"
                     name="client">
@@ -110,7 +112,7 @@
     <!--Start and End Dates-->
     <div class="two fields">
         <div class="required field" [class.error]="!startDate.valid">
-            <label>Start Date (Month/Day/Year)</label>
+            <label>Start Date (MM/DD/YYYY)</label>
             <input type="date"
                    required
                    [(ngModel)]="job.startDate"
@@ -119,7 +121,7 @@
                    #startDate="ngModel">
         </div>
         <div class="required field" [class.error]="!endDate.valid">
-            <label>End Date (Month/Day/Year)</label>
+            <label>End Date (MM/DD/YY)</label>
             <input type="date"
                    required
                    [(ngModel)]="job.endDate"
@@ -130,7 +132,7 @@
     </div>
 
     <!--Description-->
-    <div class="field">
+    <div class="required field">
         <label>Description</label>
         <textarea [(ngModel)]="job.description"
                   rows="3"
@@ -141,34 +143,38 @@
 
 
     <br><br>
-    <!--Producer-->
-    <div class="field">
-        <label>Producer</label>
-        <select class="ui search dropdown selection"
-                [(ngModel)]="job.producer"
-                name="producer">
-            <option value=" ">(no producer)</option>
-            <option *ngFor="let p of producers; let i = index"
-                    [ngValue]="p">
-                {{p}}
-            </option>
-        </select>
-    </div>
+    <div class="two fields">
+        <!--Producer-->
+        <div class="required field">
+            <label>Producer</label>
+            <select required class="ui search dropdown selection"
+                    [(ngModel)]="job.producer"
+                    name="producer">
+                <option value=" ">(no producer)</option>
+                <option *ngFor="let p of producers; let i = index"
+                        [ngValue]="p">
+                    {{p}}
+                </option>
+            </select>
+        </div>
 
-    <!--Rate Card Selector-->
-    <app-rate-card-selector
-            (onRateUpdated)="onRateUpdated($event)"
-            #rateCardSelector>
-    </app-rate-card-selector>
+        <!--Rate Card Selector-->
+        <app-rate-card-selector
+                (onRateUpdated)="onRateUpdated($event)"
+                #rateCardSelector>
+        </app-rate-card-selector>
+    </div>
 
     <!--Service Type-->
     <div class="two fields">
-        <div class="grouped field">
-            <label>Service Type</label>
+        <div class="required grouped field">
+            <label>Trello Board Type</label>
             <div class="field">
                 <div class="radio" *ngFor="let serviceType of serviceTypes">
                     <label>
-                        <input type="radio" name="type" [(ngModel)]="job.serviceType" [value]="serviceType.value">
+                        <input type="radio" required
+                               name="type" [(ngModel)]="job.serviceType"
+                               [value]="serviceType.value">
                         {{serviceType.display}}
                     </label>
                 </div>
