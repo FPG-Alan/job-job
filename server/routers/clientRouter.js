@@ -34,6 +34,7 @@ clientRouter.get("/count-by-year", function (req, res) {
                     "auth": tenKApiKeys.keys
                 })
                 .end(function (response) {
+                    console.log("Counting projects of client:", client.name);
                     var projects = response.body.data;
                     // get only projects that start this year
                     // get only projects that have the same client name
@@ -46,19 +47,34 @@ clientRouter.get("/count-by-year", function (req, res) {
                         return false;
                     });
 
-                    // alternatively, we can add a lot of leading zeroes,
-                    // then splice the last 3 or n characters (more efficient
-                    // but not necessary for now)
-                    var formattedCount = projects.length + 1 >= 100
-                        ? "" + (projects.length + 1)
-                        : projects.length + 1 >= 10
-                        ? "0" + (projects.length + 1)
-                        : "00" + (projects.length + 1);
+                    // parse project names to find the current highest project code
+                    var shortYear = req.query.year.slice(2);
+                    var codes = [];
+                    for (proj in projects) {
+                        var name = projects[proj].name;
+                        var code = name.match(/(\d+){4,5}(?=_)/)[0];
+                        if (code && code.slice(0, 2) == shortYear) {
+                            var codeInt = parseInt(code.slice(2));
+                            codes.push(codeInt);
+                        }
+                    }
+                    codes.sort(function descending(a, b) {
+                        return b - a
+                    });
 
-                    console.log("Counting projects of client:", client.name);
+                    var greatestCode = codes[0];
+                    if (!greatestCode) {
+                        formattedCount = "001";
+                    } else {
+                        var formattedCount = greatestCode + 1 >= 100
+                            ? "" + (greatestCode + 1)
+                            : greatestCode + 1 >= 10
+                            ? "0" + (greatestCode + 1)
+                            : "00" + (greatestCode + 1);
+                    }
                     res.json({
                         client: client.name,
-                        count: projects.length + 1,
+                        count: parseInt(formattedCount),
                         formattedCount: formattedCount
                     });
                 });
