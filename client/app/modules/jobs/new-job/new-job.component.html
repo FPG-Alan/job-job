@@ -194,21 +194,20 @@
         </div>
     </div>
 
-    <!--TODO: remaining features
-        projectStatus select
-        phases (not MVP(?))
-    -->
+    <!--TODO: projectStatus select-->
     <div class="ui divider"></div>
-    <div class="row">
-        <div class="column">
-            <div class="ui large right floated buttons">
-                <button type="button" class="ui negative button"
-                        (click)="confirmResetModels()"><i class="refresh icon"></i>Clear
-                </button>
-                <div class="or"></div>
-                <button type="submit" class="ui positive button"
-                        [disabled]="!form.form.valid || submitted"><i class="checkmark icon"></i>Submit
-                </button>
+    <div class="ui grid">
+        <div class="row">
+            <div class="column">
+                <div class="ui large right floated buttons">
+                    <button type="button" class="ui negative button"
+                            (click)="confirmResetModels()"><i class="refresh icon"></i>Clear
+                    </button>
+                    <div class="or"></div>
+                    <button type="submit" class="ui positive button"
+                            [disabled]="!form.form.valid || submitted"><i class="checkmark icon"></i>Submit
+                    </button>
+                </div>
             </div>
         </div>
     </div>
