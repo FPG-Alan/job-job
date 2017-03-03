@@ -1,24 +1,43 @@
 <div class="ui clearing basic segment">
-    <h1 class="ui left floated header"><i class="suitcase icon"></i>Jobs</h1>
+    <h1 class="ui left floated header"><i class="suitcase icon"></i>Job Search</h1>
     <a class="ui right floated button" routerLink="/jobs/new">
         <i class="add icon"></i>New Job
     </a>
 </div>
 
-<form class="ui form" #f="ngForm">
-    <!--Filtering by Client-->
-    <div class="field">
-        <select multiple="" class="ui fluid multiple search selection dropdown"
-                [(ngModel)]="clientFilterInput"
-                (ngModelChange)="onFilterSearchChange()"
-                name="clientFilter"
-                #clientFilter="ngModel">
-            <!--disabled will prevent selection of empty string-->
-            <option value="" disabled="true">Filter by Client...</option>
-            <option *ngFor="let c of clients;"
-                    [value]="c.name">{{c.name}}
-            </option>
-        </select>
+<form class="ui form stackable grid" #f="ngForm">
+    <div class="ten wide computer twelve wide tablet sixteen wide mobile column">
+        <!--Search by Client-->
+        <div class="inline field">
+            <label>Search by Client</label>
+            <select multiple="" class="ui fluid multiple search selection dropdown"
+                    [(ngModel)]="clientFilterInput"
+                    (ngModelChange)="onFilterSearchChange()"
+                    name="clientFilter"
+                    #clientFilter="ngModel">
+                <!--disabled will prevent selection of empty string-->
+                <option value="" disabled="true"></option>
+                <option *ngFor="let c of clients;"
+                        [value]="c.name">{{c.name}}
+                </option>
+            </select>
+        </div>
+        <div class="ui horizontal divider">
+            Or
+        </div>
+        <!--Search by Producer-->
+        <div class="inline field">
+            <label>Search by Producer</label>
+            <input type="text">
+        </div>
+        <div class="ui horizontal divider">
+            Or
+        </div>
+        <!--Search by Keyword-->
+        <div class="inline field">
+            <label>Search by Keyword</label>
+            <input type="text">
+        </div>
     </div>
 </form>
 
@@ -44,7 +63,8 @@
         </thead>
         <tbody>
         <tr *ngFor="let j of displayedJobs">
-            <td class="ui selectable"><a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit: 35}}</a></td>
+            <td class="ui selectable"><a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit: 35}}</a>
+            </td>
             <td>{{j?.client}}</td>
         </tr>
         </tbody>
