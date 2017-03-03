@@ -7,6 +7,7 @@ import {CommonService} from "../../../services/common.service";
 import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
 import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
+import {NewClientComponent} from "../../clients/new-client/new-client.component";
 
 declare var $;
 
@@ -19,6 +20,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
 
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
+    @ViewChild('newClient')
+    private newClientComponent: NewClientComponent;
 
     clients: Client[] = [];
     producers: string[] = [];
@@ -57,11 +60,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
             closable: false,
             lastResort: "right center"
         });
-        $("#new-client-popup").popup({
-            on: "click",
-            closable: true,
-            lastResort: "right center"
-        });
 
         // SESSION STORAGE: check for prefilled or saved fields
         let savedJob = sessionStorage.getItem("saved_job_fields");
@@ -92,6 +90,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
         $("#confirm-reset-job").remove();
         $("#confirm-new-job").modal("hide");
         $("#confirm-new-job").remove();
+        $("#new-client-modal").modal("hide");
+        $("#new-client-modal").remove();
     }
 
 
@@ -115,6 +115,11 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     err => this.commonService.handleError(err)
                 );
         }
+    }
+
+    addNewClient(){
+        $("#new-client-modal")
+            .modal("show");
     }
 
     addNewBrand(brand: string) {
