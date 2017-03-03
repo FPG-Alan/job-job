@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {Client} from "../../../classes/client";
@@ -14,6 +14,8 @@ declare var $;
 })
 export class NewClientComponent implements OnInit {
 
+    @Output() onCreated = new EventEmitter<any>();
+    @Output() onCancel = new EventEmitter<boolean>();
     submitted = false;
     client: Client;
     currentBrand: string = "";
@@ -57,7 +59,7 @@ export class NewClientComponent implements OnInit {
                             "Sweet!",
                             "Successfully created a new client"
                         );
-                        this.router.navigate(["/"]);
+                        this.onCreated.emit(res);
                     },
                     err => this.commonService.handleError(err)
                 );
@@ -66,5 +68,10 @@ export class NewClientComponent implements OnInit {
 
     resetModels() {
         this.client = new Client("", "", "", []);
+    }
+
+    cancel() {
+        this.resetModels();
+        this.onCancel.emit(true);
     }
 }
