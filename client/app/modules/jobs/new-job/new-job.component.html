@@ -41,15 +41,17 @@
     <!--Client & Brand-->
     <div class="two fields">
         <div class="required field" id="client-select-field">
-            <label>Client
+            <label>Client Name
                 (can't find it?
                 <a id="new-client-popup" class="popup-trigger"
                    (click)="addNewClient()"><i class="add icon"></i>add new</a>
                 <div class="ui small modal" id="new-client-modal">
-                    <i class="close icon"></i>
                     <div class="header">Create New Client</div>
                     <div class="content">
-                        <app-new-client></app-new-client>
+                        <app-new-client
+                                (onCreated)="onNewClientCreated($event)"
+                                (onCancel)="onNewClientCancel($event)">
+                        </app-new-client>
                     </div>
                 </div>
                 )
@@ -220,8 +222,8 @@
         Are you sure you want to reset the fields on this form?
     </div>
     <div class="actions">
-        <div class="ui positive button" (click)="resetModels()"><i class="checkmark icon"></i>I'm sure!</div>
         <div class="ui negative button"><i class="remove icon"></i>Nope</div>
+        <div class="ui positive button" (click)="resetModels()"><i class="checkmark icon"></i>I'm sure!</div>
     </div>
 </div>
 

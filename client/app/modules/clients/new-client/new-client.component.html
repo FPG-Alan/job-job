@@ -1,7 +1,3 @@
-<h1>
-    Create New Client
-</h1>
-
 <form #form="ngForm" class="ui form" id="new-client-form"
       (ngSubmit)="onSubmit(form)"
       novalidate>
@@ -24,8 +20,6 @@
                name="shortCode"
                #shortCode="ngModel">
     </div>
-    <!-- TODO: rate cards & brands -->
-
     <form #brandForm="ngForm" class="field"
           (ngSubmit)="addBrand()"
           novalidate>

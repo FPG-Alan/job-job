@@ -117,9 +117,19 @@ export class NewJobComponent implements OnInit, OnDestroy {
         }
     }
 
-    addNewClient(){
+    addNewClient() {
         $("#new-client-modal")
+            .modal("setting", "closable", false)
             .modal("show");
+    }
+
+    onNewClientCreated(event: any) {
+        // TODO: update client list
+        $("#new-client-modal").modal("hide");
+    }
+
+    onNewClientCancel(event: any) {
+        $("#new-client-modal").modal("hide");
     }
 
     addNewBrand(brand: string) {
