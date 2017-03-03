@@ -124,7 +124,11 @@ export class NewJobComponent implements OnInit, OnDestroy {
     }
 
     onNewClientCreated(event: any) {
-        // TODO: update client list
+        this.apiService.getAllClients()
+            .subscribe(
+                res => this.clients = res,
+                err => this.commonService.handleError(err)
+            );
         $("#new-client-modal").modal("hide");
     }
 
