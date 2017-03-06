@@ -50,13 +50,13 @@
                     [class.ascending]="sortOrder == 'ascending'"
                     [class.descending]="sortOrder == 'descending'"
                     (click)="sortTable('name')">
-                    Job Name
+                    Job Name <span *ngIf="sortCategory == 'name'">(sorted {{sortOrder}})</span>
                 </th>
                 <th [class.sorted]="sortCategory == 'client'"
                     [class.ascending]="sortOrder == 'ascending'"
                     [class.descending]="sortOrder == 'descending'"
                     (click)="sortTable('client')">
-                    Client
+                    Client <span *ngIf="sortCategory == 'client'">(sorted {{sortOrder}})</span>
                 </th>
             </tr>
             </thead>
