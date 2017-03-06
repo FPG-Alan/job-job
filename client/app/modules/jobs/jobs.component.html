@@ -10,6 +10,14 @@
         <h4 class="ui horizontal divider header">
             Search
         </h4>
+        <!--Search by Keyword-->
+        <div class="field">
+            <label>Keyword</label>
+            <input type="text"
+                   [(ngModel)]="keywordFilterInput"
+                   name="keywordFilter"
+                   #keywordFilter="ngModel">
+        </div>
         <!--Search by Client-->
         <div class="field">
             <label>Client</label>
@@ -28,22 +36,27 @@
         <div class="divider"></div>
         <!--Search by Producer-->
         <div class="field">
-            <label>Producer</label>
+            <label>Producer 🙋</label>
             <input type="text">
         </div>
         <div class="divider"></div>
-        <!--Search by Keyword-->
-        <div class="field">
-            <label>Keyword</label>
-            <input type="text">
+
+        <div class="ui info message">
+            <div class="header">
+                Note
+            </div>
+            <div class="content">
+                Search feature only supports filtering with EITHER one of the above criteria
+            </div>
         </div>
     </form>
 
     <!--Display Area-->
+    <!--TODO: make table rows look more like they're clickable-->
     <div class="ui basic no-padding segment eleven wide computer ten wide tablet right floated column"
          [class.loading]="loading">
-        <table class="ui green compact sortable celled table"
-               *ngIf="displayedJobs?.length > 0">
+        <table class="ui green compact sortable table"
+               *ngIf="displayedJobs?.length > 0 && displayedJobs">
             <thead>
             <tr>
                 <th [class.sorted]="sortCategory == 'name'"
@@ -61,9 +74,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let j of displayedJobs">
-                <td class="ui selectable"><a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit:
-                    35}}</a>
+            <tr *ngFor="let j of displayedJobs | filter: keywordFilterInput">
+                <td class="ui selectable">
+                    <a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit:35}}</a>
                 </td>
                 <td>{{j?.client}}</td>
             </tr>

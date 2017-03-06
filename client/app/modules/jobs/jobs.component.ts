@@ -19,6 +19,9 @@ export class JobsComponent implements OnInit {
     sortOrder: string = "";
     sortCategory: string = "";
     clientFilterInput = [];
+    producerFilterInput = "";
+    keywordFilterInput = "";
+
 
     constructor(private apiService: ApiService,
                 private commonService: CommonService) {
