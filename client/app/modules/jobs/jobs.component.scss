@@ -6,8 +6,14 @@ form > * { margin-bottom: 0.25em !important }
     }
 }
 
-.ui.table * {
+.ui.table {
     white-space: normal;
+    thead {
+        word-break: normal;
+    }
+    :not(thead) {
+        word-break: break-all;
+    }
 }
 
 @media (max-width: 767px) {
@@ -16,5 +22,8 @@ form > * { margin-bottom: 0.25em !important }
     }
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (min-width: 767px) {
+    .ui.grid [class*="right floated"].column {
+        margin-left: 1em !important;
+    }
 }

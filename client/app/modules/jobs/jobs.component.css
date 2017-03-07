@@ -4,11 +4,18 @@ form > * {
 .ui.selectable.table tr:hover {
   cursor: pointer; }
 
-.ui.table * {
+.ui.table {
   white-space: normal; }
+  .ui.table thead {
+    word-break: normal; }
+  .ui.table :not(thead) {
+    word-break: break-all; }
 
 @media (max-width: 767px) {
   .ui.table tbody tr td.selectable > a:not(.ui) {
     padding: 0; } }
+@media only screen and (min-width: 767px) {
+  .ui.grid [class*="right floated"].column {
+    margin-left: 1em !important; } }
 
 /*# sourceMappingURL=jobs.component.css.map */
