@@ -6,8 +6,15 @@ form > * { margin-bottom: 0.25em !important }
     }
 }
 
+.ui.table * {
+    white-space: normal;
+}
+
 @media (max-width: 767px) {
     .ui.table tbody tr td.selectable > a:not(.ui) {
         padding: 0;
     }
+}
+
+@media only screen and (max-width: 767px) {
 }

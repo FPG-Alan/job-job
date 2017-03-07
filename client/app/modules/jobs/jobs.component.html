@@ -6,7 +6,7 @@
 </div>
 
 <div class="ui stackable grid">
-    <form class="ui form four wide computer five wide tablet column" #f="ngForm">
+    <form class="ui form four wide computer five wide tablet sixteen wide mobile left floated column" #f="ngForm">
         <h4 class="ui horizontal divider header">
             Search
         </h4>
@@ -51,7 +51,8 @@
 
     <!--Display Area-->
     <!--TODO: make table rows look more like they're clickable-->
-    <div class="ui basic no-padding segment eleven wide computer ten wide tablet right floated column"
+    <div class="ui basic no-padding segment eleven wide computer ten wide tablet
+     sixteen wide mobile right floated column"
          [class.loading]="loading">
         <table class="ui green compact sortable table"
                *ngIf="displayedJobs?.length > 0 && displayedJobs">
