@@ -50,26 +50,6 @@ export class JobsComponent implements OnInit {
         // this.getProducers();
     }
 
-    onFilterSearchChange() {
-        this.displayedJobs = this.jobs;
-        // can be split into more functions; will do if 1 more filterer needed
-
-        // filter by clients
-        if (this.clientFilterInput.length > 0) {
-            let filteredClients = [];
-            for (let c of this.clientFilterInput) {
-                filteredClients.push(c.toLowerCase())
-            }
-            this.displayedJobs = this.displayedJobs.filter(function (proj) {
-                if (proj.client) {
-                    return filteredClients.indexOf(proj.client.toLowerCase()) != -1;
-                }
-                return false;
-            });
-        }
-        this.loading = false;
-    }
-
 
     // getProducers() {
     //     if (this.producers.length == 0) {
