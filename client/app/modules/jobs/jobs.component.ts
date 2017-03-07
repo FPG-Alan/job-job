@@ -15,6 +15,7 @@ export class JobsComponent implements OnInit {
     jobs: any[] = [];
     displayedJobs: any[] = [];
     clients: Client[] = [];
+    producers = [];
     loading: boolean = false;
     sortOrder: string = "";
     sortCategory: string = "";
@@ -28,7 +29,7 @@ export class JobsComponent implements OnInit {
     }
 
     ngOnInit() {
-        $(".ui.multiple.selection.dropdown").dropdown();
+        $(".ui.selection.dropdown").dropdown();
 
         this.loading = true;
         this.apiService.getAllJobs()
@@ -46,6 +47,7 @@ export class JobsComponent implements OnInit {
                 result => this.clients = result,
                 err => this.commonService.handleError(err)
             );
+        // this.getProducers();
     }
 
     onFilterSearchChange() {
@@ -68,6 +70,28 @@ export class JobsComponent implements OnInit {
         this.loading = false;
     }
 
+
+    // getProducers() {
+    //     if (this.producers.length == 0) {
+    //         this.apiService.getCustomFields()
+    //             .subscribe(
+    //                 res => {
+    //                     for (let field of res.data) {
+    //                         if (field.name == "Producer") {
+    //                             this.producers = field.options;
+    //                             break;
+    //                         }
+    //                     }
+    //                 },
+    //                 err => this.commonService.handleError(err)
+    //             )
+    //     }
+    // }
+
+
+    /********
+     * SORT *
+     ********/
     sortTable(category: string) {
         if (this.sortCategory != category) {
             // ascending order if not sorted
