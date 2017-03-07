@@ -21,15 +21,14 @@
         <!--Search by Producer-->
         <div class="field">
             <label>Producer 🙋</label>
+            <input type="text" disabled placeholder="(not available yet)">
             <!--<select multiple="" class="ui fluid multiple search selection dropdown"-->
-                    <!--[(ngModel)]="producerFilterInput"-->
-                    <!--name="producerFilterInput"-->
-                    <!--#producerFilter="ngModel">-->
-                <!--&lt;!&ndash;disabled will prevent selection of empty string&ndash;&gt;-->
-                <!--<option value="" disabled="true"></option>-->
-                <!--<option *ngFor="let p of producers;"-->
-                        <!--[value]="p">{{p}}-->
-                <!--</option>-->
+            <!--[(ngModel)]="producerFilterInput"-->
+            <!--name="producerFilterInput"-->
+            <!--#producerFilter="ngModel">-->
+            <!--<option *ngFor="let p of producers;"-->
+            <!--[value]="p">{{p}}-->
+            <!--</option>-->
             <!--</select>-->
         </div>
         <!--Search by Client-->
@@ -37,11 +36,8 @@
             <label>Client</label>
             <select multiple="" class="ui fluid multiple search selection dropdown"
                     [(ngModel)]="clientFilterInput"
-                    (ngModelChange)="onFilterSearchChange()"
                     name="clientFilter"
                     #clientFilter="ngModel">
-                <!--disabled will prevent selection of empty string-->
-                <option value="" disabled="true"></option>
                 <option *ngFor="let c of clients;"
                         [value]="c.name">{{c.name}}
                 </option>
@@ -82,7 +78,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let j of displayedJobs | filter: keywordFilterInput">
+            <tr *ngFor="let j of displayedJobs
+            | filter: keywordFilterInput:'name':false
+            | filterMultiple: clientFilterInput:'client':true">
                 <td class="ui selectable">
                     <a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit:35}}</a>
                 </td>

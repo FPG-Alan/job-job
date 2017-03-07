@@ -6,11 +6,12 @@ import {ApiService} from "../../services/api.service";
 import {IntegrationsService} from "../../services/integrations.service";
 import {CharacterLimitPipe} from "../../pipes/character-limit.pipe";
 import {SearchPipe} from "../../pipes/filter.pipe";
+import {SearchMultiplePipe} from "../../pipes/filter-multiple.pipe";
 
 @NgModule({
     imports: [CommonModule],
-    declarations: [CharacterLimitPipe, SearchPipe],
-    exports: [CharacterLimitPipe, SearchPipe]
+    declarations: [CharacterLimitPipe, SearchPipe, SearchMultiplePipe],
+    exports: [CharacterLimitPipe, SearchPipe, SearchMultiplePipe]
 })
 export class SharedModule {
 
