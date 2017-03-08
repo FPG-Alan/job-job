@@ -5,10 +5,13 @@
   margin-bottom: 0.25em; }
 
 app-rate-card-selector {
-  width: 50%;
+  width: 100%;
   padding-left: .5em;
   padding-right: .5em; }
 
+@media screen and (min-width: 768px) {
+  app-rate-card-selector {
+    width: 50%; } }
 #confirm-new-job .ui.loader:after {
   border-color: #767676 transparent transparent !important; }
 

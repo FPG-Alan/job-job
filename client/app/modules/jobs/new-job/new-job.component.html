@@ -175,7 +175,7 @@
             <div class="field">
                 <div class="radio" *ngFor="let serviceType of serviceTypes">
                     <label>
-                        <input type="radio" required
+                        <input type="radio"
                                name="type" [(ngModel)]="job.serviceType"
                                [value]="serviceType.value">
                         {{serviceType.display}}
