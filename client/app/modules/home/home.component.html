@@ -9,7 +9,10 @@
         <img class="ui inline bottom aligned mini image" src="assets/parrot.gif">
     </div>
 </div>
-<app-authentication *ngIf="allSynced == false"></app-authentication>
+<app-authentication
+        *ngIf="allSynced == false"
+        (onAuthenticated)="onAuthenticated($event)">
+</app-authentication>
 
 <div *ngIf="allSynced">
     <a class="ui button" routerLink="/jobs/new">

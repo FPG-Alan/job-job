@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 import {AuthService} from "../../../services/auth.service";
 import {CommonService} from "../../../services/common.service";
 import {ApiService} from "../../../services/api.service";
@@ -12,6 +12,7 @@ import {User} from "../../../classes/user";
 })
 export class AuthenticationComponent implements OnInit {
 
+    @Output() onAuthenticated = new EventEmitter<boolean>();
     localProfile: any;
     user: User = new User("", "", "", false, false, false);
     authenticatingBox = false;
@@ -60,7 +61,10 @@ export class AuthenticationComponent implements OnInit {
                             // get user again and check if Box is authenticated
                             this.apiService.getMyUser(this.localProfile.user_id)
                                 .subscribe(
-                                    res => this.user = res,
+                                    res => {
+                                        this.user = res;
+                                        this.onAuthenticated.emit(true);
+                                    },
                                     err => this.commonService.handleError(err)
                                 )
                         }
@@ -87,7 +91,10 @@ export class AuthenticationComponent implements OnInit {
                 // get user again and check if Trello is authenticated
                 this.apiService.getMyUser(this.localProfile.user_id)
                     .subscribe(
-                        res => this.user = res,
+                        res => {
+                            this.user = res;
+                            this.onAuthenticated.emit(true);
+                        },
                         err => this.commonService.handleError(err)
                     )
             }
@@ -122,7 +129,10 @@ export class AuthenticationComponent implements OnInit {
                             // get user again and check if Box is authenticated
                             this.apiService.getMyUser(this.localProfile.user_id)
                                 .subscribe(
-                                    res => this.user = res,
+                                    res => {
+                                        this.user = res;
+                                        this.onAuthenticated.emit(true);
+                                    },
                                     err => this.commonService.handleError(err)
                                 )
                         }

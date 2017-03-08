@@ -32,4 +32,8 @@ export class HomeComponent implements OnInit {
                 }
             )
     }
+
+    onAuthenticated(event: any) {
+        this.ngOnInit()
+    }
 }
