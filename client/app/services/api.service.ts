@@ -23,7 +23,7 @@ export class ApiService {
      * USERS *
      *********/
     getMyUser(userId: string) {
-        return this.authHttp.get("/user/?id=" + userId)
+        return this.authHttp.get("/user?id=" + userId)
             .map(res => <User> res.json())
     }
 

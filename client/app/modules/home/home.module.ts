@@ -5,6 +5,7 @@ import {HomeComponent} from "./home.component";
 import {routing} from "./home.routing";
 import {JobsModule} from "../jobs/jobs.module";
 import {ClientsModule} from "../clients/clients.module";
+import {AuthenticationModule} from "../settings/authentication/authentication.module";
 
 @NgModule({
     imports: [
@@ -12,6 +13,7 @@ import {ClientsModule} from "../clients/clients.module";
         SharedModule.forRoot(),
         JobsModule,
         ClientsModule,
+        AuthenticationModule,
         routing
     ],
     declarations: [

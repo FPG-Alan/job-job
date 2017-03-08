@@ -11,8 +11,8 @@ import {AuthenticationModule} from "./authentication/authentication.module";
         CommonModule,
         FormsModule,
         SharedModule.forRoot(),
-        routing,
-        AuthenticationModule
+        AuthenticationModule,
+        routing
     ],
     declarations: [SettingsComponent]
 })
