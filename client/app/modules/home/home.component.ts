@@ -1,9 +1,8 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {AuthenticationComponent} from "../settings/authentication/authentication.component";
-import {AuthService} from "../../services/auth.service";
-import {User} from "../../classes/user";
 import {ApiService} from "../../services/api.service";
 import {CommonService} from "../../services/common.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
     selector: 'app-home',
@@ -16,27 +15,26 @@ export class HomeComponent implements OnInit {
     private authenticationComponent: AuthenticationComponent;
 
     allSynced: boolean;
-    localProfile: any;
-    user: User = new User("", "", "", false, false, false);
 
-    constructor(private authService: AuthService,
-                private apiService: ApiService,
-                private commonService: CommonService) {
+    constructor(private apiService: ApiService,
+                private commonService: CommonService,
+                private authService: AuthService) {
     }
 
     ngOnInit() {
-        this.localProfile = this.authService.getUserProfile();
-        this.apiService.getMyUser(this.localProfile.user_id)
+        this.authService.isAllAuthenticated()
             .subscribe(
                 res => {
-                    this.user = res;
-                    this.allSynced = this.user.boxAuthenticated &&
-                    this.user.trelloAuthenticated &&
-                    this.user.slackAuthenticated
-                        ? true
-                        : false;
+                    if (res == true) {
+                        this.allSynced = true;
+                    } else {
+                        this.allSynced = false;
+                    }
                 },
-                err => this.commonService.handleError(err)
-            );
+                err => {
+                    this.allSynced = false;
+                    this.commonService.handleError(err);
+                }
+            )
     }
 }
