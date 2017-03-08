@@ -6,7 +6,11 @@
     margin-bottom: 0.25em;
 }
 
-app-rate-card-selector { width: 50%; }
+app-rate-card-selector {
+    width: 50%;
+    padding-left: .5em;
+    padding-right: .5em;
+}
 
 // override loader color in a dimmer (set to white by default)
 #confirm-new-job .ui.loader:after {
