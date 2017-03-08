@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {Client} from "../../classes/client";
 import {ApiService} from "../../services/api.service";
 import {CommonService} from "../../services/common.service";
+import {AuthService} from "../../services/auth.service";
 
 declare var $;
 
@@ -12,6 +13,7 @@ declare var $;
 })
 export class JobsComponent implements OnInit {
 
+    allSynced: boolean;
     jobs: any[] = [];
     displayedJobs: any[] = [];
     clients: Client[] = [];
@@ -25,11 +27,24 @@ export class JobsComponent implements OnInit {
 
 
     constructor(private apiService: ApiService,
-                private commonService: CommonService) {
+                private commonService: CommonService,
+                private authService: AuthService) {
     }
 
     ngOnInit() {
         $(".ui.selection.dropdown").dropdown();
+
+        this.authService.isAllAuthenticated()
+            .subscribe(
+                res => {
+                    if (res == true) this.allSynced = true;
+                    else this.allSynced = false;
+                },
+                err => {
+                    this.allSynced = false;
+                    this.commonService.handleError(err);
+                }
+            );
 
         this.loading = true;
         this.apiService.getAllJobs()

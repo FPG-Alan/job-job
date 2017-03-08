@@ -12,6 +12,10 @@
 <app-authentication *ngIf="allSynced == false"></app-authentication>
 
 <div *ngIf="allSynced">
-    <div class="ui button"><i class="add icon"></i>Create New Job</div>
-    <div class="ui button"><i class="search icon"></i>Job Search and Edit Rate Card</div>
+    <a class="ui button" routerLink="/jobs/new">
+        <i class="add icon"></i>Create New Job
+    </a>
+    <a class="ui button" routerLink="/jobs">
+        <i class="search icon"></i>Job Search and Edit Rate Card
+    </a>
 </div>

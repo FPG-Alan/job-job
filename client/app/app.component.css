@@ -3,7 +3,8 @@
  */
 #main-menu {
   font-size: 1.1rem;
-  border-radius: 0; }
+  border-radius: 0;
+  z-index: 102; }
   #main-menu #sidebar-toggle {
     display: none !important;
     position: absolute;

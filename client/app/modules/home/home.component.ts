@@ -1,6 +1,5 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {AuthenticationComponent} from "../settings/authentication/authentication.component";
-import {ApiService} from "../../services/api.service";
 import {CommonService} from "../../services/common.service";
 import {AuthService} from "../../services/auth.service";
 
@@ -16,8 +15,7 @@ export class HomeComponent implements OnInit {
 
     allSynced: boolean;
 
-    constructor(private apiService: ApiService,
-                private commonService: CommonService,
+    constructor(private commonService: CommonService,
                 private authService: AuthService) {
     }
 
@@ -25,11 +23,8 @@ export class HomeComponent implements OnInit {
         this.authService.isAllAuthenticated()
             .subscribe(
                 res => {
-                    if (res == true) {
-                        this.allSynced = true;
-                    } else {
-                        this.allSynced = false;
-                    }
+                    if (res == true) this.allSynced = true;
+                    else this.allSynced = false;
                 },
                 err => {
                     this.allSynced = false;

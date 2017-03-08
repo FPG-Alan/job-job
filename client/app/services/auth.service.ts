@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {CommonService} from "./common.service";
 import {ApiService} from "./api.service";
 import {User} from "../classes/user";
+import {Observable} from "rxjs";
 
 // avoid name not found warnings
 declare var Auth0Lock: any;
@@ -70,7 +71,11 @@ export class AuthService {
         return JSON.parse(localStorage.getItem("profile"));
     }
 
-    public isAllAuthenticated() {
+    /**
+     * Check whether user has authorized/authenticated all required integrations
+     * @returns {Observable<R>}
+     */
+    public isAllAuthenticated(): Observable<boolean> {
         let localProfile = this.getUserProfile();
         return this.apiService.getMyUser(localProfile.user_id)
             .map(res => res.boxAuthenticated &&
