@@ -16,6 +16,7 @@ export class AuthService {
         autoclose: true
     };
     lock = new Auth0Lock('1CD38zBzoOUTvLzrWlredXlx0Q1IRJNJ', 'davefpg.auth0.com', this.options);
+
     user: User = new User("", "", "", false, false, false);
 
     constructor(private router: Router,
@@ -67,5 +68,14 @@ export class AuthService {
 
     public getUserProfile() {
         return JSON.parse(localStorage.getItem("profile"));
+    }
+
+    public isAllAuthenticated() {
+        let localProfile = this.getUserProfile();
+        return this.apiService.getMyUser(localProfile.user_id)
+            .map(res => res.boxAuthenticated &&
+                res.trelloAuthenticated &&
+                res.slackAuthenticated
+            );
     }
 }
