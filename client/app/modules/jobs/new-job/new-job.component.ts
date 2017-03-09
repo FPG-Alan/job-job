@@ -68,7 +68,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
             this.job = JSON.parse(savedJob);
             this.finalName = JSON.parse(savedFinalName);
             $("#client-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.client.name)
-                ? "(no client)"
+                ? "(select client)"
                 : this.job.client.name;
             $("#brand-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.brand)
                 ? "(no brand)"
