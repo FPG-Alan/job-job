@@ -8,6 +8,7 @@
 
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
+      (keydown.enter)="$event.preventDefault()"
       novalidate>
 
     <!--Final Generated Name-->
@@ -84,7 +85,7 @@
                     )
                 </span>
                 <span [class.hidden]="!commonService.isEmptyString(job?.client?.name)">
-                    (needs client)
+                    (please select a Client first)
                 </span>
             </label>
             <select class="ui search dropdown selection"

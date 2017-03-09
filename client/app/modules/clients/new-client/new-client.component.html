@@ -1,5 +1,6 @@
 <form #form="ngForm" class="ui form" id="new-client-form"
       (ngSubmit)="onSubmit(form)"
+      (keydown.enter)="$event.preventDefault()"
       novalidate>
     <div class="required field" [class.error]="submitted && !name.valid">
         <label>Client Name</label>
@@ -22,6 +23,7 @@
     </div>
     <form #brandForm="ngForm" class="field"
           (ngSubmit)="addBrand()"
+          (keydown.enter)="brandSubmit.click()"
           novalidate>
         <div class="field">
             <label>Brands</label>
@@ -30,7 +32,7 @@
                        [(ngModel)]="currentBrand"
                        name="brand"
                        #brand="ngModel">
-                <button type="submit" class="ui label button"><i class="add icon"></i></button>
+                <button type="submit" class="ui label button" #brandSubmit>Add</button>
             </div>
             <div class="ui secondary compact segment" *ngIf="client.brands.length > 0">
                 <div class="ui blue label" *ngFor="let b of client.brands; let i = index">{{b}}
@@ -47,7 +49,7 @@
             <div class="column">
                 <div class="ui large right floated buttons">
                     <button type="button" class="ui negative button"
-                            (click)="cancel()"><i class="refresh icon"></i>Cancel
+                            (click)="cancel()"><i class="remove icon"></i>Cancel
                     </button>
                     <div class="or"></div>
                     <button type="submit" class="ui positive button"
