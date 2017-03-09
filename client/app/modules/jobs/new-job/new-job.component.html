@@ -60,7 +60,8 @@
             <select required class="ui search dropdown selection"
                     [(ngModel)]="job.client"
                     (ngModelChange)="this.submitted = false; onClientChange()"
-                    name="client">
+                    name="client"
+                    #client="ngModel">
                 <option value=" ">(no client)</option>
                 <option *ngFor="let cli of clients; let i = index"
                         [ngValue]="cli">
@@ -153,7 +154,8 @@
             <label>Producer</label>
             <select required class="ui search dropdown selection"
                     [(ngModel)]="job.producer"
-                    name="producer">
+                    name="producer"
+                    #producer="ngModel">
                 <option value=" ">(no producer)</option>
                 <option *ngFor="let p of producers; let i = index"
                         [ngValue]="p">
@@ -199,6 +201,18 @@
 
     <!--TODO: projectStatus select-->
     <div class="ui divider"></div>
+    <div class="ui negative message" *ngIf="!form.form.valid">
+        <div class="header">
+            Please fill out the following fields
+        </div>
+        <p class="content">
+        <div class="ui list">
+            <div class="item" *ngIf="!client.valid">Client Name</div>
+            <div class="item" *ngIf="!name.valid">Job Name</div>
+            <div class="item" *ngIf="!producer.valid">Producer</div>
+        </div>
+        </p>
+    </div>
     <div class="ui grid">
         <div class="row">
             <div class="column">
