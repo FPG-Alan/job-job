@@ -60,6 +60,7 @@ export class NewClientComponent implements OnInit {
                             "Successfully created a new client"
                         );
                         this.onCreated.emit(res);
+                        form.reset();
                     },
                     err => this.commonService.handleError(err)
                 );

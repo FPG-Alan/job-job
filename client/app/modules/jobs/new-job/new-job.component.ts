@@ -281,7 +281,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             name: "Type",
                             value: this.job.serviceType
                         });
-                        this.startFinalConfirmation();
+                        this.startFinalConfirmation(form);
                     },
                     err => this.commonService.handleError(err)
                 );
@@ -391,7 +391,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         trelloUrl: null
     }; // TODO: replace this when we have custom fields
 
-    private startFinalConfirmation() {
+    private startFinalConfirmation(form: NgForm) {
         this.rateCardProcessingState = "disabled";
         this.boxProcessingStates = {
             client: "disabled",
@@ -422,7 +422,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         let timeInterval = setInterval(() => {
             if (this.servicesCount >= this.maxServicesCount) {
                 setTimeout(() => {
+                    // reset the form so it doesn't validate after success
                     this.resetModels();
+                    form.reset();
                     this.canEndConfirm = true;
 
                     // push the compiled custom field values
