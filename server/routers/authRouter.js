@@ -12,6 +12,10 @@ var Token = require("../models/token");
 var boxKeys = require("../integrations/boxKeys");
 var boxSdk = require("../integrations/boxSetup");
 
+// init Slack env var
+var slackRedirect = process.env.NODE_ENV == "development" ?
+    process.env.SLACK_REDIRECT_URI_DEV : process.env.NODE_ENV == "production" ?
+    process.env.SLACK_REDIRECT_URI_PROD : null;
 
 // get auth params (e.g. app keys, redirect URL, prod/dev environment, etc.)
 authRouter.get("/box/auth-params", function (req, res) {
@@ -134,7 +138,8 @@ authRouter.get("/slack", function (req, res) {
         unirest.get(process.env.SLACK_API_URL + "oauth.access" +
             "?client_id=" + process.env.SLACK_CLIENT_ID +
             "&client_secret=" + process.env.SLACK_CLIENT_SECRET +
-            "&code=" + req.query.code)
+            "&code=" + req.query.code +
+            "&redirect_uri=" + slackRedirect)
             .headers({
                 "Accept": "application/json",
                 "Content-Type": "application/json"

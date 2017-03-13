@@ -111,12 +111,6 @@ export class AuthenticationComponent implements OnInit {
                     if (!authParams) return;
 
                     let encodedRedirect = encodeURIComponent(authParams.redirectUri);
-                    console.log("https://slack.com/oauth/authorize" +
-                        "?client_id=" + authParams.clientId +
-                        "&scope=" + "channels:write" +
-                        "&redirect_uri=" + encodedRedirect +
-                        "&state=" + this.user.userId +
-                        "&team=" + authParams.teamId);
                     let child = window.open("https://slack.com/oauth/authorize" +
                         "?client_id=" + authParams.clientId +
                         "&scope=" + "channels:write" +
