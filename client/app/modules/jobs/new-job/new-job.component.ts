@@ -281,7 +281,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             name: "Type",
                             value: this.job.serviceType
                         });
-                        this.startFinalConfirmation(form);
+                        this.startFinalConfirmation();
                     },
                     err => this.commonService.handleError(err)
                 );
@@ -391,7 +391,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         trelloUrl: null
     }; // TODO: replace this when we have custom fields
 
-    private startFinalConfirmation(form: NgForm) {
+    private startFinalConfirmation() {
         this.rateCardProcessingState = "disabled";
         this.boxProcessingStates = {
             client: "disabled",
@@ -422,9 +422,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
         let timeInterval = setInterval(() => {
             if (this.servicesCount >= this.maxServicesCount) {
                 setTimeout(() => {
-                    // reset the form so it doesn't validate after success
                     this.resetModels();
-                    form.reset();
+                    this.submitted = false;
                     this.canEndConfirm = true;
 
                     // push the compiled custom field values
@@ -546,6 +545,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 () => {
                     this.servicesCount++;
                     $("#confirm-new-job").modal("refresh");
+                    console.log("Trello's done")
                 }
             )
     }
@@ -565,6 +565,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 () => {
                     this.servicesCount++;
                     $("#confirm-new-job").modal("refresh");
+                    console.log("Slack's done")
                 }
             );
     }
