@@ -61,10 +61,16 @@
                 #rateCardSelector>
         </app-rate-card-selector>
         <div class="ui divider"></div>
-        <div class="ui right floated positive button"
-             [class.loading]="rateCardProcessingState == 'loading'"
-             (click)="rateCardProcessingState = 'loading'; rateCardSelectorComponent.updateBillRates();">
-            Submit
+        <div class="ui grid">
+            <div class="row">
+                <div class="column">
+                    <div class="ui right floated positive button"
+                         [class.loading]="rateCardProcessingState == 'loading'"
+                         (click)="rateCardProcessingState = 'loading'; rateCardSelectorComponent.updateBillRates();">
+                        Submit
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

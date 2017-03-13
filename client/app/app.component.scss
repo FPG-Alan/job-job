@@ -4,6 +4,7 @@
 #main-menu {
     font-size: 1.1rem;
     border-radius: 0;
+    z-index: 102;
 
     #sidebar-toggle {
         display: none !important;
@@ -26,6 +27,14 @@
     margin-top: 45px;
     padding-top: 50px;
     padding-bottom: 50px;
+}
+
+@media only screen and (max-width: 768px) {
+    .ui.container {
+        width: auto !important;
+        margin-left: 1em !important;
+        margin-right: 1em !important;
+    }
 }
 
 /*

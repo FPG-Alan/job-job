@@ -2,15 +2,24 @@
     <h1 class="ui left floated header">
         <i class="users icon"></i>Clients
     </h1>
-    <a class="ui right floated button" routerLink="/clients/new">
-        <i class="add icon"></i>New Client
-    </a>
+    <div class="ui right floated button" (click)="addNewClient()">
+        <i class="add icon"></i>Create New Client
+    </div>
+    <div class="ui small modal" id="new-client-modal">
+        <div class="header">Create New Client</div>
+        <div class="content">
+            <app-new-client
+                    (onCreated)="onNewClientCreated($event)"
+                    (onCancel)="onNewClientCancel($event)">
+            </app-new-client>
+        </div>
+    </div>
 </div>
 
 
 <!--Display Area-->
 <div class="ui basic no-padding segment">
-    <table class="ui yellow compact selectable celled table"
+    <table class="ui green compact selectable celled table"
            *ngIf="clients?.length > 0">
         <thead>
         <tr>

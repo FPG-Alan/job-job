@@ -7,6 +7,7 @@ import {CommonService} from "../../../services/common.service";
 import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
 import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
+import {NewClientComponent} from "../../clients/new-client/new-client.component";
 
 declare var $;
 
@@ -19,6 +20,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
 
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
+    @ViewChild('newClient')
+    private newClientComponent: NewClientComponent;
 
     clients: Client[] = [];
     producers: string[] = [];
@@ -57,11 +60,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
             closable: false,
             lastResort: "right center"
         });
-        $("#new-client-popup").popup({
-            on: "click",
-            closable: true,
-            lastResort: "right center"
-        });
 
         // SESSION STORAGE: check for prefilled or saved fields
         let savedJob = sessionStorage.getItem("saved_job_fields");
@@ -70,7 +68,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
             this.job = JSON.parse(savedJob);
             this.finalName = JSON.parse(savedFinalName);
             $("#client-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.client.name)
-                ? "(no client)"
+                ? "(select client)"
                 : this.job.client.name;
             $("#brand-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.brand)
                 ? "(no brand)"
@@ -92,6 +90,8 @@ export class NewJobComponent implements OnInit, OnDestroy {
         $("#confirm-reset-job").remove();
         $("#confirm-new-job").modal("hide");
         $("#confirm-new-job").remove();
+        $("#new-client-modal").modal("hide");
+        $("#new-client-modal").remove();
     }
 
 
@@ -115,6 +115,25 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     err => this.commonService.handleError(err)
                 );
         }
+    }
+
+    addNewClient() {
+        $("#new-client-modal")
+            .modal("setting", "closable", false)
+            .modal("show");
+    }
+
+    onNewClientCreated(event: any) {
+        this.apiService.getAllClients()
+            .subscribe(
+                res => this.clients = res,
+                err => this.commonService.handleError(err)
+            );
+        $("#new-client-modal").modal("hide");
+    }
+
+    onNewClientCancel(event: any) {
+        $("#new-client-modal").modal("hide");
     }
 
     addNewBrand(brand: string) {
@@ -262,7 +281,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             name: "Type",
                             value: this.job.serviceType
                         });
-                        this.startFinalConfirmation();
+                        this.startFinalConfirmation(form);
                     },
                     err => this.commonService.handleError(err)
                 );
@@ -372,7 +391,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         trelloUrl: null
     }; // TODO: replace this when we have custom fields
 
-    private startFinalConfirmation() {
+    private startFinalConfirmation(form: NgForm) {
         this.rateCardProcessingState = "disabled";
         this.boxProcessingStates = {
             client: "disabled",
@@ -403,7 +422,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         let timeInterval = setInterval(() => {
             if (this.servicesCount >= this.maxServicesCount) {
                 setTimeout(() => {
+                    // reset the form so it doesn't validate after success
                     this.resetModels();
+                    form.reset();
                     this.canEndConfirm = true;
 
                     // push the compiled custom field values

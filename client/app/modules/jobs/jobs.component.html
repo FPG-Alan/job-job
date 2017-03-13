@@ -1,59 +1,90 @@
 <div class="ui clearing basic segment">
-    <h1 class="ui left floated header"><i class="suitcase icon"></i>Jobs</h1>
-    <a class="ui right floated button" routerLink="/jobs/new">
-        <i class="add icon"></i>New Job
+    <h1 class="ui left floated header"><i class="suitcase icon"></i>Job Search</h1>
+    <a *ngIf="allSynced" class="ui right floated button" routerLink="/jobs/new">
+        <i class="add icon"></i>Create New Job
     </a>
 </div>
 
-<form class="ui form" #f="ngForm">
-    <!--Filtering by Client-->
-    <div class="field">
-        <select multiple="" class="ui fluid multiple search selection dropdown"
-                [(ngModel)]="clientFilterInput"
-                (ngModelChange)="onFilterSearchChange()"
-                name="clientFilter"
-                #clientFilter="ngModel">
-            <!--disabled will prevent selection of empty string-->
-            <option value="" disabled="true">Filter by Client...</option>
-            <option *ngFor="let c of clients;"
-                    [value]="c.name">{{c.name}}
-            </option>
-        </select>
-    </div>
-</form>
+<div class="ui stackable grid">
+    <form class="ui form four wide computer five wide tablet sixteen wide mobile left floated column" #f="ngForm">
+        <h4 class="ui horizontal divider header">
+            Search
+        </h4>
+        <!--Search by Keyword-->
+        <div class="field">
+            <label>Keyword</label>
+            <input type="text"
+                   [(ngModel)]="keywordFilterInput"
+                   name="keywordFilter"
+                   #keywordFilter="ngModel">
+        </div>
+        <!--Search by Producer-->
+        <div class="field">
+            <label>Producer 🙋</label>
+            <input type="text" disabled placeholder="(not available yet)">
+            <!--<select multiple="" class="ui fluid multiple search selection dropdown"-->
+            <!--[(ngModel)]="producerFilterInput"-->
+            <!--name="producerFilterInput"-->
+            <!--#producerFilter="ngModel">-->
+            <!--<option *ngFor="let p of producers;"-->
+            <!--[value]="p">{{p}}-->
+            <!--</option>-->
+            <!--</select>-->
+        </div>
+        <!--Search by Client-->
+        <div class="field">
+            <label>Client</label>
+            <select multiple="" class="ui fluid multiple search selection dropdown"
+                    [(ngModel)]="clientFilterInput"
+                    name="clientFilter"
+                    #clientFilter="ngModel">
+                <option *ngFor="let c of clients;"
+                        [value]="c.name">{{c.name}}
+                </option>
+            </select>
+        </div>
+    </form>
 
-<!--Display Area-->
-<div class="ui basic no-padding segment" [class.loading]="loading">
-    <table class="ui yellow compact sortable celled table"
-           *ngIf="displayedJobs?.length > 0">
-        <thead>
-        <tr>
-            <th [class.sorted]="sortCategory == 'name'"
-                [class.ascending]="sortOrder == 'ascending'"
-                [class.descending]="sortOrder == 'descending'"
-                (click)="sortTable('name')">
-                Job Name
-            </th>
-            <th [class.sorted]="sortCategory == 'client'"
-                [class.ascending]="sortOrder == 'ascending'"
-                [class.descending]="sortOrder == 'descending'"
-                (click)="sortTable('client')">
-                Client
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let j of displayedJobs">
-            <td class="ui selectable"><a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit: 35}}</a></td>
-            <td>{{j?.client}}</td>
-        </tr>
-        </tbody>
-    </table>
+    <!--Display Area-->
+    <!--TODO: make table rows look more like they're clickable-->
+    <div class="ui basic no-padding segment eleven wide computer ten wide tablet
+     sixteen wide mobile right floated column"
+         [class.loading]="loading">
+        <table class="ui green compact sortable table"
+               *ngIf="displayedJobs?.length > 0 && displayedJobs">
+            <thead>
+            <tr>
+                <th [class.sorted]="sortCategory == 'name'"
+                    [class.ascending]="sortOrder == 'ascending'"
+                    [class.descending]="sortOrder == 'descending'"
+                    (click)="sortTable('name')">
+                    Job Name <span *ngIf="sortCategory == 'name'">(sorted {{sortOrder}})</span>
+                </th>
+                <th [class.sorted]="sortCategory == 'client'"
+                    [class.ascending]="sortOrder == 'ascending'"
+                    [class.descending]="sortOrder == 'descending'"
+                    (click)="sortTable('client')">
+                    Client <span *ngIf="sortCategory == 'client'">(sorted {{sortOrder}})</span>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let j of displayedJobs
+            | filter: keywordFilterInput:'name':false
+            | filterMultiple: clientFilterInput:'client':true">
+                <td class="ui selectable">
+                    <a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit:35}}</a>
+                </td>
+                <td>{{j?.client}}</td>
+            </tr>
+            </tbody>
+        </table>
 
-    <div *ngIf="displayedJobs === null || displayedJobs?.length == 0"
-         class="ui warning message">
-        <div class="header">
-            No jobs found
+        <div *ngIf="displayedJobs === null || displayedJobs?.length == 0"
+             class="ui warning message">
+            <div class="header">
+                No jobs found
+            </div>
         </div>
     </div>
 </div>

@@ -1,4 +1,7 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {AuthenticationComponent} from "../settings/authentication/authentication.component";
+import {CommonService} from "../../services/common.service";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
     selector: 'app-home',
@@ -7,11 +10,30 @@ import {Component, OnInit} from "@angular/core";
 })
 export class HomeComponent implements OnInit {
 
-    activeMenuTab = "jobs";
+    @ViewChild('authentcation')
+    private authenticationComponent: AuthenticationComponent;
 
-    constructor() {
+    allSynced: boolean;
+
+    constructor(private commonService: CommonService,
+                private authService: AuthService) {
     }
 
     ngOnInit() {
+        this.authService.isAllAuthenticated()
+            .subscribe(
+                res => {
+                    if (res == true) this.allSynced = true;
+                    else this.allSynced = false;
+                },
+                err => {
+                    this.allSynced = false;
+                    this.commonService.handleError(err);
+                }
+            )
+    }
+
+    onAuthenticated(event: any) {
+        this.ngOnInit()
     }
 }

@@ -6,8 +6,24 @@ form > * { margin-bottom: 0.25em !important }
     }
 }
 
+.ui.table {
+    white-space: normal;
+    thead {
+        word-break: normal;
+    }
+    :not(thead) {
+        word-break: break-all;
+    }
+}
+
 @media (max-width: 767px) {
     .ui.table tbody tr td.selectable > a:not(.ui) {
         padding: 0;
+    }
+}
+
+@media only screen and (min-width: 767px) {
+    .ui.grid [class*="right floated"].column {
+        margin-left: 1em !important;
     }
 }

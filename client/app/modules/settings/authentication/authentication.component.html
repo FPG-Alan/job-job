@@ -1,0 +1,66 @@
+<table class="ui very basic unstackable table">
+    <thead>
+    </thead>
+    <tbody>
+    <tr>
+        <td><img class="ui logo image" src="assets/logos/box_logo.png"></td>
+        <td>
+            <h4 class="ui header">
+                Box
+                <div class="sub header">
+                    Online file sharing and personal cloud content management service for businesses
+                </div>
+            </h4>
+        </td>
+        <td class="right aligned">
+            <a class="ui button"
+               *ngIf="!user.boxAuthenticated"
+               [class.loading]="authenticatingBox"
+               (click)="navigateBoxAuth()">Authenticate</a>
+            <a class="ui positive button"
+               *ngIf="user.boxAuthenticated"
+               (click)="navigateBoxAuth()">Synced</a>
+        </td>
+    </tr>
+    <tr>
+        <td><img class="ui logo image" src="assets/logos/trello_logo.png"></td>
+        <td>
+            <h4 class="ui header">
+                Trello
+                <div class="sub header">
+                    Organize and prioritize your projects in a fun, flexible and rewarding way
+                </div>
+            </h4>
+        </td>
+        <td class="right aligned">
+            <a class="ui button"
+               *ngIf="!user.trelloAuthenticated"
+               [class.loading]="authenticatingTrello"
+               (click)="navigateTrelloAuth()">Authenticate</a>
+            <a class="ui positive button"
+               *ngIf="user.trelloAuthenticated"
+               (click)="navigateTrelloAuth()">Synced</a>
+        </td>
+    </tr>
+    <tr>
+        <td><img class="ui logo image" src="assets/logos/slack_logo.png"></td>
+        <td>
+            <h4 class="ui header">
+                Slack
+                <div class="sub header">
+                    All the tools your team needs in one place. Messaging, search, archiving & more
+                </div>
+            </h4>
+        </td>
+        <td class="right aligned">
+            <a class="ui button"
+               *ngIf="!user.slackAuthenticated"
+               [class.loading]="authenticatingSlack"
+               (click)="navigateSlackAuth()">Authenticate</a>
+            <a class="ui positive button"
+               *ngIf="user.slackAuthenticated"
+               (click)="navigateSlackAuth()">Synced</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -3,7 +3,8 @@
  */
 #main-menu {
   font-size: 1.1rem;
-  border-radius: 0; }
+  border-radius: 0;
+  z-index: 102; }
   #main-menu #sidebar-toggle {
     display: none !important;
     position: absolute;
@@ -26,6 +27,11 @@
   padding-top: 50px;
   padding-bottom: 50px; }
 
+@media only screen and (max-width: 768px) {
+  .ui.container {
+    width: auto !important;
+    margin-left: 1em !important;
+    margin-right: 1em !important; } }
 /*
  * Notification Message Popup
  */

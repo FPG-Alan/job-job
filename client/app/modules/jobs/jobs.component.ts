@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {Client} from "../../classes/client";
 import {ApiService} from "../../services/api.service";
 import {CommonService} from "../../services/common.service";
+import {AuthService} from "../../services/auth.service";
 
 declare var $;
 
@@ -12,20 +13,38 @@ declare var $;
 })
 export class JobsComponent implements OnInit {
 
+    allSynced: boolean;
     jobs: any[] = [];
     displayedJobs: any[] = [];
     clients: Client[] = [];
+    producers = [];
     loading: boolean = false;
     sortOrder: string = "";
     sortCategory: string = "";
     clientFilterInput = [];
+    producerFilterInput = "";
+    keywordFilterInput = "";
+
 
     constructor(private apiService: ApiService,
-                private commonService: CommonService) {
+                private commonService: CommonService,
+                private authService: AuthService) {
     }
 
     ngOnInit() {
-        $(".ui.multiple.selection.dropdown").dropdown();
+        $(".ui.selection.dropdown").dropdown();
+
+        this.authService.isAllAuthenticated()
+            .subscribe(
+                res => {
+                    if (res == true) this.allSynced = true;
+                    else this.allSynced = false;
+                },
+                err => {
+                    this.allSynced = false;
+                    this.commonService.handleError(err);
+                }
+            );
 
         this.loading = true;
         this.apiService.getAllJobs()
@@ -43,28 +62,31 @@ export class JobsComponent implements OnInit {
                 result => this.clients = result,
                 err => this.commonService.handleError(err)
             );
+        // this.getProducers();
     }
 
-    onFilterSearchChange() {
-        this.displayedJobs = this.jobs;
-        // can be split into more functions; will do if 1 more filterer needed
 
-        // filter by clients
-        if (this.clientFilterInput.length > 0) {
-            let filteredClients = [];
-            for (let c of this.clientFilterInput) {
-                filteredClients.push(c.toLowerCase())
-            }
-            this.displayedJobs = this.displayedJobs.filter(function (proj) {
-                if (proj.client) {
-                    return filteredClients.indexOf(proj.client.toLowerCase()) != -1;
-                }
-                return false;
-            });
-        }
-        this.loading = false;
-    }
+    // getProducers() {
+    //     if (this.producers.length == 0) {
+    //         this.apiService.getCustomFields()
+    //             .subscribe(
+    //                 res => {
+    //                     for (let field of res.data) {
+    //                         if (field.name == "Producer") {
+    //                             this.producers = field.options;
+    //                             break;
+    //                         }
+    //                     }
+    //                 },
+    //                 err => this.commonService.handleError(err)
+    //             )
+    //     }
+    // }
 
+
+    /********
+     * SORT *
+     ********/
     sortTable(category: string) {
         if (this.sortCategory != category) {
             // ascending order if not sorted

@@ -8,6 +8,7 @@
 
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
+      (keydown.enter)="$event.preventDefault()"
       novalidate>
 
     <!--Final Generated Name-->
@@ -41,26 +42,31 @@
     <!--Client & Brand-->
     <div class="two fields">
         <div class="required field" id="client-select-field">
-            <label>Client
+            <label>Client Name
                 (can't find it?
-                <a id="new-client-popup" class="popup-trigger">
-                    <i class="help circle icon"></i>check me out
-                </a>
-                <div class="ui popup">
-                    You can go <a routerLink="/clients/new">here</a> to create a new Client.
-                    We save most fields, so don't worry about going off to a different page.
-                    Come back here when you're done~ :D
+                <a id="new-client-popup" class="popup-trigger"
+                   (click)="addNewClient()"><i class="add icon"></i>add new</a>
+                <div class="ui small modal" id="new-client-modal">
+                    <div class="header">Create New Client</div>
+                    <div class="content">
+                        <app-new-client
+                                (onCreated)="onNewClientCreated($event)"
+                                (onCancel)="onNewClientCancel($event)">
+                        </app-new-client>
+                    </div>
                 </div>
                 )
             </label>
             <select required class="ui search dropdown selection"
                     [(ngModel)]="job.client"
-                    (ngModelChange)="this.submitted = false; onClientChange()"
-                    name="client">
-                <option value=" ">(no client)</option>
+                    (ngModelChange)="submitted = false; onClientChange()"
+                    name="client"
+                    #client="ngModel">
+                <option value=" " disabled>(select client)</option>
                 <option *ngFor="let cli of clients; let i = index"
                         [ngValue]="cli">
-                    {{cli.name}} <span *ngIf="!commonService.isEmptyString(cli.shortCode)">- ({{cli.shortCode}})</span>
+                    {{cli?.name}} <span
+                        *ngIf="!commonService.isEmptyString(cli?.shortCode)">- ({{cli?.shortCode}})</span>
                 </option>
             </select>
         </div>
@@ -81,15 +87,15 @@
                     )
                 </span>
                 <span [class.hidden]="!commonService.isEmptyString(job?.client?.name)">
-                    (needs client)
+                    (please select a Client first)
                 </span>
             </label>
             <select class="ui search dropdown selection"
                     [(ngModel)]="job.brand"
-                    (ngModelChange)="this.submitted = false; onBrandChange()"
+                    (ngModelChange)="submitted = false; onBrandChange()"
                     name="brand">
                 <option value=" ">(no brand)</option>
-                <option *ngFor="let b of job.client.brands; let i = index"
+                <option *ngFor="let b of job?.client?.brands; let i = index"
                         [value]="b">{{b}}
                 </option>
             </select>
@@ -104,7 +110,7 @@
                autofocus
                required
                [(ngModel)]="job.name"
-               (ngModelChange)="this.submitted = false; onJobNameChange();"
+               (ngModelChange)="submitted = false; onJobNameChange();"
                name="name"
                #name="ngModel">
     </div>
@@ -116,7 +122,7 @@
             <input type="date"
                    required
                    [(ngModel)]="job.startDate"
-                   (ngModelChange)="this.submitted = false; onDateChange('start', $event)"
+                   (ngModelChange)="submitted = false; onDateChange('start', $event)"
                    name="startDate"
                    #startDate="ngModel">
         </div>
@@ -125,7 +131,7 @@
             <input type="date"
                    required
                    [(ngModel)]="job.endDate"
-                   (ngModelChange)="this.submitted = false; onDateChange('end', $event)"
+                   (ngModelChange)="submitted = false; onDateChange('end', $event)"
                    name="endDate"
                    #endDate="ngModel">
         </div>
@@ -149,8 +155,9 @@
             <label>Producer</label>
             <select required class="ui search dropdown selection"
                     [(ngModel)]="job.producer"
-                    name="producer">
-                <option value=" ">(no producer)</option>
+                    name="producer"
+                    #producer="ngModel">
+                <option value="">(select producer)</option>
                 <option *ngFor="let p of producers; let i = index"
                         [ngValue]="p">
                     {{p}}
@@ -172,7 +179,7 @@
             <div class="field">
                 <div class="radio" *ngFor="let serviceType of serviceTypes">
                     <label>
-                        <input type="radio" required
+                        <input type="radio"
                                name="type" [(ngModel)]="job.serviceType"
                                [value]="serviceType.value">
                         {{serviceType.display}}
@@ -193,21 +200,33 @@
         </div>
     </div>
 
-    <!--TODO: remaining features
-        projectStatus select
-        phases (not MVP(?))
-    -->
+    <!--TODO: projectStatus select-->
     <div class="ui divider"></div>
-    <div class="ui right floated large buttons">
-        <button type="button" class="ui negative button"
-                (click)="confirmResetModels()"><i class="refresh icon"></i>Clear
-        </button>
-        <div class="or"></div>
-        <button type="submit" class="ui positive button"
-                [disabled]="!form.form.valid || submitted"><i class="checkmark icon"></i>Submit
-        </button>
+    <div class="ui negative message" *ngIf="!form.form.valid">
+        <div class="header">
+            Please fill out the following fields
+        </div>
+        <div class="ui list">
+            <div class="item" *ngIf="commonService.isEmptyString(job?.client?.name)">Client Name</div>
+            <div class="item" *ngIf="!name.valid">Job Name</div>
+            <div class="item" *ngIf="commonService.isEmptyString(job?.producer)">Producer</div>
+        </div>
     </div>
-
+    <div class="ui grid">
+        <div class="row">
+            <div class="column">
+                <div class="ui large right floated buttons">
+                    <button type="button" class="ui negative button"
+                            (click)="confirmResetModels()"><i class="refresh icon"></i>Clear
+                    </button>
+                    <div class="or"></div>
+                    <button type="submit" class="ui positive button"
+                            [disabled]="!form.form.valid || submitted"><i class="checkmark icon"></i>Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
 
 
@@ -217,8 +236,8 @@
         Are you sure you want to reset the fields on this form?
     </div>
     <div class="actions">
-        <div class="ui positive button" (click)="resetModels()"><i class="checkmark icon"></i>I'm sure!</div>
         <div class="ui negative button"><i class="remove icon"></i>Nope</div>
+        <div class="ui positive button" (click)="resetModels()"><i class="checkmark icon"></i>I'm sure!</div>
     </div>
 </div>
 

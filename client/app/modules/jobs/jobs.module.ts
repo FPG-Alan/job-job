@@ -7,6 +7,7 @@ import {RateCardSelectorModule} from "./rate-card-selector/rate-card-selector.mo
 import {JobsComponent} from "./jobs.component";
 import {DetailsComponent} from "./details/details.component";
 import {NewJobComponent} from "./new-job/new-job.component";
+import {NewClientModule} from "../clients/new-client/new-client.module";
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import {NewJobComponent} from "./new-job/new-job.component";
         FormsModule,
         SharedModule.forRoot(),
         RateCardSelectorModule,
+        NewClientModule,
         routing
     ],
     declarations: [JobsComponent, DetailsComponent, NewJobComponent]
