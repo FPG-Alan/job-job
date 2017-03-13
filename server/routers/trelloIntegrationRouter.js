@@ -19,7 +19,7 @@ var invalidTokenError = {
 trelloIntegrationRouter.post("/", function (req, res) {
     Token.findOne({userId: req.body.userId, provider: "trello"}, function (err, token) {
         if (err || !token.tokenInfo.token) {
-            res.statusCode.send(invalidTokenError);
+            res.status(500).send(invalidTokenError);
         } else {
             var newBoard = {
                 name: req.body.boardName,

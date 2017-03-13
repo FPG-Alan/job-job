@@ -17,7 +17,7 @@ var invalidTokenError = {
 slackIntegrationRouter.post("/", function (req, res) {
     Token.findOne({userId: req.body.userId, provider: "slack"}, function (err, token) {
         if (err || !token.tokenInfo.access_token) {
-            res.statusCode.send(invalidTokenError);
+            res.status(500).send(invalidTokenError);
         } else {
             if (req.body.channelName) {
                 unirest.post(apiUrl + "channels.create/" +
