@@ -156,6 +156,8 @@ authRouter.get("/slack", function (req, res) {
                             newToken.tokenInfo = response.body;
                         }
 
+                        console.log(newToken);
+
                         newToken.save(function (err, token) {
                             User.findOne({userId: req.query.state}, function (err, user) {
                                 if (user) {

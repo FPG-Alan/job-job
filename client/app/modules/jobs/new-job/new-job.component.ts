@@ -546,6 +546,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 () => {
                     this.servicesCount++;
                     $("#confirm-new-job").modal("refresh");
+                    console.log("Trello's done")
                 }
             )
     }
@@ -565,6 +566,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                 () => {
                     this.servicesCount++;
                     $("#confirm-new-job").modal("refresh");
+                    console.log("Slack's done")
                 }
             );
     }
