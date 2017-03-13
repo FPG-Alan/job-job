@@ -130,6 +130,7 @@ authRouter.get("/trello", function (req, res) {
 
 authRouter.get("/slack", function (req, res) {
     if (req.query.code && req.query.state) {
+        console.log("test auth/slack with query and state)");
         // TODO: check state if match user
         unirest.get(process.env.SLACK_API_URL + "oauth.access" +
             "?client_id=" + process.env.SLACK_CLIENT_ID +
