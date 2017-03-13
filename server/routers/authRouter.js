@@ -140,10 +140,9 @@ authRouter.get("/slack", function (req, res) {
                 "Content-Type": "application/json"
             })
             .end(function (response) {
-                if (response.status !== 200) {
-                    console.log(response);
+                if (response.status !== 200 || response.body.error) {
+                    console.log(response.body);
                 } else {
-                    console.log("full response", response);
                     Token.findOne({userId: req.query.state, provider: "slack"}, function (err, token) {
                         var newToken = {};
                         if (!token) { // token object doesn't exist; making a new one
@@ -156,8 +155,6 @@ authRouter.get("/slack", function (req, res) {
                             newToken = token;
                             newToken.tokenInfo = response.body;
                         }
-
-                        console.log(newToken);
 
                         newToken.save(function (err, token) {
                             User.findOne({userId: req.query.state}, function (err, user) {
@@ -175,7 +172,6 @@ authRouter.get("/slack", function (req, res) {
                 }
             });
     } else {
-        console.log(response);
         res.sendFile(path.join(__dirname + '/../views/success.html'));
     }
 });
