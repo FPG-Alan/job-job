@@ -174,6 +174,7 @@ authRouter.get("/slack", function (req, res) {
                 }
             });
     } else {
+        console.log(response);
         res.sendFile(path.join(__dirname + '/../views/success.html'));
     }
 });
