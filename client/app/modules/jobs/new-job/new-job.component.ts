@@ -322,7 +322,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
     private fillCustomFieldId() {
         for (let value of this.customFieldValues) {
             let sameNameFields = this.customFields.filter(function isSameFieldName(field) {
-                console.log(value.name, field.name);
                 return value.name == field.name;
             });
             if (sameNameFields.length > 0) {
