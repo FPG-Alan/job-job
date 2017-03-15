@@ -73,7 +73,6 @@ export class AuthService {
                     .subscribe(
                         res => {
                             this.user = res;
-                            console.log("got user");
                             resolve()
                         },
                         err => this.commonService.handleError(err)
@@ -109,7 +108,6 @@ export class AuthService {
         return new Promise<void>(resolve => {
             this.getMyUser().then(
                 resolve => {
-                    console.log("user:", this.user)
                     if (this.user.boxAuthenticated &&
                         this.user.trelloAuthenticated &&
                         this.user.slackAuthenticated) {
