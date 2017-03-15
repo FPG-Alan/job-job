@@ -49,6 +49,7 @@ rateCardRouter.put("/:project", function (req, res) {
                         if (resCounts >= rates.length) {
                             res.end(JSON.stringify(response.body) + "]");
                             console.log("Bill rates update for job", req.params.project, "DONE!");
+                            return;
                         } else {
                             res.write(JSON.stringify(response.body) + ",");
                         }

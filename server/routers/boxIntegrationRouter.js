@@ -9,8 +9,8 @@ var Token = require("../models/token");
 var boxKeys = require("../integrations/boxKeys");
 var rootFolder =
     process.env.NODE_ENV == "production" ? boxKeys.prod.rootFolder
-    : process.env.NODE_ENV == "development" ? boxKeys.dev.rootFolder
-    : null;
+        : process.env.NODE_ENV == "development" ? boxKeys.dev.rootFolder
+        : null;
 var sdk = require("../integrations/boxSetup");
 var invalidTokenError = {
     header: "Token is invalid or expired",

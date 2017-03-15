@@ -171,12 +171,7 @@ export class ApiService {
     /*******************
      * BOX INTEGRATION *
      *******************/
-    createNewFolder(folderName: any, parentFolderId: string) {
-        // get user info to retrieve security tokens
-        let userId = "";
-        let localProfile = JSON.parse(localStorage.getItem("profile"));
-        if (localProfile && localProfile.userId) userId = localProfile.user_id;
-
+    createNewFolder(userId: string, folderName: any, parentFolderId: string) {
         let body = {
             userId: userId,
             folderName: folderName,
@@ -193,12 +188,7 @@ export class ApiService {
     /**********************
      * TRELLO INTEGRATION *
      **********************/
-    copyBoard(boardName: string, serviceType: string) {
-        // get user info to retrieve security tokens
-        let userId = "";
-        let localProfile = JSON.parse(localStorage.getItem("profile"));
-        if (localProfile && localProfile.userId) userId = localProfile.user_id;
-
+    copyBoard(userId: string, boardName: string, serviceType: string) {
         let body = {
             userId: userId,
             boardName: boardName,
@@ -215,12 +205,7 @@ export class ApiService {
     /*********************
      * SLACK INTEGRATION *
      *********************/
-    createNewChannel(channelName: string) {
-        // get user info to retrieve security tokens
-        let userId = "";
-        let localProfile = JSON.parse(localStorage.getItem("profile"));
-        if (localProfile && localProfile.userId) userId = localProfile.user_id;
-
+    createNewChannel(userId: string, channelName: string) {
         let body = {
             userId: userId,
             channelName: channelName

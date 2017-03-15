@@ -27,13 +27,14 @@ export class AuthService {
         this.getMyUser();
     }
 
-    private setUpUser() {
+    public setUpUser() {
         return new Promise<void>(resolve => {
             // set userProfile attribute if already saved profile
             this.profile = JSON.parse(localStorage.getItem('profile'));
             if (this.profile) {
                 resolve();
             }
+            // TODO: catch error
 
             // add callback for lock "authenticated" event
             this.lock.on("authenticated", (authResult) => {

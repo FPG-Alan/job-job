@@ -8,6 +8,7 @@ import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
 import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
 import {NewClientComponent} from "../../clients/new-client/new-client.component";
+import {AuthService} from "../../../services/auth.service";
 
 declare var $;
 
@@ -23,6 +24,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
     @ViewChild('newClient')
     private newClientComponent: NewClientComponent;
 
+    userId: string = "";
     clients: Client[] = [];
     producers: string[] = [];
     public serviceTypes = [
@@ -49,7 +51,15 @@ export class NewJobComponent implements OnInit, OnDestroy {
 
     constructor(private router: Router,
                 private commonService: CommonService,
-                private apiService: ApiService) {
+                private apiService: ApiService,
+                private authService: AuthService) {
+        if (!this.authService.profile) {
+            this.authService.setUpUser().then(() => {
+                this.userId = this.authService.profile.user_id;
+            });
+        } else {
+            this.userId = this.authService.profile.user_id;
+        }
     }
 
     ngOnInit() {
@@ -497,7 +507,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
 
             // recursive folder creation
             if (!this.commonService.isEmptyString(folderName)) {
-                this.apiService.createNewFolder(folderName, parentFolderId)
+                this.apiService.createNewFolder(this.userId, folderName, parentFolderId)
                     .subscribe(
                         res => {
                             if (type == "job") {
@@ -513,6 +523,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             this.createNewFolder(parentId, nextType);
                         },
                         err => {
+                            this.boxProcessingStates[type] = "failed";
                             this.commonService.handleError(err);
                             this.servicesCount++;
                             $("#confirm-new-job").modal("refresh");
@@ -527,7 +538,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
      **********************/
     copyBoard(boardName, serviceType) {
         this.trelloProcessingState = "active";
-        this.apiService.copyBoard(boardName, serviceType)
+        this.apiService.copyBoard(this.userId, boardName, serviceType)
             .subscribe(
                 res => {
                     this.trelloProcessingState = "completed";
@@ -555,7 +566,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
      *********************/
     createNewChannel(channelName) {
         this.slackProcessingState = "active";
-        this.apiService.createNewChannel(channelName)
+        this.apiService.createNewChannel(this.userId, channelName)
             .subscribe(
                 res => this.slackProcessingState = "completed",
                 err => {
