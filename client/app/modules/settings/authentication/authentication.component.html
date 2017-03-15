@@ -14,11 +14,11 @@
         </td>
         <td class="right aligned">
             <a class="ui button"
-               *ngIf="!user.boxAuthenticated"
+               *ngIf="!authService.user.boxAuthenticated"
                [class.loading]="authenticatingBox"
                (click)="navigateBoxAuth()">Authenticate</a>
             <a class="ui positive button"
-               *ngIf="user.boxAuthenticated"
+               *ngIf="authService.user.boxAuthenticated"
                (click)="navigateBoxAuth()">Synced</a>
         </td>
     </tr>
@@ -34,11 +34,11 @@
         </td>
         <td class="right aligned">
             <a class="ui button"
-               *ngIf="!user.trelloAuthenticated"
+               *ngIf="!authService.user.trelloAuthenticated"
                [class.loading]="authenticatingTrello"
                (click)="navigateTrelloAuth()">Authenticate</a>
             <a class="ui positive button"
-               *ngIf="user.trelloAuthenticated"
+               *ngIf="authService.user.trelloAuthenticated"
                (click)="navigateTrelloAuth()">Synced</a>
         </td>
     </tr>
@@ -54,11 +54,11 @@
         </td>
         <td class="right aligned">
             <a class="ui button"
-               *ngIf="!user.slackAuthenticated"
+               *ngIf="!authService.user.slackAuthenticated"
                [class.loading]="authenticatingSlack"
                (click)="navigateSlackAuth()">Authenticate</a>
             <a class="ui positive button"
-               *ngIf="user.slackAuthenticated"
+               *ngIf="authService.user.slackAuthenticated"
                (click)="navigateSlackAuth()">Synced</a>
         </td>
     </tr>

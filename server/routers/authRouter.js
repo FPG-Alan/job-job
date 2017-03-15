@@ -55,7 +55,6 @@ authRouter.get("/box", function (req, res) {
             if (err) res.redirect('/');
 
             if (tokenInfo) {
-                console.log("token:", tokenInfo);
                 Token.findOne(
                     {userId: req.query.state, provider: "box"},
                     function (err, token) {

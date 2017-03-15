@@ -13,7 +13,6 @@ declare var $;
 })
 export class JobsComponent implements OnInit {
 
-    allSynced: boolean;
     jobs: any[] = [];
     displayedJobs: any[] = [];
     clients: Client[] = [];
@@ -34,17 +33,7 @@ export class JobsComponent implements OnInit {
     ngOnInit() {
         $(".ui.selection.dropdown").dropdown();
 
-        this.authService.isAllAuthenticated()
-            .subscribe(
-                res => {
-                    if (res == true) this.allSynced = true;
-                    else this.allSynced = false;
-                },
-                err => {
-                    this.allSynced = false;
-                    this.commonService.handleError(err);
-                }
-            );
+        this.authService.updateIntegrationStatus();
 
         this.loading = true;
         this.apiService.getAllJobs()

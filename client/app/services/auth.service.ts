@@ -19,33 +19,66 @@ export class AuthService {
     lock = new Auth0Lock('1CD38zBzoOUTvLzrWlredXlx0Q1IRJNJ', 'davefpg.auth0.com', this.options);
 
     user: User = new User("", "", "", false, false, false);
+    profile: any;
+    allSynced: boolean;
 
     constructor(private router: Router,
                 private commonService: CommonService,
                 private apiService: ApiService) {
-        // add callback for lock "authenticated" event
-        this.lock.on("authenticated", (authResult) => {
-            localStorage.setItem("id_token", authResult.idToken);
-            this.lock.getProfile(authResult.idToken, (err, profile) => {
-                if (err) {
-                    alert(err);
-                    return;
-                }
-                localStorage.setItem("profile", JSON.stringify(profile));
-                // store user info in database
-                if (profile) {
-                    this.user.userId = profile.user_id;
-                    this.user.name = profile.name;
-                    this.user.email = profile.email;
-                    this.apiService.getOrCreateMyUser(this.user)
+        this.getMyUser();
+    }
+
+    private setUpUser() {
+        return new Promise<void>(resolve => {
+            // set userProfile attribute if already saved profile
+            this.profile = JSON.parse(localStorage.getItem('profile'));
+            if (this.profile) {
+                resolve();
+            }
+
+            // add callback for lock "authenticated" event
+            this.lock.on("authenticated", (authResult) => {
+                localStorage.setItem("id_token", authResult.idToken);
+                this.lock.getProfile(authResult.idToken, (err, profile) => {
+                    if (err) {
+                        alert(err);
+                        return;
+                    }
+                    localStorage.setItem("profile", JSON.stringify(profile));
+                    this.profile = profile;
+                    // store User in database
+                    let u = new User("", "", "", false, false, false);
+                    u.userId = this.profile.user_id;
+                    u.name = this.profile.name;
+                    u.email = this.profile.email;
+                    this.apiService.getOrCreateMyUser(u)
                         .subscribe(
-                            res => this.user = res,
-                            err => this.commonService.handleError(err)
+                            res => console.log(res),
+                            err => {
+                                this.commonService.handleError(err);
+                                this.logout();
+                            },
+                            () => resolve()
                         )
-                }
-                console.log(profile);
+                });
+                this.router.navigate(["/"]);
             });
-            this.router.navigate(["/"]);
+        })
+    }
+
+    public getMyUser() {
+        return new Promise<void>(resolve => {
+            this.setUpUser().then(() => {
+                this.apiService.getMyUser(this.profile.user_id)
+                    .subscribe(
+                        res => {
+                            this.user = res;
+                            console.log("got user");
+                            resolve()
+                        },
+                        err => this.commonService.handleError(err)
+                    )
+            })
         });
     }
 
@@ -67,20 +100,37 @@ export class AuthService {
         this.router.navigate(["/login"]);
     };
 
-    public getUserProfile() {
-        return JSON.parse(localStorage.getItem("profile"));
+    /**
+     * Update user to see if authorized/authenticated all required integrations
+     * for real time observers
+     */
+    public updateIntegrationStatus(): Promise<void> {
+        // the condition is a Boolean and not primitive boolean
+        return new Promise<void>(resolve => {
+            this.getMyUser().then(
+                resolve => {
+                    console.log("user:", this.user)
+                    if (this.user.boxAuthenticated &&
+                        this.user.trelloAuthenticated &&
+                        this.user.slackAuthenticated) {
+                        this.allSynced = true;
+                    } else {
+                        this.allSynced = false;
+                    }
+                })
+        });
     }
 
-    /**
-     * Check whether user has authorized/authenticated all required integrations
-     * @returns {Observable<R>}
-     */
-    public isAllAuthenticated(): Observable<boolean> {
-        let localProfile = this.getUserProfile();
-        return this.apiService.getMyUser(localProfile.user_id)
-            .map(res => res.boxAuthenticated &&
-                res.trelloAuthenticated &&
-                res.slackAuthenticated
-            );
+    public getIntegrationSyncedStatus(): Promise<boolean> {
+        return this.getMyUser().then(
+            resolve => {
+                if (this.user.boxAuthenticated &&
+                    this.user.trelloAuthenticated &&
+                    this.user.slackAuthenticated) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
     }
 }
