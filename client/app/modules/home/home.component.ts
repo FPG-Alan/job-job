@@ -20,17 +20,12 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.authService.isAllAuthenticated()
-            .subscribe(
-                res => {
-                    if (res == true) this.allSynced = true;
-                    else this.allSynced = false;
-                },
-                err => {
-                    this.allSynced = false;
-                    this.commonService.handleError(err);
-                }
-            )
+        if (this.authService.isAllAuthenticated()) {
+            this.allSynced = true;
+        } else {
+            console.log("not all synced");
+            this.allSynced = false;
+        }
     }
 
     onAuthenticated(event: any) {

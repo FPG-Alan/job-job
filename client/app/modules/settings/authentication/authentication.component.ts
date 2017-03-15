@@ -2,7 +2,6 @@ import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 import {AuthService} from "../../../services/auth.service";
 import {CommonService} from "../../../services/common.service";
 import {ApiService} from "../../../services/api.service";
-import {User} from "../../../classes/user";
 
 
 @Component({
@@ -13,8 +12,6 @@ import {User} from "../../../classes/user";
 export class AuthenticationComponent implements OnInit {
 
     @Output() onAuthenticated = new EventEmitter<boolean>();
-    localProfile: any;
-    user: User = new User("", "", "", false, false, false);
     authenticatingBox = false;
     authenticatingTrello = false;
     authenticatingSlack = false;
@@ -26,12 +23,6 @@ export class AuthenticationComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.localProfile = this.authService.getUserProfile();
-        this.apiService.getMyUser(this.localProfile.user_id)
-            .subscribe(
-                res => this.user = res,
-                err => this.commonService.handleError(err)
-            );
     }
 
     navigateBoxAuth() {
@@ -48,7 +39,7 @@ export class AuthenticationComponent implements OnInit {
                         "?response_type=code" +
                         "&client_id=" + authParams.clientId +
                         "&redirect_uri=" + encodedRedirect +
-                        "&state=" + this.user.userId, '', 'toolbar=0,status=0,width=626,height=436');
+                        "&state=" + this.authService.user.userId, '', 'toolbar=0,status=0,width=626,height=436');
                     if (!child) {
                         this.authenticatingBox = false;
                         return;
@@ -58,15 +49,9 @@ export class AuthenticationComponent implements OnInit {
                         if (child.closed) {
                             clearInterval(timer);
                             this.authenticatingBox = false;
+                            this.onAuthenticated.emit(true);
                             // get user again and check if Box is authenticated
-                            this.apiService.getMyUser(this.localProfile.user_id)
-                                .subscribe(
-                                    res => {
-                                        this.user = res;
-                                        this.onAuthenticated.emit(true);
-                                    },
-                                    err => this.commonService.handleError(err)
-                                )
+                            this.authService.getMyUser();
                         }
                     }, 500);
 
@@ -78,7 +63,7 @@ export class AuthenticationComponent implements OnInit {
     navigateTrelloAuth() {
         this.authenticatingTrello = true;
 
-        let child = window.open("/auth/trello?userId=" + this.user.userId, '', 'toolbar=0,status=0,width=626,height=436');
+        let child = window.open("/auth/trello?userId=" + this.authService.user.userId, '', 'toolbar=0,status=0,width=626,height=436');
         if (!child) {
             this.authenticatingTrello = false;
             return;
@@ -88,15 +73,9 @@ export class AuthenticationComponent implements OnInit {
             if (child.closed) {
                 clearInterval(timer);
                 this.authenticatingTrello = false;
+                this.onAuthenticated.emit(true);
                 // get user again and check if Trello is authenticated
-                this.apiService.getMyUser(this.localProfile.user_id)
-                    .subscribe(
-                        res => {
-                            this.user = res;
-                            this.onAuthenticated.emit(true);
-                        },
-                        err => this.commonService.handleError(err)
-                    )
+                this.authService.getMyUser();
             }
         }, 500);
     }
@@ -115,7 +94,7 @@ export class AuthenticationComponent implements OnInit {
                         "?client_id=" + authParams.clientId +
                         "&scope=" + "channels:write" +
                         "&redirect_uri=" + encodedRedirect +
-                        "&state=" + this.user.userId +
+                        "&state=" + this.authService.user.userId +
                         "&team=" + authParams.teamId, '', 'toolbar=0,status=0,width=626,height=436');
                     if (!child) {
                         this.authenticatingSlack = false;
@@ -126,15 +105,9 @@ export class AuthenticationComponent implements OnInit {
                         if (child.closed) {
                             clearInterval(timer);
                             this.authenticatingSlack = false;
-                            // get user again and check if Box is authenticated
-                            this.apiService.getMyUser(this.localProfile.user_id)
-                                .subscribe(
-                                    res => {
-                                        this.user = res;
-                                        this.onAuthenticated.emit(true);
-                                    },
-                                    err => this.commonService.handleError(err)
-                                )
+                            this.onAuthenticated.emit(true);
+                            // get user again and check if Slack is authenticated
+                            this.authService.getMyUser();
                         }
                     }, 500);
                 },

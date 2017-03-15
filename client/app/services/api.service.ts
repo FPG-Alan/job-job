@@ -175,7 +175,7 @@ export class ApiService {
         // get user info to retrieve security tokens
         let userId = "";
         let localProfile = JSON.parse(localStorage.getItem("profile"));
-        if (localProfile) userId = localProfile.user_id;
+        if (localProfile && localProfile.userId) userId = localProfile.user_id;
 
         let body = {
             userId: userId,
@@ -197,7 +197,7 @@ export class ApiService {
         // get user info to retrieve security tokens
         let userId = "";
         let localProfile = JSON.parse(localStorage.getItem("profile"));
-        if (localProfile) userId = localProfile.user_id;
+        if (localProfile && localProfile.userId) userId = localProfile.user_id;
 
         let body = {
             userId: userId,
@@ -219,7 +219,7 @@ export class ApiService {
         // get user info to retrieve security tokens
         let userId = "";
         let localProfile = JSON.parse(localStorage.getItem("profile"));
-        if (localProfile) userId = localProfile.user_id;
+        if (localProfile && localProfile.userId) userId = localProfile.user_id;
 
         let body = {
             userId: userId,
