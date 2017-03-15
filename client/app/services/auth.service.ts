@@ -4,7 +4,6 @@ import {Router} from "@angular/router";
 import {CommonService} from "./common.service";
 import {ApiService} from "./api.service";
 import {User} from "../classes/user";
-import {Observable} from "rxjs";
 
 // avoid name not found warnings
 declare var Auth0Lock: any;
@@ -58,10 +57,12 @@ export class AuthService {
                                 this.commonService.handleError(err);
                                 this.logout();
                             },
-                            () => resolve()
+                            () => {
+                                resolve();
+                                this.router.navigate(["/"]);
+                            }
                         )
                 });
-                this.router.navigate(["/"]);
             });
         })
     }
