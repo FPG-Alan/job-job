@@ -9,7 +9,7 @@ export class IntegrationsGuard implements CanActivate {
     }
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-        if (this.authService.isAllAuthenticated()) {
+        if (this.authService.getIntegrationSyncedStatus()) {
             return true;
         } else {
             this.router.navigate(['/']);

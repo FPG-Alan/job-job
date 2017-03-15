@@ -13,22 +13,16 @@ export class HomeComponent implements OnInit {
     @ViewChild('authentcation')
     private authenticationComponent: AuthenticationComponent;
 
-    allSynced: boolean;
 
     constructor(private commonService: CommonService,
                 private authService: AuthService) {
     }
 
     ngOnInit() {
-        if (this.authService.isAllAuthenticated()) {
-            this.allSynced = true;
-        } else {
-            console.log("not all synced");
-            this.allSynced = false;
-        }
+        this.authService.updateIntegrationStatus()
     }
 
     onAuthenticated(event: any) {
-        this.ngOnInit()
+        this.ngOnInit();
     }
 }

@@ -20,6 +20,7 @@ export class AuthService {
 
     user: User = new User("", "", "", false, false, false);
     profile: any;
+    allSynced: boolean;
 
     constructor(private router: Router,
                 private commonService: CommonService,
@@ -100,37 +101,36 @@ export class AuthService {
     };
 
     /**
-     * Check whether user has authorized/authenticated all required integrations
+     * Update user to see if authorized/authenticated all required integrations
+     * for real time observers
      */
-    public isAllAuthenticated(): boolean {
+    public updateIntegrationStatus(): Promise<void> {
         // the condition is a Boolean and not primitive boolean
-        if (!this.commonService.isEmptyString(this.user.userId)) {
-            console.log("user:", this.user)
-            if (this.user.boxAuthenticated &&
-                this.user.trelloAuthenticated &&
-                this.user.slackAuthenticated) {
-                console.log("true")
-                return true;
-            } else {
-
-                console.log("false")
-                return false;
-            }
-        } else {
-            console.log("using promise")
-            let result: boolean;
+        return new Promise<void>(resolve => {
             this.getMyUser().then(
                 resolve => {
                     console.log("user:", this.user)
                     if (this.user.boxAuthenticated &&
                         this.user.trelloAuthenticated &&
                         this.user.slackAuthenticated) {
-                        result = true;
+                        this.allSynced = true;
                     } else {
-                        result = false;
+                        this.allSynced = false;
                     }
                 })
-            return result;
-        }
+        });
+    }
+
+    public getIntegrationSyncedStatus(): Promise<boolean> {
+        return this.getMyUser().then(
+            resolve => {
+                if (this.user.boxAuthenticated &&
+                    this.user.trelloAuthenticated &&
+                    this.user.slackAuthenticated) {
+                    return true;
+                } else {
+                    return false;
+                }
+            })
     }
 }

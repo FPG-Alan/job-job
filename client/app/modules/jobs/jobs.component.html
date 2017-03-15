@@ -1,6 +1,6 @@
 <div class="ui clearing basic segment">
     <h1 class="ui left floated header"><i class="suitcase icon"></i>Job Search</h1>
-    <a *ngIf="allSynced" class="ui right floated button" routerLink="/jobs/new">
+    <a *ngIf="authService.allSynced" class="ui right floated button" routerLink="/jobs/new">
         <i class="add icon"></i>Create New Job
     </a>
 </div>
