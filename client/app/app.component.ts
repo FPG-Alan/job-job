@@ -43,6 +43,7 @@ export class AppComponent {
 
     toggleSidebar() {
         $(".ui.sidebar")
+            .sidebar({ context: $('app-root') })
             .sidebar('setting', 'transition', 'overlay')
             .sidebar("toggle");
     }

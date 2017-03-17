@@ -24,7 +24,8 @@
 </nav>
 
 
-<div class="ui right sidebar inverted vertical labeled icon menu" *ngIf="authService.authenticated()">
+<div class="ui fixed right sidebar inverted vertical labeled icon menu overlay"
+     *ngIf="authService.authenticated()">
     <a routerLink="/"
        routerLinkActive="active"
        [routerLinkActiveOptions]="{exact: true}"
@@ -52,13 +53,14 @@
 </div>
 
 
-<div class="ui"
-     [class.container]="authService.authenticated()"
-     [class.pusher]="authService.authenticated()">
-    <router-outlet></router-outlet>
+<div class="pusher">
+    <div class="ui"
+         [class.container]="authService.authenticated()">
+        <router-outlet></router-outlet>
+    </div>
 </div>
 
-
+<!--Notification Message Popup-->
 <div class="ui sticky hidden floating message" id="notif-message">
     <i class="close icon"></i>
     <div class="header">

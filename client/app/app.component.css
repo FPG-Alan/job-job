@@ -20,10 +20,17 @@
       display: block !important; } }
 
 /*
+ * Sidebar
+ */
+.ui.fixed.right.sidebar {
+  z-index: 102;
+  position: fixed !important; }
+
+/*
  * Pushed Container for Sidebar
  */
 .pusher {
-  margin-top: 45px;
+  margin-top: 43px;
   padding-top: 50px;
   padding-bottom: 50px; }
 
