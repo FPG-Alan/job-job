@@ -19,7 +19,7 @@
         expiration: "never",
         success: function () {
             var token = Trello.token();
-            document.location = document.location + "&token=" + token;
+            window.location.href = window.location.href + "&token=" + token;
         },
         error: function () {
             window.alert("Failed to authorize!")
