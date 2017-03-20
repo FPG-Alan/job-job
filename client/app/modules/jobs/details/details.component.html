@@ -33,7 +33,9 @@
     <div *ngFor="let field of customFields">
         <label>{{field.name}}: </label>
         <span *ngFor="let val of field?.vals; let isLast=last">
-            <a *ngIf="isUrl(val.value)" href="{{val.value}}">{{val.value | characterLimit: 50}}</a>
+            <a target="_blank" *ngIf="isUrl(val.value)" href="{{val.value}}">
+                {{val.value | characterLimit: 50}}
+            </a>
             <span *ngIf="!isUrl(val.value)">{{val.value}}</span>
             {{isLast ? "" : ", "}}
         </span>
