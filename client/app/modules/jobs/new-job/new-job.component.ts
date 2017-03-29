@@ -30,7 +30,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
     public serviceTypes = [
         {value: 'Site', display: 'Site Template'},
         {value: 'Banner', display: 'Banner Template'},
-        {value: "", display: "Create your own"}
+        {value: '', display: 'None (Manually Create on Trello)'}
     ];
     slackChannelName = "";
     customFields: any;
