@@ -52,7 +52,7 @@ clientRouter.get("/count-by-year", function (req, res) {
                     var codes = [];
                     for (proj in projects) {
                         var name = projects[proj].name;
-                        if (name.match(/(\d+){4,5}(?=_)/)){
+                        if (name.match(/(\d+){4,5}(?=_)/)) {
                             var code = name.match(/(\d+){4,5}(?=_)/)[0];
                             if (code && code.slice(0, 2) == shortYear) {
                                 var codeInt = parseInt(code.slice(2));
