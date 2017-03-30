@@ -525,9 +525,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
                             this.createNewFolder(parentId, nextType);
                         },
                         err => {
+                            this.servicesCount++;
                             this.boxProcessingStates[type] = "failed";
                             this.commonService.handleError(err);
-                            this.servicesCount++;
                             $("#confirm-new-job").modal("refresh");
                         }
                     );
@@ -543,6 +543,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.apiService.copyBoard(this.userId, boardName, serviceType)
             .subscribe(
                 res => {
+                    this.servicesCount++;
                     this.trelloProcessingState = "completed";
                     this.confirmInfo.trelloUrl =
                         "https://trello.com/b/" + res.id;
@@ -552,15 +553,15 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     });
                 },
                 err => {
+                    this.servicesCount++;
                     this.trelloProcessingState = "failed";
                     this.commonService.handleError(err);
                 },
                 () => {
-                    this.servicesCount++;
                     $("#confirm-new-job").modal("refresh");
                     console.log("Trello's done")
                 }
-            )
+            );
     }
 
     /*********************
@@ -570,13 +571,16 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.slackProcessingState = "active";
         this.apiService.createNewChannel(this.userId, channelName)
             .subscribe(
-                res => this.slackProcessingState = "completed",
+                res => {
+                    this.servicesCount++;
+                    this.slackProcessingState = "completed";
+                },
                 err => {
+                    this.servicesCount++;
                     this.slackProcessingState = "failed";
                     this.commonService.handleError(err);
                 },
                 () => {
-                    this.servicesCount++;
                     $("#confirm-new-job").modal("refresh");
                     console.log("Slack's done")
                 }

@@ -34,7 +34,7 @@ slackIntegrationRouter.post("/", function (req, res) {
                                 errorMessage.message = "Channel name is taken";
                             }
                             res.status(500).send(errorMessage);
-                            console.log(response);
+                            console.log(response.body);
                         } else {
                             res.send(response.body);
                             console.log("Created new Slack channel:", "...");
