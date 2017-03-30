@@ -6,12 +6,16 @@ import {Pipe, PipeTransform} from "@angular/core";
 export class SlackChannelNamePipe implements PipeTransform {
 
     transform(value: string): string {
+        if (!value ) {
+            return ""
+        }
         // ~21 characters, only a-z, 0-9, hyphens, underscores
         let result = 'p-' + value;
         result = result.replace(/\_/g, '-');
 
         // the prefix that needs to be included in a project channel name
-        let requiredPrefix = result.match(/^([^-]*\-){2}/)[0];
+        if (!result.match(/^([^-]*\-){2}/)) return value.toLowerCase();
+        let requiredPrefix:string = result.match(/^([^-]*\-){2}/)[0];
         let remainLength = 21 - requiredPrefix.length;
 
         // the remaining substring that might need to be reduced
