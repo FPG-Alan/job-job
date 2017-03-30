@@ -196,7 +196,7 @@
                        name="slackChannel"
                        #slackChannel="ngModel"
                        maxlength="21">
-                <div class="ui pointing label">
+                <div class="ui pointing label" *ngIf="!commonService.isEmptyString(finalName.result)">
                     ex: {{finalName.result | slackChannelName}}
                 </div>
             </div>
