@@ -364,6 +364,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         let newClient = new Client("", "", "", []);
         this.job = new Job("", newClient, "", null, "", "", "", "",
             strStartDate, strEndDate);
+        $("#client-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.client.name)
+            ? "(select client)"
+            : this.job.client.name;
 
         this.finalName = {
             result: "",
