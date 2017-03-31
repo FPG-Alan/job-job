@@ -28,9 +28,13 @@ slackIntegrationRouter.post("/", function (req, res) {
                         "Content-Type": "application/json"
                     })
                     .end(function (response) {
-                        if (response.status !== 200) {
-                            res.status(500).send({header: "Failed to create new Slack channel"});
-                            console.log(response);
+                        if (response.status !== 200 || !response.body.ok) {
+                            var errorMessage = {header: "Failed to create new Slack channel"};
+                            if (response.body.error == "name_taken") {
+                                errorMessage.message = "Channel name is taken";
+                            }
+                            res.status(500).send(errorMessage);
+                            console.log(response.body);
                         } else {
                             res.send(response.body);
                             console.log("Created new Slack channel:", "...");

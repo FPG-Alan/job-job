@@ -62,7 +62,7 @@
                     (ngModelChange)="submitted = false; onClientChange()"
                     name="client"
                     #client="ngModel">
-                <option value=" " disabled>(select client)</option>
+                <option value="" disabled>(select client)</option>
                 <option *ngFor="let cli of clients; let i = index"
                         [ngValue]="cli">
                     {{cli?.name}} <span
@@ -139,7 +139,7 @@
 
     <!--Description-->
     <div class="required field">
-        <label>Description</label>
+        <label>Description (public info only)</label>
         <textarea [(ngModel)]="job.description"
                   rows="3"
                   placeholder="(enter description)"
@@ -196,6 +196,9 @@
                        name="slackChannel"
                        #slackChannel="ngModel"
                        maxlength="21">
+                <div class="ui pointing label" *ngIf="!commonService.isEmptyString(finalName.result)">
+                    ex: {{finalName.result | slackChannelName}}
+                </div>
             </div>
         </div>
     </div>

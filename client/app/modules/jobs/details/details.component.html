@@ -7,8 +7,8 @@
         <div class="content">
             {{job.name}}
             <div class="sub header">
-                {{job.starts_at | date: "E, MMM d, y"}} -
-                {{job.ends_at| date: "E, MMM d, y"}}
+                {{job.starts_at | date: "EEEE, M/dd/y"}} -
+                {{job.ends_at| date: "EEEE, M/dd/y"}}
             </div>
         </div>
     </h2>
@@ -48,7 +48,7 @@
     <div class="ui button" (click)="selectingRateCard = !selectingRateCard">
         <span *ngIf="!selectingRateCard">
             <i class="money icon"></i>
-            Select Rate Card
+            Change Rate Card
         </span>
         <span *ngIf="selectingRateCard">
             <i class="remove icon"></i>

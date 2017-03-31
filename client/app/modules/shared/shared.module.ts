@@ -7,11 +7,12 @@ import {IntegrationsService} from "../../services/integrations.service";
 import {CharacterLimitPipe} from "../../pipes/character-limit.pipe";
 import {SearchPipe} from "../../pipes/filter.pipe";
 import {SearchMultiplePipe} from "../../pipes/filter-multiple.pipe";
+import {SlackChannelNamePipe} from "../../pipes/slack-channel-name.pipe";
 
 @NgModule({
     imports: [CommonModule],
-    declarations: [CharacterLimitPipe, SearchPipe, SearchMultiplePipe],
-    exports: [CharacterLimitPipe, SearchPipe, SearchMultiplePipe]
+    declarations: [CharacterLimitPipe, SearchPipe, SearchMultiplePipe, SlackChannelNamePipe],
+    exports: [CharacterLimitPipe, SearchPipe, SearchMultiplePipe, SlackChannelNamePipe]
 })
 export class SharedModule {
 
