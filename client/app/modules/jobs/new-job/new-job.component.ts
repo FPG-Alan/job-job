@@ -27,7 +27,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
     userId: string = "";
     clients: Client[] = [];
     producers: string[] = [];
-    public serviceTypes = [
+    serviceTypes = [
         {value: 'Site', display: 'Site Template'},
         {value: 'Banner', display: 'Banner Template'},
         {value: '', display: 'None (Manually Create on Trello)'}
