@@ -62,7 +62,7 @@
                     (ngModelChange)="submitted = false; onClientChange()"
                     name="client"
                     #client="ngModel">
-                <option value=" " disabled>(select client)</option>
+                <option value="" disabled>(select client)</option>
                 <option *ngFor="let cli of clients; let i = index"
                         [ngValue]="cli">
                     {{cli?.name}} <span

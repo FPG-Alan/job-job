@@ -11,6 +11,17 @@ a:hover {
 .hidden {
   display: none !important; }
 
+/* Forms */
+.ng-valid[required], .ng-valid.required,
+.ng-valid[required] + input, .ng-valid.required + input {
+  border-left: 5px solid #42A948 !important;
+  /* green */ }
+
+.ng-invalid:not(form).ng-touched,
+.ng-invalid:not(form).ng-touched + input {
+  border-left: 5px solid #A94442 !important;
+  /* red */ }
+
 /* General Overrides */
 .ui.divider {
   margin-top: 1.5rem; }
