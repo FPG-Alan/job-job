@@ -11,22 +11,187 @@ a:hover {
 .hidden {
   display: none !important; }
 
-/* Forms */
-.ng-valid[required], .ng-valid.required,
-.ng-valid[required] + input, .ng-valid.required + input {
-  border-left: 5px solid #42A948 !important;
-  /* green */ }
-
-.ng-invalid:not(form).ng-touched,
-.ng-invalid:not(form).ng-touched + input {
-  border-left: 5px solid #A94442 !important;
-  /* red */ }
-
-/* General Overrides */
+/*********************
+ * General Overrides *
+ ************/
 .ui.divider {
   margin-top: 1.5rem; }
 
 .ui.basic.segment {
   padding: 0 !important; }
+
+/******************
+ * Success Fields *
+ ******************/
+/* Success Autofilled */
+.ui.form .success.success input:-webkit-autofill {
+  box-shadow: 0px 0px 0px 100px #FFFAF0 inset !important;
+  border-color: #A3C293 !important; }
+
+/* Success Placeholder */
+.ui.form .success ::-webkit-input-placeholder {
+  color: #BDE7BC !important; }
+
+.ui.form .success :-ms-input-placeholder {
+  color: #BDE7BC !important; }
+
+.ui.form .success ::-moz-placeholder {
+  color: #BDE7BC !important; }
+
+.ui.form .success :focus::-webkit-input-placeholder {
+  color: #97DA96 !important; }
+
+.ui.form .success :focus:-ms-input-placeholder {
+  color: #97DA96 !important; }
+
+.ui.form .success :focus::-moz-placeholder {
+  color: #97DA96 !important; }
+
+/* On Form */
+.ui.form.success .success.message:not(:empty) {
+  display: block; }
+
+.ui.form.success .compact.success.message:not(:empty) {
+  display: inline-block; }
+
+.ui.form.success .icon.success.message:not(:empty) {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+
+/* On Field(s) */
+.ui.form .fields.success .field label,
+.ui.form .field.success label,
+.ui.form .fields.success .field .input,
+.ui.form .field.success .input {
+  color: #1A531B !important; }
+
+.ui.form .fields.success .field .corner.label,
+.ui.form .field.success .corner.label {
+  border-color: #1A531B !important;
+  color: #FFFFFF !important; }
+
+.ui.form .fields.success .field textarea,
+.ui.form .fields.success .field select,
+.ui.form .fields.success .field input:not([type]),
+.ui.form .fields.success .field input[type="date"],
+.ui.form .fields.success .field input[type="datetime-local"],
+.ui.form .fields.success .field input[type="email"],
+.ui.form .fields.success .field input[type="number"],
+.ui.form .fields.success .field input[type="password"],
+.ui.form .fields.success .field input[type="search"],
+.ui.form .fields.success .field input[type="tel"],
+.ui.form .fields.success .field input[type="time"],
+.ui.form .fields.success .field input[type="text"],
+.ui.form .fields.success .field input[type="file"],
+.ui.form .fields.success .field input[type="url"],
+.ui.form .field.success textarea,
+.ui.form .field.success select,
+.ui.form .field.success input:not([type]),
+.ui.form .field.success input[type="date"],
+.ui.form .field.success input[type="datetime-local"],
+.ui.form .field.success input[type="email"],
+.ui.form .field.success input[type="number"],
+.ui.form .field.success input[type="password"],
+.ui.form .field.success input[type="search"],
+.ui.form .field.success input[type="tel"],
+.ui.form .field.success input[type="time"],
+.ui.form .field.success input[type="text"],
+.ui.form .field.success input[type="file"],
+.ui.form .field.success input[type="url"] {
+  background: #FCFFF5 !important;
+  border-color: #A3C293 !important;
+  color: #1A531B !important;
+  box-shadow: none !important; }
+
+.ui.form .field.success textarea:focus,
+.ui.form .field.success select:focus,
+.ui.form .field.success input:not([type]):focus,
+.ui.form .field.success input[type="date"]:focus,
+.ui.form .field.success input[type="datetime-local"]:focus,
+.ui.form .field.success input[type="email"]:focus,
+.ui.form .field.success input[type="number"]:focus,
+.ui.form .field.success input[type="password"]:focus,
+.ui.form .field.success input[type="search"]:focus,
+.ui.form .field.success input[type="tel"]:focus,
+.ui.form .field.success input[type="time"]:focus,
+.ui.form .field.success input[type="text"]:focus,
+.ui.form .field.success input[type="file"]:focus,
+.ui.form .field.success input[type="url"]:focus {
+  background: #FCFFF5 !important;
+  border-color: #A3C293 !important;
+  color: #1A531B !important;
+  -webkit-appearance: none !important;
+  box-shadow: none !important; }
+
+/* Preserve Native Select Stylings */
+.ui.form .field.success select {
+  -webkit-appearance: menulist-button; }
+
+/*------------------
+    Dropdown Success
+--------------------*/
+.ui.form .fields.success .field .ui.dropdown,
+.ui.form .fields.success .field .ui.dropdown .item,
+.ui.form .field.success .ui.dropdown,
+.ui.form .field.success .ui.dropdown .text,
+.ui.form .field.success .ui.dropdown .item {
+  background: #FCFFF5 !important;
+  color: #1A531B !important; }
+
+.ui.form .fields.success .field .ui.dropdown,
+.ui.form .field.success .ui.dropdown {
+  border-color: #A3C293 !important; }
+
+.ui.form .fields.success .field .ui.dropdown:hover,
+.ui.form .field.success .ui.dropdown:hover {
+  border-color: #A3C293 !important; }
+
+.ui.form .fields.success .field .ui.dropdown:hover .menu,
+.ui.form .field.success .ui.dropdown:hover .menu {
+  border-color: #A3C293 !important; }
+
+.ui.form .fields.success .field .ui.multiple.selection.dropdown > .label,
+.ui.form .field.success .ui.multiple.selection.dropdown > .label {
+  background-color: #CBEACB !important;
+  color: #1A531B !important; }
+
+/* Hover */
+.ui.form .fields.success .field .ui.dropdown .menu .item:hover,
+.ui.form .field.success .ui.dropdown .menu .item:hover {
+  background-color: #E7FBE7 !important; }
+
+/* Selected */
+.ui.form .fields.success .field .ui.dropdown .menu .selected.item,
+.ui.form .field.success .ui.dropdown .menu .selected.item {
+  background-color: #E7FBE7 !important; }
+
+/* Active */
+.ui.form .fields.success .field .ui.dropdown .menu .active.item,
+.ui.form .field.success .ui.dropdown .menu .active.item {
+  background-color: #CFFDCF !important; }
+
+/*--------------------
+    Checkbox Success
+---------------------*/
+.ui.form .fields.success .field .checkbox:not(.toggle):not(.slider) label,
+.ui.form .field.success .checkbox:not(.toggle):not(.slider) label,
+.ui.form .fields.success .field .checkbox:not(.toggle):not(.slider) .box,
+.ui.form .field.success .checkbox:not(.toggle):not(.slider) .box {
+  color: #1A531B !important; }
+
+.ui.form .fields.success .field .checkbox:not(.toggle):not(.slider) label:before,
+.ui.form .field.success .checkbox:not(.toggle):not(.slider) label:before,
+.ui.form .fields.success .field .checkbox:not(.toggle):not(.slider) .box:before,
+.ui.form .field.success .checkbox:not(.toggle):not(.slider) .box:before {
+  background: #FCFFF5 !important;
+  border-color: #A3C293 !important; }
+
+.ui.form .fields.success .field .checkbox label:after,
+.ui.form .field.success .checkbox label:after,
+.ui.form .fields.success .field .checkbox .box:after,
+.ui.form .field.success .checkbox .box:after {
+  color: #1A531B !important; }
 
 /*# sourceMappingURL=styles.css.map */

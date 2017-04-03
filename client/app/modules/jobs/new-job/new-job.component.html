@@ -41,7 +41,8 @@
     <br><br>
     <!--Client & Brand-->
     <div class="two fields">
-        <div class="required field" id="client-select-field">
+        <div class="required field" id="client-select-field"
+            [class.success]="!commonService.isEmptyString(job?.client?.name)">
             <label>Client
                 (can't find it?
                 <a id="new-client-popup" class="popup-trigger"
@@ -71,8 +72,7 @@
             </select>
         </div>
         <div class="field" id="brand-select-field">
-            <label>
-                Brand
+            <label>Brand
                 <span [class.hidden]="commonService.isEmptyString(job?.client?.name)">
                     (can't find it?
                     <a id="new-brand-popup" class="popup-trigger"><i class="add icon"></i>add new</a>
@@ -103,7 +103,9 @@
     </div>
 
     <!--Job Name-->
-    <div class="required field" [class.error]="submitted && !name.valid">
+    <div class="required field"
+         [class.success]="name.valid"
+         [class.error]="!name.valid && (name.dirty || name.touched)">
         <label>Job Name</label>
         <input type="text"
                placeholder="(required name)"
@@ -117,7 +119,9 @@
 
     <!--Start and End Dates-->
     <div class="two fields">
-        <div class="required field" [class.error]="!startDate.valid">
+        <div class="required field"
+             [class.success]="startDate.valid"
+             [class.error]="!startDate.valid">
             <label>Start Date (MM/DD/YYYY)</label>
             <input type="date"
                    required
@@ -126,7 +130,9 @@
                    name="startDate"
                    #startDate="ngModel">
         </div>
-        <div class="required field" [class.error]="!endDate.valid">
+        <div class="required field"
+             [class.success]="endDate.valid"
+             [class.error]="!endDate.valid">
             <label>End Date (MM/DD/YY)</label>
             <input type="date"
                    required
@@ -138,7 +144,7 @@
     </div>
 
     <!--Description-->
-    <div class="required field">
+    <div class="field">
         <label>Description (public info only)</label>
         <textarea [(ngModel)]="job.description"
                   rows="3"
@@ -151,7 +157,9 @@
     <br><br>
     <div class="two fields">
         <!--Producer-->
-        <div class="required field">
+        <div class="required field"
+             [class.success]="!commonService.isEmptyString(job?.producer)"
+             [class.error]="commonService.isEmptyString(job?.producer) && (producer.dirty || producer.touched)">
             <label>Producer</label>
             <select required class="ui search dropdown selection"
                     [(ngModel)]="job.producer"
@@ -205,16 +213,6 @@
 
     <!--TODO: projectStatus select-->
     <div class="ui divider"></div>
-    <div class="ui negative message" *ngIf="!form.form.valid">
-        <div class="header">
-            Please fill out the following fields
-        </div>
-        <div class="ui list">
-            <div class="item" *ngIf="commonService.isEmptyString(job?.client?.name)">Client Name</div>
-            <div class="item" *ngIf="!name.valid">Job Name</div>
-            <div class="item" *ngIf="commonService.isEmptyString(job?.producer)">Producer</div>
-        </div>
-    </div>
     <div class="ui grid">
         <div class="row">
             <div class="column">
