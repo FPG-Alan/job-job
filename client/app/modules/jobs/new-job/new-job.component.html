@@ -42,7 +42,8 @@
     <!--Client & Brand-->
     <div class="two fields">
         <div class="required field" id="client-select-field"
-            [class.success]="!commonService.isEmptyString(job?.client?.name)">
+             [class.success]="!commonService.isEmptyString(job?.client?.name)"
+             [class.error]="commonService.isEmptyString(job?.client?.name) && (client.dirty || client.touched)">
             <label>Client
                 (can't find it?
                 <a id="new-client-popup" class="popup-trigger"
@@ -182,7 +183,8 @@
 
     <!--Service Type-->
     <div class="two fields">
-        <div class="required grouped field">
+        <div class="required grouped field"
+             [class.success]="job.serviceType != '' && serviceTypes != null">
             <label>Trello Board Type</label>
             <div class="field">
                 <div class="radio" *ngFor="let serviceType of serviceTypes">
@@ -196,7 +198,7 @@
             </div>
         </div>
         <div class="grouped field">
-            <div class="field" [class.error]="submitted && !name.valid">
+            <div class="field">
                 <label>Slack Channel Name (leave blank to opt out)</label>
                 <input type="text"
                        placeholder="(~21 characters, only a-z, 0-9, hyphens, underscores)"
@@ -222,7 +224,9 @@
                     </button>
                     <div class="or"></div>
                     <button type="submit" class="ui positive button"
-                            [disabled]="!form.form.valid || submitted"><i class="checkmark icon"></i>Submit
+                            [disabled]="!form.form.valid || submitted
+                            || commonService.isEmptyString(rateCardSelectorComponent.selectedTemplate)">
+                        <i class="checkmark icon"></i>Submit
                     </button>
                 </div>
             </div>
@@ -231,6 +235,7 @@
 </form>
 
 
+<!-- Reset Confirmation Screen -->
 <div class="ui small modal" id="confirm-reset-job">
     <i class="close icon"></i>
     <div class="header">

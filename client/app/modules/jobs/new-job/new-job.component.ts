@@ -30,7 +30,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
     serviceTypes = [
         {value: 'Site', display: 'Site Template'},
         {value: 'Banner', display: 'Banner Template'},
-        {value: '', display: 'None (Manually Create on Trello)'}
+        {value: ' ', display: 'None (Manually Create on Trello)'}
     ];
     slackChannelName = "";
     customFields: any;
@@ -268,7 +268,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(form: NgForm) {
-        if (form.valid && !this.submitted) {
+        if (form.valid && !this.submitted
+            && !this.commonService
+                .isEmptyString(this.rateCardSelectorComponent.selectedTemplate)) {
             // validation set to submitted to avoid spamming
             this.submitted = true;
             // compile what everything that hasn't been updated yet
@@ -367,6 +369,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
         $("#client-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.client.name)
             ? "(select client)"
             : this.job.client.name;
+        this.rateCardSelectorComponent.selectedTemplate = null;
 
         this.finalName = {
             result: "",
