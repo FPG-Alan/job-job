@@ -32,6 +32,13 @@ export class RateCardSelectorComponent implements OnInit {
             );
     }
 
+    onRateChanged() {
+        $("#rate-card-select-field div.text")[0].innerText =
+            !this.selectedTemplate || this.commonService.isEmptyString(this.selectedTemplate.name)
+                ? "(select a rate card)"
+                : this.selectedTemplate.name;
+    }
+
     updateBillRates() {
         if (this.newJob && this.selectedTemplate) {
             this.apiService

@@ -5,8 +5,8 @@ import {Pipe, PipeTransform} from "@angular/core";
 })
 export class SlackChannelNamePipe implements PipeTransform {
 
-    transform(value: string): string {
-        if (!value ) {
+    transform(value: string, variant: string): string {
+        if (!value) {
             return ""
         }
         // ~21 characters, only a-z, 0-9, hyphens, underscores
@@ -15,13 +15,18 @@ export class SlackChannelNamePipe implements PipeTransform {
 
         // the prefix that needs to be included in a project channel name
         if (!result.match(/^([^-]*\-){2}/)) return 'p-' + value.toLowerCase();
-        let requiredPrefix:string = result.match(/^([^-]*\-){2}/)[0];
+        let requiredPrefix: string = result.match(/^([^-]*\-){2}/)[0];
         let remainLength = 22 - requiredPrefix.length;
 
         // the remaining substring that might need to be reduced
         let variedName = result.replace(/^(?:[^-]*\-){2}([^]*)/gi, '$1');
-        variedName = variedName.replace(/(?!^[aioeu])[aioue]/gi, '');
-        variedName = variedName.slice(0, remainLength);
+        if (variant == "noVowels") {
+            variedName = variedName
+                .replace(/(?!^[aioeu])[aioue]/gi, '')
+                .slice(0, remainLength);
+        } else if (variant == "abruptCut") {
+            variedName = variedName.slice(0, remainLength);
+        }
 
         result = requiredPrefix + variedName;
         return result.toLowerCase();

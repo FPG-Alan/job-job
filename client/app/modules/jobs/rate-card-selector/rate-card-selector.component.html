@@ -1,9 +1,10 @@
-<div class="required field"
+<div id="rate-card-select-field" class="required field"
      [class.success]="rateCard.valid"
      [class.error]="!rateCard.valid && (rateCard.dirty || rateCard.touched)">
     <label>Rate Card (default is Medium Rate)</label>
     <select required class="ui fluid search dropdown selection"
             [(ngModel)]="selectedTemplate"
+            (ngModelChange)="onRateChanged()"
             #rateCard="ngModel">
         <option value="">(select a rate card)</option>
         <option *ngFor="let t of templateCards"

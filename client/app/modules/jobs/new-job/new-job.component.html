@@ -158,7 +158,7 @@
     <br><br>
     <div class="two fields">
         <!--Producer-->
-        <div class="required field"
+        <div id="producer-select-field" class="required field"
              [class.success]="!commonService.isEmptyString(job?.producer)"
              [class.error]="commonService.isEmptyString(job?.producer) && (producer.dirty || producer.touched)">
             <label>Producer</label>
@@ -205,9 +205,18 @@
                        [(ngModel)]="slackChannelName"
                        name="slackChannel"
                        #slackChannel="ngModel"
-                       maxlength="22">
-                <div class="ui pointing label" *ngIf="!commonService.isEmptyString(finalName.result)">
-                    ex: {{finalName.result | slackChannelName}}
+                       maxlength="22"
+                       style="margin-bottom:2px">
+                <span *ngIf="!commonService.isEmptyString(job.name)">suggestions:</span>
+                <div class="ui black pointing label button"
+                     *ngIf="!commonService.isEmptyString(job.name)"
+                     (click)="selectChannelNameSuggestion('noVowels')">
+                    {{finalName.result | slackChannelName:"noVowels"}}
+                </div>
+                <div class="ui black pointing label button"
+                     *ngIf="!commonService.isEmptyString(job.name)"
+                     (click)="selectChannelNameSuggestion('abruptCut')">
+                    {{finalName.result | slackChannelName:"abruptCut"}}
                 </div>
             </div>
         </div>

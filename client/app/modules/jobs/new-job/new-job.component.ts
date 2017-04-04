@@ -9,6 +9,7 @@ import {DatePipe} from "@angular/common";
 import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
 import {NewClientComponent} from "../../clients/new-client/new-client.component";
 import {AuthService} from "../../../services/auth.service";
+import {SlackChannelNamePipe} from "../../../pipes/slack-channel-name.pipe";
 
 declare var $;
 
@@ -83,6 +84,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
             $("#brand-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.brand)
                 ? "(no brand)"
                 : this.job.brand;
+            $("#producer-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.brand)
+                ? "(select producer)"
+                : this.job.producer;
         } else {
             this.resetModels();
         }
@@ -366,10 +370,12 @@ export class NewJobComponent implements OnInit, OnDestroy {
         let newClient = new Client("", "", "", []);
         this.job = new Job("", newClient, "", null, "", "", "", "",
             strStartDate, strEndDate);
-        $("#client-select-field div.text")[0].innerText = this.commonService.isEmptyString(this.job.client.name)
-            ? "(select client)"
-            : this.job.client.name;
+        // reset Semantic select field text
+        $("#client-select-field div.text")[0].innerText = "(select client)";
+        $("#brand-select-field div.text")[0].innerText = "(no brand)";
+        $("#producer-select-field div.text")[0].innerText = "(select producer)";
         this.rateCardSelectorComponent.selectedTemplate = null;
+        this.rateCardSelectorComponent.onRateChanged();
 
         this.finalName = {
             result: "",
@@ -588,5 +594,14 @@ export class NewJobComponent implements OnInit, OnDestroy {
                     console.log("Slack's done")
                 }
             );
+    }
+
+    selectChannelNameSuggestion(type: string) {
+        if (type) {
+            this.slackChannelName = new SlackChannelNamePipe()
+                .transform(this.finalName.result, type);
+        } else {
+            return
+        }
     }
 }
