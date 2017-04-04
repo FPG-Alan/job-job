@@ -16,7 +16,7 @@ export class SlackChannelNamePipe implements PipeTransform {
         // the prefix that needs to be included in a project channel name
         if (!result.match(/^([^-]*\-){2}/)) return 'p-' + value.toLowerCase();
         let requiredPrefix:string = result.match(/^([^-]*\-){2}/)[0];
-        let remainLength = 21 - requiredPrefix.length;
+        let remainLength = 22 - requiredPrefix.length;
 
         // the remaining substring that might need to be reduced
         let variedName = result.replace(/^(?:[^-]*\-){2}([^]*)/gi, '$1');
