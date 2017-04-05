@@ -52,7 +52,7 @@ export class DetailsComponent implements OnInit {
             this.commonService.notifyMessage(
                 "success",
                 "Sweet!",
-                "Copied over bill rates template"
+                "Bill rate template updated!"
             );
             this.customFieldValues.push({
                 custom_field_id: this.rateCardFieldId,
