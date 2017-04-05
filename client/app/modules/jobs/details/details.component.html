@@ -45,16 +45,11 @@
     <div class="ui divider"></div>
 
     <h3 class="ui header">Edit Job</h3>
-    <div class="ui button" (click)="selectingRateCard = !selectingRateCard">
-        <span *ngIf="!selectingRateCard">
-            <i class="money icon"></i>
-            Change Rate Card
-        </span>
-        <span *ngIf="selectingRateCard">
-            <i class="remove icon"></i>
-            Cancel
-        </span>
+    <div *ngIf="!selectingRateCard" class="ui button" (click)="selectingRateCard = true">
+        <i class="money icon"></i>
+        Change Rate Card
     </div>
+
     <div class="ui form"
          *ngIf="selectingRateCard">
         <app-rate-card-selector
@@ -66,10 +61,18 @@
         <div class="ui grid">
             <div class="row">
                 <div class="column">
-                    <div class="ui right floated positive button"
-                         [class.loading]="rateCardProcessingState == 'loading'"
-                         (click)="rateCardProcessingState = 'loading'; rateCardSelectorComponent.updateBillRates();">
-                        Submit
+                    <div class="ui right floated buttons">
+                        <div class="ui negative button" (click)="selectingRateCard = false">
+                            <i class="remove icon"></i>
+                            Cancel
+                        </div>
+                        <div class="or"></div>
+                        <div class="ui positive button"
+                             [class.loading]="rateCardProcessingState == 'loading'"
+                             (click)="rateCardProcessingState = 'loading'; rateCardSelectorComponent.updateBillRates();">
+                            <i class="checkmark icon"></i>
+                            Submit
+                        </div>
                     </div>
                 </div>
             </div>
