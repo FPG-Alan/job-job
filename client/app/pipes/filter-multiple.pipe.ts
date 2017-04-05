@@ -23,7 +23,7 @@ export class SearchMultiplePipe implements PipeTransform {
      * @param exact - Whether user wants to search for the exact words
      * @returns {any}
      */
-    transform(items: any, list: any[], attr: string, exact: boolean): any {
+    transform(items: any, list: string[], attr: string, exact: boolean): any {
         if (!list || list.length == 0) {
             return items;
         }

@@ -23,7 +23,7 @@ export class SearchPipe implements PipeTransform {
      * @param exact - Whether user wants to search for the exact words
      * @returns {any}
      */
-    transform(items: any, keyword: any, attr: string, exact: boolean): any {
+    transform(items: any, keyword: string, attr: string, exact: boolean): any {
         if (!keyword || /^\s*$/.test(keyword)) {
             return items;
         }
@@ -33,12 +33,20 @@ export class SearchPipe implements PipeTransform {
             if (!item[attr] || !keyword) {
                 return false
             }
-            // match exact words or not
-            if (exact) {
-                return item[attr].toLowerCase() == keyword.toLowerCase();
-            } else {
-                return item[attr].toLowerCase().includes(keyword.toLowerCase());
+            // users might use spaces in their search
+            let spacedKeyword = keyword.trim().split(/\s+/);
+            for (let k of spacedKeyword) {
+                // match exact words or not
+                if (exact) {
+                    return item[attr].toLowerCase() == k.toLowerCase();
+                } else {
+                    // don't return false if not found, move on to the next one
+                    if (item[attr].toLowerCase().includes(k.toLowerCase())) {
+                        return true
+                    }
+                }
             }
+            return false
         });
     }
 }
