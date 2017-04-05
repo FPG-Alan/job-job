@@ -6,7 +6,8 @@ var tenKApiKeys = require("../integrations/tenKFtSetup");
 
 
 jobRouter.get("/all", function (req, res) {
-    unirest.get(tenKApiKeys.apiUrl + "projects?with_archived=true&per_page=100000")
+    unirest.get(tenKApiKeys.apiUrl + "projects?with_archived=true&per_page=100000" +
+        "&fields=custom_field_values")
         .headers({
             "Content-Type": "application/json",
             "auth": tenKApiKeys.keys
