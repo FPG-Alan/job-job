@@ -21,15 +21,14 @@
         <!--Search by Producer-->
         <div class="field">
             <label>Producer 🙋</label>
-            <input type="text" disabled placeholder="(not available yet)">
-            <!--<select multiple="" class="ui fluid multiple search selection dropdown"-->
-            <!--[(ngModel)]="producerFilterInput"-->
-            <!--name="producerFilterInput"-->
-            <!--#producerFilter="ngModel">-->
-            <!--<option *ngFor="let p of producers;"-->
-            <!--[value]="p">{{p}}-->
-            <!--</option>-->
-            <!--</select>-->
+            <select class="ui fluid search selection dropdown"
+                    [(ngModel)]="producerFilterInput"
+                    name="producerFilterInput"
+                    #producerFilter="ngModel">
+                <option *ngFor="let p of producers;"
+                        [value]="p">{{p}}
+                </option>
+            </select>
         </div>
         <!--Search by Client-->
         <div class="field">
@@ -71,7 +70,8 @@
             <tbody>
             <tr *ngFor="let j of displayedJobs
             | filter: keywordFilterInput:'name':false
-            | filterMultiple: clientFilterInput:'client':true">
+            | filterMultiple: clientFilterInput:'client':true
+            | filterCustomFields: producerFilterInput:producerFieldId:true">
                 <td class="ui selectable">
                     <a [routerLink]="['/jobs/details', j?.id]">{{j?.name | characterLimit:35}}</a>
                 </td>

@@ -16,7 +16,8 @@ export class JobsComponent implements OnInit {
     jobs: any[] = [];
     displayedJobs: any[] = [];
     clients: Client[] = [];
-    producers = [];
+    producers: any[] = [];
+    producerFieldId: number;
     loading: boolean = false;
     sortOrder: string = "";
     sortCategory: string = "";
@@ -51,26 +52,27 @@ export class JobsComponent implements OnInit {
                 result => this.clients = result,
                 err => this.commonService.handleError(err)
             );
-        // this.getProducers();
+        this.getProducers();
     }
 
 
-    // getProducers() {
-    //     if (this.producers.length == 0) {
-    //         this.apiService.getCustomFields()
-    //             .subscribe(
-    //                 res => {
-    //                     for (let field of res.data) {
-    //                         if (field.name == "Producer") {
-    //                             this.producers = field.options;
-    //                             break;
-    //                         }
-    //                     }
-    //                 },
-    //                 err => this.commonService.handleError(err)
-    //             )
-    //     }
-    // }
+    getProducers() {
+        if (this.producers.length == 0) {
+            this.apiService.getCustomFields()
+                .subscribe(
+                    res => {
+                        for (let field of res.data) {
+                            if (field.name == "Producer") {
+                                this.producers = field.options;
+                                this.producerFieldId = field.id;
+                                break;
+                            }
+                        }
+                    },
+                    err => this.commonService.handleError(err)
+                )
+        }
+    }
 
 
     /********

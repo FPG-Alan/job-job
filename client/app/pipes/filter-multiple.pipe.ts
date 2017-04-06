@@ -33,6 +33,7 @@ export class SearchMultiplePipe implements PipeTransform {
                 // validate existence
                 if (!item[attr]) continue;
                 // match exact words or not
+                // don't return false if not found, move on to the next one
                 if (exact) {
                     if (item[attr].toLowerCase() == keyword.toLowerCase()) return true;
                 } else {

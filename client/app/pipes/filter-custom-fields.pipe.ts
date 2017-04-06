@@ -8,11 +8,11 @@ import {Pipe, PipeTransform, Injectable} from "@angular/core";
 
 
 @Pipe({
-    name: 'filter',
+    name: 'filterCustomFields',
     pure: false
 })
 @Injectable()
-export class SearchPipe implements PipeTransform {
+export class SearchCustomFieldsPipe implements PipeTransform {
 
     /**
      * Accept the list to search from and the keyword
@@ -23,25 +23,25 @@ export class SearchPipe implements PipeTransform {
      * @param exact - Whether user wants to search for the exact words
      * @returns {any}
      */
-    transform(items: any, keyword: string, attr: string, exact: boolean): any {
+    transform(items: any, keyword: string, attrId: number, exact: boolean): any {
         if (!keyword || /^\s*$/.test(keyword)) {
             return items;
         }
 
         return items.filter(function (item) {
             // validate existence
-            if (!item[attr] || !keyword) {
+            if (!item.custom_field_values || !item.custom_field_values.data || !keyword) {
                 return false
             }
-            // users might use spaces in their search
-            let spacedKeyword = keyword.trim().split(/\s+/);
-            for (let k of spacedKeyword) {
-                // match exact words or not
-                // don't return false if not found, move on to the next one
-                if (exact) {
-                    if (item[attr].toLowerCase() == k.toLowerCase()) return true;
-                } else {
-                    if (item[attr].toLowerCase().includes(k.toLowerCase())) return true;
+            for (let values of item.custom_field_values.data) {
+                if (values.custom_field_id == attrId && values.value) {
+                    // match exact words or not
+                    // don't return false if not found, move on to the next one
+                    if (exact) {
+                        if (values.value.toLowerCase() == keyword.toLowerCase()) return true;
+                    } else {
+                        if (values.value.toLowerCase().includes(keyword.toLowerCase())) return true;
+                    }
                 }
             }
             return false
