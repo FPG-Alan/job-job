@@ -340,11 +340,11 @@ export class NewJobComponent implements OnInit, OnDestroy {
         console.log("Custom Field Values:", this.customFieldValues);
         this.apiService.createCustomFieldValues(
             this.rateCardSelectorComponent.newJob.id,
-            this.customFieldValues)
-            .subscribe(
-                res => console.log("Custom field values creation success:", res),
-                err => this.commonService.handleError(err)
-            )
+            this.customFieldValues
+        ).subscribe(
+            res => console.log("Custom field values creation success:", res),
+            err => this.commonService.handleError(err)
+        )
     }
 
 

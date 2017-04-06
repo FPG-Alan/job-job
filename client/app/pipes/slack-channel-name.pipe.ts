@@ -28,6 +28,11 @@ export class SlackChannelNamePipe implements PipeTransform {
             variedName = variedName.slice(0, remainLength);
         }
 
+        // strip tailing dash
+        if (variedName.substr(-1) == "-") {
+            variedName = variedName.substring(0, variedName.length - 1)
+        }
+
         result = requiredPrefix + variedName;
         return result.toLowerCase();
     }

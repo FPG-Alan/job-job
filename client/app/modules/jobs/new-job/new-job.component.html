@@ -201,11 +201,11 @@
             <div class="field">
                 <label>Slack Channel Name (leave blank to opt out)</label>
                 <input type="text"
-                       placeholder="(~22 characters, only a-z, 0-9, hyphens, underscores)"
+                       placeholder="(~21 characters, only a-z, 0-9, hyphens, underscores)"
                        [(ngModel)]="slackChannelName"
                        name="slackChannel"
                        #slackChannel="ngModel"
-                       maxlength="22"
+                       maxlength="21"
                        style="margin-bottom:2px">
                 <span *ngIf="!commonService.isEmptyString(job.name)">suggestions:</span>
                 <div class="ui black pointing label button"
