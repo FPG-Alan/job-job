@@ -40,13 +40,10 @@ input[readonly]:focus {
 /*
  * Speech Bubble by Ben Chao
  */
-.bubble-wrap {
-  width: 300px;
-  margin: 20px auto; }
-
 .bubble {
+  color: rgba(0, 0, 0, 0.9);
   position: relative;
-  padding: 20px;
+  padding: 10px;
   background: #FFFFFF;
   border-radius: 4px;
   border: #7F7F7F solid 1px;
@@ -79,32 +76,6 @@ input[readonly]:focus {
   top: 50%;
   margin-top: -16px; }
 
-.bubble.right:after {
-  content: '';
-  position: absolute;
-  border-style: solid;
-  border-width: 16px 0 16px 16px;
-  border-color: transparent #FFFFFF;
-  display: block;
-  width: 0;
-  z-index: 1;
-  right: -16px;
-  top: 50%;
-  margin-top: -16px; }
-
-.bubble.right:before {
-  content: '';
-  position: absolute;
-  border-style: solid;
-  border-width: 16px 0 16px 16px;
-  border-color: transparent #7F7F7F;
-  display: block;
-  width: 0;
-  z-index: 0;
-  right: -16px;
-  top: 50%;
-  margin-top: -16px; }
-
 /*
  * Bottom Nav aka Generated Title Nav
  */
@@ -118,5 +89,9 @@ input[readonly]:focus {
 #conversation-bot img#steve {
   width: 55px;
   height: auto; }
+
+@media only screen and (max-width: 768px) {
+  #conversation-bot {
+    display: none; } }
 
 /*# sourceMappingURL=new-job.component.css.map */

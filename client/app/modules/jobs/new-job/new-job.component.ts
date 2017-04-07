@@ -12,6 +12,7 @@ import {AuthService} from "../../../services/auth.service";
 import {SlackChannelNamePipe} from "../../../pipes/slack-channel-name.pipe";
 
 declare var $;
+declare var Typed;
 
 @Component({
     selector: 'app-new-job',
@@ -64,13 +65,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    /*********
-     * STEVE *
-     *********/
-    ngAfterViewInit() {
-        $("#steve").transition('fly up');
-    }
-
     ngOnInit() {
         $(".ui.checkbox").checkbox();
         $(".ui.search.dropdown.selection").dropdown();
@@ -114,6 +108,34 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         $("#confirm-new-job").remove();
         $("#new-client-modal").modal("hide");
         $("#new-client-modal").remove();
+    }
+
+    /*********
+     * STEVE *
+     *********/
+    ngAfterViewInit() {
+        setTimeout(function () {
+            $("#steve").transition('fly up')
+                .transition("setting", "onShow", function () {
+                    $("#steve-message").removeClass("hidden");
+                    Typed.new("#steve-message", {
+                        strings: ["Hello! Me name Jobes.", "Steve Jobes"],
+                        typeSpeed: -5,
+                        backSpeed: -30,
+                        showCursor: false
+                    });
+                });
+        }, 3000);
+    }
+
+    steveSays(sentences: string[]) {
+        Typed.new("#steve-message", {
+            strings: sentences,
+            typeSpeed: 0,
+            typeSpeed: -5,
+            backSpeed: -30,
+            showCursor: false
+        })
     }
 
 
