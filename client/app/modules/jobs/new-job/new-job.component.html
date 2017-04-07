@@ -12,33 +12,32 @@
       novalidate>
 
     <!--Final Generated Name-->
-    <div class="ui blue segment inline fields" [class.loading]="generating">
-        <div class="read-only ten wide field">
+    <nav class="ui bottom fixed inverted menu inline fields segment"
+         id="generated-title-nav">
+        <div class="ui dimmer"
+             [class.loading]="generating">
+            <div class="ui loader"></div>
+        </div>
+        <div id="conversation-bot" class="ui eight wide field">
+            <img id="steve" class="ui rounded image hidden" src="assets/steve.jpg">
+            <div class="bubble-wrap">
+                <div class="bubble left">
+                    {{steveMessage}}
+                </div>
+            </div>
+        </div>
+        <div class="ui read-only eight wide field container">
             <label>Generated Title</label>
-            <div *ngIf="usingFinalName" class="ui icon input">
+            <div *ngIf="usingFinalName" class="ui input">
                 <input readonly="" type="text"
                        require
                        [(ngModel)]="finalName.result"
                        name="finalName">
-                <i class="icon"></i>
-            </div>
-            <input *ngIf="!usingFinalName" readonly="" type="text"
-                   require
-                   [(ngModel)]="job.name"
-                   name="finalName">
-        </div>
-        <div class="six wide field">
-            <div class="ui toggle checkbox">
-                <input type="checkbox" tabindex="0" class="hidden"
-                       [checked]="usingFinalName"
-                       (change)="usingFinalName = !usingFinalName">
-                <label>Use generated name?</label>
             </div>
         </div>
-    </div>
+    </nav>
 
 
-    <br><br>
     <!--Client & Brand-->
     <div class="two fields">
         <div class="required field" id="client-select-field"
@@ -329,18 +328,6 @@
                             <div class="content">
                                 <div class="header">Client</div>
                                 <div class="description">Finding a folder with the client's name</div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <i class="big icon"
-                               [ngClass]="{'disabled': boxProcessingStates.brand == 'disabled',
-                           'active pulse': boxProcessingStates.brand == 'active',
-                           'trademark': boxProcessingStates.brand != 'completed' && boxProcessingStates.brand != 'failed',
-                           'green checkmark': boxProcessingStates.brand == 'completed',
-                           'red remove': boxProcessingStates.brand == 'failed'}"></i>
-                            <div class="content">
-                                <div class="header">Brand</div>
-                                <div class="description">Finding a folder with the brand name</div>
                             </div>
                         </div>
                         <div class="item">

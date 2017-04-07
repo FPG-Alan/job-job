@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild} from "@angular/core";
+import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {Job} from "../../../classes/job";
@@ -18,7 +18,7 @@ declare var $;
     templateUrl: 'new-job.component.html',
     styleUrls: ['new-job.component.scss']
 })
-export class NewJobComponent implements OnInit, OnDestroy {
+export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
@@ -49,6 +49,7 @@ export class NewJobComponent implements OnInit, OnDestroy {
     };
     generating = false; // for loader to appear on the Generated Name field
     usingFinalName = true;
+    steveMessage = "Me name Jobes. Steve Jobes.";
 
     constructor(private router: Router,
                 private commonService: CommonService,
@@ -61,6 +62,13 @@ export class NewJobComponent implements OnInit, OnDestroy {
         } else {
             this.userId = this.authService.profile.user_id;
         }
+    }
+
+    /*********
+     * STEVE *
+     *********/
+    ngAfterViewInit() {
+        $("#steve").transition('fly up');
     }
 
     ngOnInit() {
@@ -398,7 +406,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
     rateCardProcessingState = "disabled";
     boxProcessingStates: any = {
         client: "disabled",
-        brand: "disabled",
         job: "disabled"
     };
     trelloProcessingState = "disabled";
@@ -416,7 +423,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.rateCardProcessingState = "disabled";
         this.boxProcessingStates = {
             client: "disabled",
-            brand: "disabled",
             job: "disabled"
         };
         this.servicesCount = 0;
@@ -501,11 +507,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
             if (type == "client") {
                 this.boxProcessingStates.client = "active";
                 folderName = this.job.client.name;
-                // there are cases where brand name is empty
-                nextType = !this.commonService.isEmptyString(this.job.brand) ? "brand" : "job";
-            } else if (type == "brand") {
-                this.boxProcessingStates.brand = "active";
-                folderName = this.job.brand;
                 nextType = "job";
             } else if (type == "job") {
                 this.boxProcessingStates.job = "active";
