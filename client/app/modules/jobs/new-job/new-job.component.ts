@@ -50,7 +50,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     generating = false; // for loader to appear on the Generated Name field
     usingFinalName = true;
-    steveMessage = "Me name Jobes. Steve Jobes.";
 
     constructor(private router: Router,
                 private commonService: CommonService,
@@ -119,7 +118,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 .transition("setting", "onShow", function () {
                     $("#steve-message").removeClass("hidden");
                     Typed.new("#steve-message", {
-                        strings: ["Hello! Me name Jobes.", "Steve Jobes"],
+                        strings: ["Hello! Me name Jobes.", "Steve Jobes."],
                         typeSpeed: -5,
                         backSpeed: -30,
                         showCursor: false
@@ -131,7 +130,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     steveSays(sentences: string[]) {
         Typed.new("#steve-message", {
             strings: sentences,
-            typeSpeed: 0,
             typeSpeed: -5,
             backSpeed: -30,
             showCursor: false
