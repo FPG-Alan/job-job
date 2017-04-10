@@ -37,11 +37,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         {value: 'Banner', display: 'Banner Template'},
         {value: ' ', display: 'None (Manually Create on Trello)'}
     ];
-    slackChannelName = "";
     customFields: any;
     customFieldValues = [];
 
-    submitted = false;
     job: Job;
     finalName: any = {
         result: "",
@@ -51,6 +49,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         brand: "",
         formattedName: ""
     };
+    slackChannelName = "";
+
+    submitted = false;
     generating = false; // for loader to appear on the Generated Name field
     usingFinalName = true;
 
@@ -115,6 +116,13 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         this.steveBotComponent.greet();
+        $("#client-select-field .dropdown").dropdown("setting", "onShow", () => {
+            this.steveBotComponent.sayOnce(
+                ["Try typing in dropdowns." +
+                " This experience saves you the near-infinite scrolling time."],
+                "client"
+            );
+        });
     }
 
 

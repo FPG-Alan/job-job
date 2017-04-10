@@ -10,6 +10,8 @@ declare var Typed;
 })
 export class SteveBotComponent implements OnInit {
 
+    steveAlreadySaid = {};
+
     constructor() {
     }
 
@@ -22,7 +24,7 @@ export class SteveBotComponent implements OnInit {
                 .transition("setting", "onShow", function () {
                     $("#steve-message").removeClass("hidden");
                     Typed.new("#steve-message", {
-                        strings: ["Hello! Me name Jobes.\nSteve Jobes."],
+                        strings: ["Hello! Me name Jobes. Steve Jobes."],
                         typeSpeed: -5,
                         backSpeed: -30,
                         showCursor: false
@@ -34,9 +36,21 @@ export class SteveBotComponent implements OnInit {
     say(sentences: string[]) {
         Typed.new("#steve-message", {
             strings: sentences,
-            typeSpeed: -5,
+            typeSpeed: -20,
             backSpeed: -30,
             showCursor: false
         })
+    }
+
+    sayOnce(sentences: string[], id: string) {
+        if (!this.steveAlreadySaid[id]) {
+            Typed.new("#steve-message", {
+                strings: sentences,
+                typeSpeed: -20,
+                backSpeed: -30,
+                showCursor: false
+            });
+            this.steveAlreadySaid[id] = true;
+        }
     }
 }

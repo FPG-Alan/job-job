@@ -26,9 +26,9 @@
             <label>Generated Title</label>
             <div *ngIf="usingFinalName" class="ui input">
                 <input readonly="" type="text"
-                       require
                        [(ngModel)]="finalName.result"
-                       name="finalName">
+                       name="finalName"
+                       (click)="steveBotComponent.say(['*slap wrist* This field is auto-generated for you. Don\'t touch!']);">
             </div>
         </div>
     </nav>
@@ -122,7 +122,7 @@
             <input type="date"
                    required
                    [(ngModel)]="job.startDate"
-                   (ngModelChange)="submitted = false; onDateChange('start', $event)"
+                   (ngModelChange)="submitted = false; onDateChange('start', $event);"
                    name="startDate"
                    #startDate="ngModel">
         </div>
@@ -186,7 +186,10 @@
                     <label>
                         <input type="radio"
                                name="type" [(ngModel)]="job.serviceType"
-                               [value]="serviceType.value">
+                               [value]="serviceType.value"
+                               (focus)="steveBotComponent.sayOnce([
+                               'Trello Board type also determines the Service Type field on 10,000ft. If it\'s not provided,' +
+                               ' you should fill in the field on 10k\' manually.'])">
                         {{serviceType.display}}
                     </label>
                 </div>
@@ -201,7 +204,8 @@
                        name="slackChannel"
                        #slackChannel="ngModel"
                        maxlength="21"
-                       style="margin-bottom:2px">
+                       style="margin-bottom:2px"
+                       (focus)="steveBotComponent.sayOnce(['Bee tee dubs, those name suggestions are clickable.'],'slackChannel')">
                 <span *ngIf="!commonService.isEmptyString(job.name)">suggestions:</span>
                 <div class="ui black pointing label button"
                      *ngIf="!commonService.isEmptyString(job.name)"
