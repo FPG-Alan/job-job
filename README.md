@@ -28,3 +28,19 @@ Development platform is Heroku.
 
 ## Further help
 To get more help on the `angular-cli` use `ng --help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md). Contact the contributors for more information.
+
+
+## Maintenance Notes
+- To add **Trello board templates** (requires Chrome or a browser where you can see the network requests)
+  - navigate to the board on a browser
+  - open to Inspector
+  - click Network (then refresh the page if the network request list is empty)
+  - find a request that looks like https://trello.com/1/boards/*boardID*
+  - copy *boardID*, then paste in to the .env file (example TRELLO_BANNER_TEMPLATE_ID=*boardId*)
+  - in server/routers/trelloIntegrationRouter.js
+    - add something like `var *service*TemplateBoardId = process.env.TRELLO_*service*_TEMPLATE_ID;` (using process.env protects our secret variables)
+    - in `trelloIntegrationRouter.post("/")`, find the code that assigns `idBoardSource`
+    - add `req.body.serviceType == "*service*" ? *service*TemplateBoardId` before `: null`
+  - in client/app/modules/jobs/new-job/new-job.component.ts
+    - find the `serviceTypes` attribute/property of the component
+    - add to the list `{value: '*service*', display: '*what you want to render as radio choice*'}`
