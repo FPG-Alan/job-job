@@ -8,6 +8,7 @@ import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
 import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
 import {NewClientComponent} from "../../clients/new-client/new-client.component";
+import {SteveBotComponent} from "../../steve-bot/steve-bot.component";
 import {AuthService} from "../../../services/auth.service";
 import {SlackChannelNamePipe} from "../../../pipes/slack-channel-name.pipe";
 
@@ -25,6 +26,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     private rateCardSelectorComponent: RateCardSelectorComponent;
     @ViewChild('newClient')
     private newClientComponent: NewClientComponent;
+    @ViewChild('steveBot')
+    private steveBotComponent: SteveBotComponent;
 
     userId: string = "";
     clients: Client[] = [];
@@ -109,31 +112,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         $("#new-client-modal").remove();
     }
 
-    /*********
-     * STEVE *
-     *********/
-    ngAfterViewInit() {
-        setTimeout(function () {
-            $("#steve").transition('fly up')
-                .transition("setting", "onShow", function () {
-                    $("#steve-message").removeClass("hidden");
-                    Typed.new("#steve-message", {
-                        strings: ["Hello! Me name Jobes.", "Steve Jobes."],
-                        typeSpeed: -5,
-                        backSpeed: -30,
-                        showCursor: false
-                    });
-                });
-        }, 3000);
-    }
 
-    steveSays(sentences: string[]) {
-        Typed.new("#steve-message", {
-            strings: sentences,
-            typeSpeed: -5,
-            backSpeed: -30,
-            showCursor: false
-        })
+    ngAfterViewInit() {
+        this.steveBotComponent.greet();
     }
 
 

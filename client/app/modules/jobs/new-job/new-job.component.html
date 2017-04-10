@@ -18,14 +18,11 @@
              [class.loading]="generating">
             <div class="ui loader"></div>
         </div>
-        <div id="conversation-bot" class="ui eight wide field">
-            <img id="steve" class="ui rounded image hidden" src="assets/steve.jpg">
-            <div class="bubble-wrap">
-                <div class="bubble left hidden" id="steve-message">
-                </div>
-            </div>
-        </div>
-        <div class="ui read-only eight wide field container">
+        <app-steve-bot
+                class="ui ten wide field"
+                #steveBot>
+        </app-steve-bot>
+        <div class="ui read-only six wide field container">
             <label>Generated Title</label>
             <div *ngIf="usingFinalName" class="ui input">
                 <input readonly="" type="text"

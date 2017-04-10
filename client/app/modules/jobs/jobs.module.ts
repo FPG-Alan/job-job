@@ -8,6 +8,7 @@ import {JobsComponent} from "./jobs.component";
 import {DetailsComponent} from "./details/details.component";
 import {NewJobComponent} from "./new-job/new-job.component";
 import {NewClientModule} from "../clients/new-client/new-client.module";
+import {SteveBotModule} from "../steve-bot/steve-bot.module";
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import {NewClientModule} from "../clients/new-client/new-client.module";
         SharedModule.forRoot(),
         RateCardSelectorModule,
         NewClientModule,
+        SteveBotModule,
         routing
     ],
     declarations: [JobsComponent, DetailsComponent, NewJobComponent]
