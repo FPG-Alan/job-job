@@ -19,7 +19,7 @@
             <div class="ui loader"></div>
         </div>
         <app-steve-bot
-                *ngIf="settings.steve"
+                [class.hidden]="!settings.steve"
                 class="ui ten wide field"
                 #steveBot>
         </app-steve-bot>
