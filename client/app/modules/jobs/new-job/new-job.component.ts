@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ViewChild} from "@angular/core";
+import {Component, OnInit, OnDestroy, ViewChild, AfterViewInit} from "@angular/core";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {Job} from "../../../classes/job";
@@ -8,24 +8,33 @@ import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
 import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
 import {NewClientComponent} from "../../clients/new-client/new-client.component";
+import {SteveBotComponent} from "../../steve-bot/steve-bot.component";
 import {AuthService} from "../../../services/auth.service";
 import {SlackChannelNamePipe} from "../../../pipes/slack-channel-name.pipe";
 
 declare var $;
+declare var Typed;
 
 @Component({
     selector: 'app-new-job',
     templateUrl: 'new-job.component.html',
     styleUrls: ['new-job.component.scss']
 })
-export class NewJobComponent implements OnInit, OnDestroy {
+export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
     @ViewChild('newClient')
     private newClientComponent: NewClientComponent;
+    @ViewChild('steveBot')
+    private steveBotComponent: SteveBotComponent;
 
+    // user data and settings
     userId: string = "";
+    settings = {
+        "steve": true
+    };
+
     clients: Client[] = [];
     producers: string[] = [];
     serviceTypes = [
@@ -33,11 +42,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         {value: 'Banner', display: 'Banner Template'},
         {value: ' ', display: 'None (Manually Create on Trello)'}
     ];
-    slackChannelName = "";
     customFields: any;
     customFieldValues = [];
 
-    submitted = false;
     job: Job;
     finalName: any = {
         result: "",
@@ -47,6 +54,9 @@ export class NewJobComponent implements OnInit, OnDestroy {
         brand: "",
         formattedName: ""
     };
+    slackChannelName = "";
+
+    submitted = false;
     generating = false; // for loader to appear on the Generated Name field
     usingFinalName = true;
 
@@ -60,6 +70,11 @@ export class NewJobComponent implements OnInit, OnDestroy {
             });
         } else {
             this.userId = this.authService.profile.user_id;
+        }
+        if (localStorage.getItem("settings")) {
+            this.settings = JSON.parse(localStorage.getItem("settings"))
+        } else {
+            localStorage.setItem("settings", JSON.stringify(this.settings));
         }
     }
 
@@ -106,6 +121,26 @@ export class NewJobComponent implements OnInit, OnDestroy {
         $("#confirm-new-job").remove();
         $("#new-client-modal").modal("hide");
         $("#new-client-modal").remove();
+    }
+
+
+    /*********
+     * STEVE *
+     *********/
+    ngAfterViewInit() {
+        $("#client-select-field .dropdown").dropdown("setting", "onShow", () => {
+            this.steveBotComponent.sayOnce(
+                ["Try typing in dropdowns." +
+                " This experience saves you the near-infinite scrolling time."],
+                "client"
+            );
+        });
+    }
+
+    onSteveStop(event: any) {
+        this.settings.steve = false;
+        localStorage.setItem("settings", JSON.stringify(this.settings));
+
     }
 
 
@@ -398,7 +433,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
     rateCardProcessingState = "disabled";
     boxProcessingStates: any = {
         client: "disabled",
-        brand: "disabled",
         job: "disabled"
     };
     trelloProcessingState = "disabled";
@@ -416,7 +450,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
         this.rateCardProcessingState = "disabled";
         this.boxProcessingStates = {
             client: "disabled",
-            brand: "disabled",
             job: "disabled"
         };
         this.servicesCount = 0;
@@ -501,11 +534,6 @@ export class NewJobComponent implements OnInit, OnDestroy {
             if (type == "client") {
                 this.boxProcessingStates.client = "active";
                 folderName = this.job.client.name;
-                // there are cases where brand name is empty
-                nextType = !this.commonService.isEmptyString(this.job.brand) ? "brand" : "job";
-            } else if (type == "brand") {
-                this.boxProcessingStates.brand = "active";
-                folderName = this.job.brand;
                 nextType = "job";
             } else if (type == "job") {
                 this.boxProcessingStates.job = "active";
