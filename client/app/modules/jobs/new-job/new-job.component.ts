@@ -31,7 +31,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // user data and settings
     userId: string = "";
-    settings: any;
+    settings = {
+        "steve": true
+    };
 
     clients: Client[] = [];
     producers: string[] = [];
@@ -69,8 +71,10 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.userId = this.authService.profile.user_id;
         }
-        if (localStorage.getItem("settings")){
+        if (localStorage.getItem("settings")) {
             this.settings = JSON.parse(localStorage.getItem("settings"))
+        } else {
+            localStorage.setItem("settings", JSON.stringify(this.settings));
         }
     }
 
@@ -120,6 +124,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
 
+    /*********
+     * STEVE *
+     *********/
     ngAfterViewInit() {
         $("#client-select-field .dropdown").dropdown("setting", "onShow", () => {
             this.steveBotComponent.sayOnce(
@@ -128,6 +135,12 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 "client"
             );
         });
+    }
+
+    onSteveStop(event: any) {
+        this.settings.steve = false;
+        localStorage.setItem("settings", JSON.stringify(this.settings));
+
     }
 
 

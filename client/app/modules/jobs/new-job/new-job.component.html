@@ -21,6 +21,7 @@
         <app-steve-bot
                 [class.hidden]="!settings.steve"
                 class="ui ten wide field"
+                (onSteveStop)="onSteveStop($event)"
                 #steveBot>
         </app-steve-bot>
         <div class="ui read-only six wide field container">

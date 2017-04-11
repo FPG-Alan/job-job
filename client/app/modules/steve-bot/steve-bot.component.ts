@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 
 declare var $;
 declare var Typed;
@@ -10,12 +10,16 @@ declare var Typed;
 })
 export class SteveBotComponent implements OnInit {
 
+    @Output() onSteveStop = new EventEmitter<boolean>();
     steveAlreadySaid = {};
 
     constructor() {
     }
 
     ngOnInit() {
+        $(".dropdown").dropdown({
+            direction: "upward"
+        });
         this.greet();
     }
 
@@ -53,5 +57,21 @@ export class SteveBotComponent implements OnInit {
             });
             this.steveAlreadySaid[id] = true;
         }
+    }
+
+    stop() {
+        Typed.new("#steve-message", {
+            strings: ["K bai!"],
+            typeSpeed: -5,
+            backSpeed: -30,
+            showCursor: false,
+            callback: () => {
+                $("#steve")
+                    .transition('fly up')
+                    .transition("setting", "onHide", () => {
+                        this.onSteveStop.emit(false);
+                    })
+            }
+        });
     }
 }
