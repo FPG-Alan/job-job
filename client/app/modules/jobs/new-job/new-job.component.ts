@@ -29,7 +29,10 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('steveBot')
     private steveBotComponent: SteveBotComponent;
 
+    // user data and settings
     userId: string = "";
+    settings: any;
+
     clients: Client[] = [];
     producers: string[] = [];
     serviceTypes = [
@@ -65,6 +68,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         } else {
             this.userId = this.authService.profile.user_id;
+        }
+        if (localStorage.getItem("settings")){
+            this.settings = JSON.parse(localStorage.getItem("settings"))
         }
     }
 
@@ -115,7 +121,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     ngAfterViewInit() {
-        this.steveBotComponent.greet();
         $("#client-select-field .dropdown").dropdown("setting", "onShow", () => {
             this.steveBotComponent.sayOnce(
                 ["Try typing in dropdowns." +

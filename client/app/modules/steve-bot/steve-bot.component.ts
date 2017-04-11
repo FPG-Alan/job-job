@@ -16,6 +16,7 @@ export class SteveBotComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.greet();
     }
 
     greet() {
