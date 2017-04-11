@@ -29,8 +29,20 @@
         </tr>
         </thead>
         <tbody>
-        <tr *ngFor="let c of clients">
-            <td>{{c?.name}}</td>
+        <tr *ngFor="let c of clients; let i = index">
+            <td>
+                <a *ngIf="!editClients[i]"
+                      (click)="editClients[i]=true">{{c?.name}}</a>
+                <div *ngIf="editClients[i]==true" class="ui input">
+                    <input value="{{c.name}}">
+                    <div class="ui negative button" (click)="editClients[i]=false">
+                        Cancel
+                    </div>
+                    <div class="ui positive button" (click)="editClient(c.name, i)">
+                        Save
+                    </div>
+                </div>
+            </td>
             <td>{{c?.shortCode}}</td>
             <td>
                 <div class="ui list">

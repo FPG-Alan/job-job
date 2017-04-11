@@ -12,16 +12,22 @@ declare var $;
 export class ClientsComponent implements OnInit {
 
     clients: Client[] = [];
+    editClients: boolean[] = [];
 
     constructor(private apiService: ApiService) {
+        this.apiService.getAllClients()
+            .subscribe(
+                res => {
+                    this.clients = res;
+                    for (let c of this.clients) {
+                        this.editClients.push(false)
+                    }
+                },
+                err => console.log(err)
+            );
     }
 
     ngOnInit() {
-        this.apiService.getAllClients()
-            .subscribe(
-                res => this.clients = res,
-                err => console.log(err)
-            );
     }
 
     ngOnDestroy() {
@@ -42,5 +48,10 @@ export class ClientsComponent implements OnInit {
 
     onNewClientCancel(event: any) {
         $("#new-client-modal").modal("hide");
+    }
+
+    editClient(newName: string, index: number) {
+        this.editClients[index] = false;
+        console.log(newName, index);
     }
 }
