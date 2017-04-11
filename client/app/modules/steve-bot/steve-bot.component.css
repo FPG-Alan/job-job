@@ -2,6 +2,14 @@ img#steve {
   width: 55px;
   height: auto; }
 
+.ui.inverted.menu {
+  background: #1B1C1D !important; }
+  .ui.inverted.menu .item, .ui.inverted.menu .item.active, .ui.inverted.menu .item:focus, .ui.inverted.menu .item:hover {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: normal !important; }
+  .ui.inverted.menu .item:hover {
+    background: rgba(255, 255, 255, 0.15) !important; }
+
 /*
  * Speech Bubble by Ben Chao
  */
