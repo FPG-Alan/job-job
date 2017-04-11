@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {Client} from "../../classes/client";
 import {ApiService} from "../../services/api.service";
+import {AuthService} from "../../services/auth.service";
 
 declare var $;
 
@@ -13,8 +14,24 @@ export class ClientsComponent implements OnInit {
 
     clients: Client[] = [];
     editClients: boolean[] = [];
+    role: string;
 
-    constructor(private apiService: ApiService) {
+    constructor(private apiService: ApiService,
+                private authService: AuthService) {
+        if (!this.authService.profile) {
+            this.authService.setUpUser().then(() => {
+                let profile = this.authService.profile;
+                if (profile.app_metadata && profile.app_metadata.roles)
+                    this.role = profile.app_metadata.roles[0];
+            });
+        } else {
+            let profile = this.authService.profile;
+            if (profile.app_metadata && profile.app_metadata.roles)
+                this.role = profile.app_metadata.roles[0];
+        }
+    }
+
+    ngOnInit() {
         this.apiService.getAllClients()
             .subscribe(
                 res => {
@@ -25,9 +42,6 @@ export class ClientsComponent implements OnInit {
                 },
                 err => console.log(err)
             );
-    }
-
-    ngOnInit() {
     }
 
     ngOnDestroy() {
@@ -51,7 +65,10 @@ export class ClientsComponent implements OnInit {
     }
 
     editClient(newName: string, index: number) {
+        // check if admin
+        if (this.role == "admin"){
+            //
+        }
         this.editClients[index] = false;
-        console.log(newName, index);
     }
 }
