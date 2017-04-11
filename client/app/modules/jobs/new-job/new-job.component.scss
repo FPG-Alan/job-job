@@ -68,6 +68,12 @@ input[readonly]:focus {
     label {
         color: rgba(255, 255, 255, .9) !important;
     }
+    .segment { background: transparent !important; }
+    .active.dimmer { background: transparent !important; }
+    .active.dimmer ~ label,
+    .active.dimmer ~ .ui.input {
+        opacity: 0.1;
+    }
 }
 
 @media only screen and (max-width: 768px) {

@@ -46,6 +46,13 @@ input[readonly]:focus {
   padding-bottom: 10px; }
   #generated-title-nav label {
     color: rgba(255, 255, 255, 0.9) !important; }
+  #generated-title-nav .segment {
+    background: transparent !important; }
+  #generated-title-nav .active.dimmer {
+    background: transparent !important; }
+  #generated-title-nav .active.dimmer ~ label,
+  #generated-title-nav .active.dimmer ~ .ui.input {
+    opacity: 0.1; }
 
 @media only screen and (max-width: 768px) {
   app-steve-bot {
