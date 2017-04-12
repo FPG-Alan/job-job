@@ -2,6 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {Client} from "../../classes/client";
 import {ApiService} from "../../services/api.service";
 import {AuthService} from "../../services/auth.service";
+import {CommonService} from "../../services/common.service";
 
 declare var $;
 
@@ -17,6 +18,7 @@ export class ClientsComponent implements OnInit {
     role: string;
 
     constructor(private apiService: ApiService,
+                private commonService: CommonService,
                 private authService: AuthService) {
         if (!this.authService.profile) {
             this.authService.setUpUser().then(() => {
@@ -64,10 +66,21 @@ export class ClientsComponent implements OnInit {
         $("#new-client-modal").modal("hide");
     }
 
-    editClient(newName: string, index: number) {
+    editClient(index: number, newName: string) {
         // check if admin
-        if (this.role == "admin"){
-            //
+        if (this.role == "admin" && this.clients[index]) {
+            this.apiService.editClient(this.clients[index].name, newName)
+                .subscribe(
+                    res => {
+                        this.clients[index] = res;
+                        this.commonService.notifyMessage(
+                            "success",
+                            "Sweet!",
+                            "Client name changed"
+                        );
+                    },
+                    err => this.commonService.handleError(err)
+                )
         }
         this.editClients[index] = false;
     }
