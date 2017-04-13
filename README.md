@@ -1,6 +1,30 @@
 # Job Job
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.18. The known latest compatible version is 1.0.0-rc.1.
 
+## App integrations setup
+- **10,000ft** (dev is https://vnext.10000ft.com/settings and prod is https://app.10000ft.com/settings)
+  - navigate to URL above
+  - click Developer API 
+  - retrieve long string of token
+- **Box** (https://fancypantsgroup.app.box.com/developers/services/edit/)
+  - create an App with desired name (ideally we should have 2 apps)
+  - retrieve client_id and client_secret under OAuth2 Parameters
+  - fill in redirect_uri, if you have 2 apps, url for dev should be the following:
+    - dev: http://localhost:3000/auth/box (or whichever port you're using)
+    - prod: https://jtb-fpg.herokuapp.com/auth/box (or where the app lives)
+- **Trello** (https://trello.com/app-key)
+  - the key found in the URL above is used to retrieve the token using your app
+- **Slack** (https://api.slack.com/apps)
+  - click Create New App
+  - navigate to Basic Information
+    - find App Credentials
+    - retrieve Client ID and Client Secret
+  - navigate to OAuth & Permissions
+    - find Redirect URLs
+    - add http://localhost:3000/auth/slack for dev
+    - add https://jtb-fpg.herokuapp.com/auth/slack for prod
+  
+
 ## Local installation
 1. Clone project from https://github.com/fancypantsgroup/job-job.git
 2. Install MongoDB and run `mongod` in the command line
