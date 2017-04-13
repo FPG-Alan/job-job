@@ -51,7 +51,7 @@ export class AuthenticationComponent implements OnInit {
                             this.authenticatingBox = false;
                             this.onAuthenticated.emit(true);
                             // get user again and check if Box is authenticated
-                            this.authService.getMyUser();
+                            this.authService.getMyUser(false);
                         }
                     }, 500);
 
@@ -75,7 +75,7 @@ export class AuthenticationComponent implements OnInit {
                 this.authenticatingTrello = false;
                 this.onAuthenticated.emit(true);
                 // get user again and check if Trello is authenticated
-                this.authService.getMyUser();
+                this.authService.getMyUser(false);
             }
         }, 500);
     }
@@ -107,7 +107,7 @@ export class AuthenticationComponent implements OnInit {
                             this.authenticatingSlack = false;
                             this.onAuthenticated.emit(true);
                             // get user again and check if Slack is authenticated
-                            this.authService.getMyUser();
+                            this.authService.getMyUser(false);
                         }
                     }, 500);
                 },
