@@ -180,6 +180,18 @@ export class ApiService {
             .map(res => res.json())
     }
 
+    /********
+     * AUTH *
+     ********/
+    updateAuthStatus(userId: string) {
+        let body = {userId: userId};
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.put("/auth/auth-status", body, options)
+            .map(res => <User> res.json());
+    }
+
 
     /*******************
      * BOX INTEGRATION *

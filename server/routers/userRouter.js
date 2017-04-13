@@ -7,6 +7,7 @@ userRouter.get("/", function (req, res) {
     User.findOne({userId: req.query.id}, function (err, user) {
         if (err) {
             res.status(500).send({header: 'Couldn\'t find your user data'});
+            return
         }
         res.json(user);
     });
@@ -28,6 +29,7 @@ userRouter.post("/", function (req, res) {
             newUser.save(function (err, newUser) {
                 if (err) {
                     res.status(500).send({header: 'Couldn\'t find or create user with this email'});
+                    return
                 }
                 res.json(newUser);
             });
