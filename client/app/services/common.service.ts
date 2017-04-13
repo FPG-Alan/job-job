@@ -16,7 +16,6 @@ export class CommonService {
             content: messageContent
         }, {
             className: [messageClass],
-            autoHide: false,
             style: "custom",
             position: "bottom right",
             showDuration: 500,
