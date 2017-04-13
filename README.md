@@ -16,8 +16,6 @@ This project was generated with [angular-cli](https://github.com/angular/angular
   - follow their instructions on "How to Obtain a Client ID"
   - in the Clients tab of the social connection setup (same modal), enable this social connection
   for the Client that you just created
-  
-
 
 ## App integrations setup
 - **10,000ft** (dev is https://vnext.10000ft.com/settings and prod is https://app.10000ft.com/settings)
