@@ -25,7 +25,8 @@
         "../node_modules/jquery/dist/jquery.min.js",
         "assets/typed.js/dist/typed.min.js",
         "assets/semantic/semantic.min.js",
-        "assets/auth0-lock/lock.min.js"
+        "assets/auth0-lock/lock.min.js",
+        "assets/notifyjs/notify.min.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

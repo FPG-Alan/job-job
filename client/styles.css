@@ -194,4 +194,79 @@ a:hover {
 .ui.form .field.success .checkbox .box:after {
   color: #1A531B !important; }
 
+/*********************
+ * Notify JS Overide *
+ *********************/
+/* Positive */
+.notifyjs-custom-positive .ui.message {
+  background-color: #FCFFF5;
+  color: #2C662D; }
+
+.notifyjs-custom-positive .ui.message,
+.notifyjs-custom-positive .ui.attached.message {
+  box-shadow: 0px 0px 0px 1px #A3C293 inset, 0px 0px 0px 0px transparent; }
+
+.notifyjs-custom-positive .ui.message .header {
+  color: #1A531B; }
+
+/* Negative */
+.notifyjs-custom-negative .ui.message {
+  background-color: #FFF6F6;
+  color: #9F3A38; }
+
+.notifyjs-custom-negative .ui.message,
+.notifyjs-custom-negative .ui.attached.message {
+  box-shadow: 0px 0px 0px 1px #E0B4B4 inset, 0px 0px 0px 0px transparent; }
+
+.notifyjs-custom-negative .ui.message .header {
+  color: #912D2B; }
+
+/* Info */
+.notifyjs-custom-info .ui.message {
+  background-color: #F8FFFF;
+  color: #276F86; }
+
+.notifyjs-custom-info .ui.message,
+.notifyjs-custom-info .ui.attached.message {
+  box-shadow: 0px 0px 0px 1px #A9D5DE inset, 0px 0px 0px 0px transparent; }
+
+.notifyjs-custom-info .ui.message .header {
+  color: #0E566C; }
+
+/* Warning */
+.notifyjs-custom-warning .ui.message {
+  background-color: #FFFAF3;
+  color: #573A08; }
+
+.notifyjs-custom-warning .ui.message,
+.notifyjs-custom-warning .ui.attached.message {
+  box-shadow: 0px 0px 0px 1px #C9BA9B inset, 0px 0px 0px 0px transparent; }
+
+.notifyjs-custom-warning .ui.message .header {
+  color: #794B02; }
+
+/* Error */
+.notifyjs-custom-error .ui.message {
+  background-color: #FFF6F6;
+  color: #9F3A38; }
+
+.notifyjs-custom-error .ui.message,
+.notifyjs-custom-error .ui.attached.message {
+  box-shadow: 0px 0px 0px 1px #E0B4B4 inset, 0px 0px 0px 0px transparent; }
+
+.notifyjs-custom-error .ui.message .header {
+  color: #912D2B; }
+
+/* Success */
+.notifyjs-custom-success .ui.message {
+  background-color: #FCFFF5;
+  color: #2C662D; }
+
+.notifyjs-custom-success .ui.message,
+.notifyjs-custom-success .ui.attached.message {
+  box-shadow: 0px 0px 0px 1px #A3C293 inset, 0px 0px 0px 0px transparent; }
+
+.notifyjs-custom-success .ui.message .header {
+  color: #1A531B; }
+
 /*# sourceMappingURL=styles.css.map */

@@ -77,8 +77,8 @@ export class RateCardSelectorComponent implements OnInit {
                             });
                             if (newRates.length != 0) {
                                 // update bill rate where
-                                //      id = curr.id
-                                //      rate = matched.rate
+                                //   id = curr.id
+                                //   rate = matched.rate
                                 for (let n of newRates) {
                                     toUpdateRates.push({
                                         id: currRate.id,
