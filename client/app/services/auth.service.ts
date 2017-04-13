@@ -24,7 +24,7 @@ export class AuthService {
     constructor(private router: Router,
                 private commonService: CommonService,
                 private apiService: ApiService) {
-        this.getMyUser();
+        this.getMyUser(false);
     }
 
     public setUpUser() {
@@ -68,14 +68,25 @@ export class AuthService {
         })
     }
 
-    public getMyUser() {
+    public getMyUser(updateAuthStatus: boolean) {
         return new Promise<void>(resolve => {
             this.setUpUser().then(() => {
                 this.apiService.getMyUser(this.profile.user_id)
                     .subscribe(
                         res => {
                             this.user = res;
-                            resolve()
+                            if (updateAuthStatus) {
+                                this.apiService.updateAuthStatus(this.user.userId)
+                                    .subscribe(res=> {
+                                        this.user = res;
+                                        resolve();
+                                    }, err => {
+                                        console.log(err);
+                                        resolve();
+                                    });
+                            } else {
+                                resolve();
+                            }
                         },
                         err => this.commonService.handleError(err)
                     )
@@ -108,7 +119,7 @@ export class AuthService {
     public updateIntegrationStatus(): Promise<void> {
         // the condition is a Boolean and not primitive boolean
         return new Promise<void>(resolve => {
-            this.getMyUser().then(
+            this.getMyUser(true).then(
                 resolve => {
                     if (this.user.boxAuthenticated &&
                         this.user.trelloAuthenticated &&
@@ -122,7 +133,7 @@ export class AuthService {
     }
 
     public getIntegrationSyncedStatus(): Promise<boolean> {
-        return this.getMyUser().then(
+        return this.getMyUser(true).then(
             resolve => {
                 if (this.user.boxAuthenticated &&
                     this.user.trelloAuthenticated &&
