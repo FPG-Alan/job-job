@@ -43,10 +43,6 @@ export class NewClientComponent implements OnInit {
     }
 
     onSubmit(form: NgForm) {
-        console.log(form.value);
-        console.log(form.valid);
-        console.log(form);
-
         if (form.valid && !this.submitted) {
             this.submitted = true;
             this.apiService.createNewClient(this.client)

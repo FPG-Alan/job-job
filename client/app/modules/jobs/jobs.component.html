@@ -7,13 +7,13 @@
 
 <div class="ui stackable grid">
     <form class="ui form four wide computer five wide tablet sixteen wide mobile left floated column" #f="ngForm">
-        <h4 class="ui horizontal divider header">
-            Search
-        </h4>
+        <h3 class="ui horizontal header">
+            <div class="sub header">Imagine Google, but for only you. (Implying too many things here)</div>
+        </h3>
         <!--Search by Keyword-->
         <div class="field">
             <label>Keyword</label>
-            <input type="text" placeholder="(enter keywords in job names)"
+            <input type="text"
                    [(ngModel)]="keywordFilterInput"
                    name="keywordFilter"
                    #keywordFilter="ngModel">
@@ -25,7 +25,6 @@
                     [(ngModel)]="producerFilterInput"
                     name="producerFilterInput"
                     #producerFilter="ngModel">
-                <option value=" ">(select producer)</option>
                 <option *ngFor="let p of producers"
                         [value]="p">{{p}}
                 </option>
@@ -38,7 +37,6 @@
                     [(ngModel)]="clientFilterInput"
                     name="clientFilter"
                     #clientFilter="ngModel">
-                <option value="">(select as many clients as you like)</option>
                 <option *ngFor="let c of clients"
                         [value]="c.name">{{c.name}}
                 </option>
