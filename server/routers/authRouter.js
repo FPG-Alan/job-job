@@ -1,5 +1,6 @@
 var express = require('express');
 var unirest = require('unirest');
+var Promise = require('promise');
 var dotenv = process.env.NODE_ENV == "production"
     ? null : require('dotenv').config();
 var path = require("path");
@@ -180,4 +181,75 @@ authRouter.get("/slack", function (req, res) {
     }
 });
 
+
+// using Promise to check for all integrations' auth status
+authRouter.put("/auth-status", function (req, res) {
+    var id = req.body.userId;
+    User.findOne({userId: id}, function (err, user) {
+        if (err) {
+            res.status(500).send({header: 'Couldn\'t find your user data'});
+            return;
+        }
+        Promise.all([boxAuthed(id), trelloAuthed(id), slackAuthed(id)])
+            .done(function (results) {
+                    console.log(results);
+                    user.boxAuthenticated = results[0];
+                    user.trelloAuthenticated = results[1];
+                    user.slackAuthenticated = results[2];
+                    user.save(function (err, returnedUser) {
+                        if (err) {
+                            res.status(500).send({header: 'Something failed while validating your authentication status'});
+                            return;
+                        }
+                        res.json(returnedUser);
+                    });
+                }, function (err) {
+                    res.status(500).send({header: 'Something failed while validating your authentication status'});
+                }
+            )
+    });
+});
+
+function boxAuthed(id) {
+    return new Promise(function (resolve) {
+        Token.findOne({userId: id, provider: "box"}, function (err, token) {
+            if (err || !token || !token.tokenInfo) {
+                console.log("Failed to retrieve Box token for User:", id);
+                resolve(false);
+            } else {
+                boxSdk.getTokensRefreshGrant(token.tokenInfo.refreshToken, function (err, newTokenInfo) {
+                    if (err || !newTokenInfo || !newTokenInfo.accessToken) {
+                        console.log("Failed to refresh Box token for User:", id);
+                        resolve(false);
+                    } else {
+                        // store refreshed token
+                        token.tokenInfo = newTokenInfo;
+                        token.save(function (err, returnedToken) {
+                            if (err) {
+                                console.log("Failed to save Box token for User:", id);
+                                resolve(false);
+                            }
+                            else resolve(true);
+                        });
+                    }
+                });
+            }
+        });
+    });
+}
+
+
+function trelloAuthed(id) {
+    return new Promise(function (resolve) {
+        resolve(false)
+    });
+}
+
+
+function slackAuthed(id) {
+    return new Promise(function (resolve) {
+        resolve(false);
+    });
+
+}
 module.exports = authRouter;
