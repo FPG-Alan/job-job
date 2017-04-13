@@ -192,7 +192,6 @@ authRouter.put("/auth-status", function (req, res) {
         }
         Promise.all([boxAuthed(id), trelloAuthed(id), slackAuthed(id)])
             .done(function (results) {
-                    console.log(results);
                     user.boxAuthenticated = results[0];
                     user.trelloAuthenticated = results[1];
                     user.slackAuthenticated = results[2];
@@ -241,15 +240,20 @@ function boxAuthed(id) {
 
 function trelloAuthed(id) {
     return new Promise(function (resolve) {
-        resolve(false)
+        Token.findOne({userId: id, provider: "trello"}, function (err, token) {
+            if (token) resolve(true);
+            else resolve(false);
+        });
     });
 }
-
 
 function slackAuthed(id) {
     return new Promise(function (resolve) {
-        resolve(false);
+        Token.findOne({userId: id, provider: "slack"}, function (err, token) {
+            if (token) resolve(true);
+            else resolve(false);
+        });
     });
-
 }
+
 module.exports = authRouter;
