@@ -11,26 +11,17 @@ export class CommonService {
     }
 
     notifyMessage(messageClass: string, messageHeader: string, messageContent: string) {
-        let $notifMessage = $("#notif-message");
-        $notifMessage.addClass(messageClass);
-        $notifMessage.find(".header").html(messageHeader);
-        $notifMessage.find(".content").html(messageContent);
-        $notifMessage.transition({
-            animation: "fade",
-            duration: "500ms"
+        $.notify({
+            header: messageHeader,
+            content: messageContent
+        }, {
+            className: [messageClass],
+            autoHide: false,
+            style: "custom",
+            position: "bottom right",
+            showDuration: 500,
+            hideDuration: 500,
         });
-        setTimeout(function () {
-            $notifMessage.transition({
-                animation: "fade",
-                duration: "500ms",
-                onHide: function () {
-                    $notifMessage.removeClass(messageClass);
-                    $notifMessage.find(".header").empty();
-                    $notifMessage.find(".content").empty();
-                }
-            });
-        }, 4000);
-
     }
 
     isEmptyString(str: string) {

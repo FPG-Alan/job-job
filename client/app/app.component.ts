@@ -33,17 +33,25 @@ export class AppComponent {
             .subscribe((event) => this.titleService.setTitle(
                 event['title'] + " | Job Job"));
 
-        $('#notif-message .close')
-            .on('click', function () {
-                $(this).closest('.message').transition('fade');
-            });
+        // Semantic UI Modules
         $('.ui.dropdown').dropdown();
         $('.ui.modal').modal();
+
+        // NotifyJs Settings
+        $.notify.addStyle('custom', {
+            html: `
+                <div>
+                    <div class="ui message"">
+                        <div class="header" data-notify-html="header"></div>
+                        <p class="content" data-notify-html="content"></p>
+                    </div>
+                </div>`
+        });
     }
 
     toggleSidebar() {
         $(".ui.sidebar")
-            .sidebar({ context: $('app-root') })
+            .sidebar({context: $('app-root')})
             .sidebar('setting', 'transition', 'overlay')
             .sidebar("toggle");
     }
