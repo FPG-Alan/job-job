@@ -1,6 +1,24 @@
 # Job Job
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.18. The known latest compatible version is 1.0.0-rc.1.
 
+## Auth0 setup
+- navigate to https://manage.auth0.com/#/
+- click New Client
+- choose Single Page Web Applications as client type
+- navigate to that client's Settings
+  - retrieve Client ID and Client Secret
+- find Allowed Callback URLs
+  - fill "http://localhost:3000/, https://jtb-fpg.herokuapp.com/", etc.
+- (optional?) just to make sure, find Allowed Origins (CORS)
+  - fill in "https://jtb-fpg.herokuapp.com"
+- navigate to https://manage.auth0.com/#/connections/social
+  - click Google or your desired social connection
+  - follow their instructions on "How to Obtain a Client ID"
+  - in the Clients tab of the social connection setup (same modal), enable this social connection
+  for the Client that you just created
+  
+
+
 ## App integrations setup
 - **10,000ft** (dev is https://vnext.10000ft.com/settings and prod is https://app.10000ft.com/settings)
   - navigate to URL above
