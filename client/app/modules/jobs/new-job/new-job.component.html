@@ -12,33 +12,30 @@
       novalidate>
 
     <!--Final Generated Name-->
-    <div class="ui blue segment inline fields" [class.loading]="generating">
-        <div class="read-only ten wide field">
+    <nav class="ui bottom fixed inverted menu inline fields segment"
+         id="generated-title-nav">
+        <app-steve-bot
+                [class.hidden]="!settings.steve"
+                class="ui ten wide field"
+                (onSteveStop)="onSteveStop($event)"
+                #steveBot>
+        </app-steve-bot>
+        <div class="ui read-only six wide field container segment">
+            <div class="ui dimmer"
+                 [class.active]="generating">
+                <div class="ui text loader">Generating</div>
+            </div>
             <label>Generated Title</label>
-            <div *ngIf="usingFinalName" class="ui icon input">
+            <div *ngIf="usingFinalName" class="ui input">
                 <input readonly="" type="text"
-                       require
                        [(ngModel)]="finalName.result"
-                       name="finalName">
-                <i class="icon"></i>
-            </div>
-            <input *ngIf="!usingFinalName" readonly="" type="text"
-                   require
-                   [(ngModel)]="job.name"
-                   name="finalName">
-        </div>
-        <div class="six wide field">
-            <div class="ui toggle checkbox">
-                <input type="checkbox" tabindex="0" class="hidden"
-                       [checked]="usingFinalName"
-                       (change)="usingFinalName = !usingFinalName">
-                <label>Use generated name?</label>
+                       name="finalName"
+                       (click)="steveBotComponent.say(['*slap wrist* This field is auto-generated for you. Don\'t touch!']);">
             </div>
         </div>
-    </div>
+    </nav>
 
 
-    <br><br>
     <!--Client & Brand-->
     <div class="two fields">
         <div class="required field" id="client-select-field"
@@ -127,7 +124,7 @@
             <input type="date"
                    required
                    [(ngModel)]="job.startDate"
-                   (ngModelChange)="submitted = false; onDateChange('start', $event)"
+                   (ngModelChange)="submitted = false; onDateChange('start', $event);"
                    name="startDate"
                    #startDate="ngModel">
         </div>
@@ -191,7 +188,10 @@
                     <label>
                         <input type="radio"
                                name="type" [(ngModel)]="job.serviceType"
-                               [value]="serviceType.value">
+                               [value]="serviceType.value"
+                               (focus)="steveBotComponent.sayOnce([
+                               'Trello Board type also determines the Service Type field on 10,000ft. If it\'s not provided,' +
+                               ' you should fill in the field on 10k\' manually.'])">
                         {{serviceType.display}}
                     </label>
                 </div>
@@ -206,7 +206,8 @@
                        name="slackChannel"
                        #slackChannel="ngModel"
                        maxlength="21"
-                       style="margin-bottom:2px">
+                       style="margin-bottom:2px"
+                       (focus)="steveBotComponent.sayOnce(['Bee tee dubs, those name suggestions are clickable.'],'slackChannel')">
                 <span *ngIf="!commonService.isEmptyString(job.name)">suggestions:</span>
                 <div class="ui black pointing label button"
                      *ngIf="!commonService.isEmptyString(job.name)"
@@ -329,18 +330,6 @@
                             <div class="content">
                                 <div class="header">Client</div>
                                 <div class="description">Finding a folder with the client's name</div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <i class="big icon"
-                               [ngClass]="{'disabled': boxProcessingStates.brand == 'disabled',
-                           'active pulse': boxProcessingStates.brand == 'active',
-                           'trademark': boxProcessingStates.brand != 'completed' && boxProcessingStates.brand != 'failed',
-                           'green checkmark': boxProcessingStates.brand == 'completed',
-                           'red remove': boxProcessingStates.brand == 'failed'}"></i>
-                            <div class="content">
-                                <div class="header">Brand</div>
-                                <div class="description">Finding a folder with the brand name</div>
                             </div>
                         </div>
                         <div class="item">

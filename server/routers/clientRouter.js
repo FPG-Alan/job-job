@@ -19,7 +19,7 @@ clientRouter.get("/all", function (req, res) {
 
 clientRouter.get("/count-by-year", function (req, res) {
     if (!req.query.client || !req.query.year) {
-        res.status(500).send({header: 'Need to specify Client and Year'});
+        res.status(500).send({header: 'Need to specify client name and year'});
         return;
     }
     Client.findOne({name: req.query.client}, function (err, client) {
@@ -132,6 +132,27 @@ clientRouter.post("/brand", function (req, res) {
                 header: 'Couldn\'t add a new brand',
                 message: 'Please try a different name'
             });
+        }
+    })
+});
+
+
+clientRouter.put("/", function (req, res) {
+    if (!req.body.client || !req.body.newName) {
+        res.status(500).send({header: 'Need to specify old and new client name'});
+        return;
+    }
+    Client.findOne({name: req.body.client}, function (err, client) {
+        if (client) {
+            client.name = req.body.newName;
+            client.save(function(err, client){
+                if (err) {
+                    res.status(500).send({header: 'Couldn\'t save new client name'});
+                }
+                res.json(client);
+            })
+        } else {
+            res.status(500).send({header: 'Error finding client'});
         }
     })
 });

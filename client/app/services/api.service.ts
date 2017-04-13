@@ -4,6 +4,7 @@ import {Headers, RequestOptions} from "@angular/http";
 import {Client} from "../classes/client";
 import {Job} from "../classes/job";
 import {User} from "../classes/user";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class ApiService {
@@ -69,6 +70,18 @@ export class ApiService {
 
         return this.authHttp.post("/client/brand", body, options)
             .map(res => res.json());
+    }
+
+    editClient(clientName: string, newName: string): Observable<Client> {
+        let body = {
+            client: clientName,
+            newName: newName
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.put("/client", body, options)
+            .map(res => <Client> res.json());
     }
 
 

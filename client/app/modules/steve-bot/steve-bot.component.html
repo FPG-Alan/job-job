@@ -1,0 +1,15 @@
+<div class="ui dropdown">
+    <img id="steve" class="ui rounded image hidden" src="assets/steve.jpg">
+    <div class="ui inverted menu">
+        <div class="ui button item" (click)="say(['Wassuh!','Focus on your job.'])">
+            <i class="hand paper icon"></i>Hello!
+        </div>
+        <div class="ui button item" (click)="stop()">
+            <i class="remove icon"></i>Be quiet, Steve!
+        </div>
+    </div>
+</div>
+<div class="bubble-wrap">
+    <div class="bubble left hidden" id="steve-message">
+    </div>
+</div>

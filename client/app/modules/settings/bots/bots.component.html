@@ -1,0 +1,25 @@
+<table class="ui very basic unstackable table">
+    <thead>
+    </thead>
+    <tbody>
+    <tr>
+        <td><img class="ui logo image" src="assets/steve.jpg"></td>
+        <td>
+            <h4 class="ui header">
+                Stevebot
+                <div class="sub header">
+                    Embodiment of instruction and annoyance
+                </div>
+            </h4>
+        </td>
+        <td class="right aligned">
+            <a class="ui button"
+               *ngIf="!botSettings.steve"
+               (click)="toggleLocalSettings('steve')">Disabled</a>
+            <a class="ui positive button"
+               *ngIf="botSettings.steve"
+               (click)="toggleLocalSettings('steve')">Enabled</a>
+        </td>
+    </tr>
+    </tbody>
+</table>

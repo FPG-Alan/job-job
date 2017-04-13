@@ -6,6 +6,10 @@
     margin-bottom: 0.25em;
 }
 
+#new-job-form {
+    padding-bottom: 50px;
+}
+
 app-rate-card-selector {
     width: 100%;
     padding-left: .5em;
@@ -33,9 +37,9 @@ input[readonly]:focus {
     }
 }
 
-/*****************************
- * Pulse by Nathan B. Weller *
- *****************************/
+/*
+ * Pulse by Nathan B. Weller
+ */
 .pulse {
     animation: pulse 1s ease infinite;
 }
@@ -51,5 +55,29 @@ input[readonly]:focus {
 
     100% {
         transform: scale(1);
+    }
+}
+
+/*
+ * Bottom Nav aka Generated Title Nav
+ */
+#generated-title-nav {
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    label {
+        color: rgba(255, 255, 255, .9) !important;
+    }
+    .segment { background: transparent !important; }
+    .active.dimmer { background: transparent !important; }
+    .active.dimmer ~ label,
+    .active.dimmer ~ .ui.input {
+        opacity: 0.1;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    app-steve-bot {
+        display: none !important;
     }
 }
