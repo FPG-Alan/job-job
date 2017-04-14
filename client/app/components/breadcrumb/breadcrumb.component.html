@@ -1,0 +1,8 @@
+<div class="ui breadcrumb">
+    <a routerLink="/" class="section">Home</a>
+    <span *ngFor="let b of breadcrumbs">
+        <i class="right angle icon divider"></i>
+        <a [routerLink]="[b.url]"
+           routerLinkActive="active">{{b.label}}</a>
+    </span>
+</div>

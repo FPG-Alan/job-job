@@ -1,10 +1,11 @@
 import "rxjs/add/operator/filter";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
-import {Component} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import {AuthService} from "./services/auth.service";
 import {Router, NavigationEnd, ActivatedRoute} from "@angular/router";
 import {Title} from "@angular/platform-browser";
+import {BreadcrumbComponent} from "./components/breadcrumb/breadcrumb.component";
 
 declare var $;
 
@@ -14,7 +15,9 @@ declare var $;
     styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-    title = 'app works!';
+
+    @ViewChild('breadcrumb')
+    private breadcrumbComponent: BreadcrumbComponent;
 
     constructor(private authService: AuthService,
                 private router: Router,
@@ -23,7 +26,15 @@ export class AppComponent {
         // Dynamic Page Titles - Code by Todd Motto
         this.router.events
             .filter(event => event instanceof NavigationEnd)
-            .map(() => this.activatedRoute)
+            .map(() => {
+                if (this.authService.authenticated()) {
+                    // set breadcrumbs
+                    let root: ActivatedRoute = this.activatedRoute.root;
+                    this.breadcrumbComponent.breadcrumbs =
+                        this.breadcrumbComponent.getBreadcrumbs(root, "", []);
+                }
+                return this.activatedRoute;
+            })
             .map(route => {
                 while (route.firstChild) route = route.firstChild;
                 return route;

@@ -8,13 +8,21 @@ import {IntegrationsGuard} from "../../services/integrations.guard";
 export const routes: Routes = [
     {
         path: "jobs",
-        children: [
-            {path: "", component: JobsComponent, pathMatch: "full", data: {title: "Jobs"}},
-            {path: "details/:id", component: DetailsComponent, data: {title: "Job Details"}},
-            {path: "new", component: NewJobComponent,
-                canActivate: [IntegrationsGuard],
-                data: {title: "New Job"}}
-        ],
+        data: {title: "Jobs"},
+        children: [{
+            path: "",
+            component: JobsComponent,
+            pathMatch: "full"
+        }, {
+            path: "details/:id",
+            component: DetailsComponent,
+            data: {title: "Job Details"}
+        }, {
+            path: "new",
+            component: NewJobComponent,
+            canActivate: [IntegrationsGuard],
+            data: {title: "New Job"}
+        }],
         canActivate: [AuthGuard]
     }
 ];
