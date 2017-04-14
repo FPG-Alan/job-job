@@ -58,7 +58,6 @@ export class BreadcrumbComponent implements OnInit {
 
             //append route URL to URL
             url += `/${routeURL}`;
-            console.log(route);
 
             // add breadcrumb
             let breadcrumb: Breadcrumb = {
