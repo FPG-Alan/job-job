@@ -1,8 +1,8 @@
 <div class="ui breadcrumb">
-    <a routerLink="/" class="section">Home</a>
-    <span *ngFor="let b of breadcrumbs">
+    <a *ngIf="breadcrumbs?.length>0" routerLink="/" class="section">Home</a>
+    <span *ngFor="let b of breadcrumbs; let isLast = last">
         <i class="right angle icon divider"></i>
-        <a [routerLink]="[b.url]"
-           routerLinkActive="active">{{b.label}}</a>
+        <a *ngIf="!isLast" class="section" [routerLink]="[b.url]">{{b.label}}</a>
+        <div *ngIf="isLast" class="active section">{{b.label}}</div>
     </span>
 </div>
