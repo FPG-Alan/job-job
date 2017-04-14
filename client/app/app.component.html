@@ -8,7 +8,7 @@
         <a routerLink="/jobs"
            routerLinkActive="active"
            class="item">
-            <i class="suitcase icon"></i>Job Search</a>
+            <i class="suitcase icon"></i>Jobs</a>
         <a routerLink="/clients"
            routerLinkActive="active"
            class="item">
@@ -52,6 +52,10 @@
         <i class="sign out icon"></i>Log Out</a>
 </div>
 
+<app-breadcrumb
+        *ngIf="authService.authenticated()"
+        #breadcrumb>
+</app-breadcrumb>
 
 <div [class.pusher]="authService.authenticated()">
     <div class="ui" [class.container]="authService.authenticated()">

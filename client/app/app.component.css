@@ -30,8 +30,6 @@
  * Pushed Container for Sidebar
  */
 .pusher {
-  margin-top: 43px;
-  padding-top: 50px;
   padding-bottom: 50px;
   min-height: 100vh; }
 
@@ -40,6 +38,14 @@
     width: auto !important;
     margin-left: 1em !important;
     margin-right: 1em !important; } }
+/*
+ * Breadcrumb
+ */
+app-breadcrumb {
+  margin-top: 43px;
+  background: #eee;
+  display: block; }
+
 /*
  * Notification Message Popup
  */

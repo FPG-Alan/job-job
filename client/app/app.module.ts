@@ -4,6 +4,7 @@ import {FormsModule} from "@angular/forms";
 import {Http, HttpModule, RequestOptions} from "@angular/http";
 import {AuthHttp, AuthConfig} from "angular2-jwt";
 import {AppComponent} from "./app.component";
+import {BreadcrumbComponent} from "./components/breadcrumb/breadcrumb.component";
 import {routing, appRoutingProviders} from "./app.routing";
 import {LoginModule} from "./modules/login/login.module";
 import {HomeModule} from "./modules/home/home.module";
@@ -15,7 +16,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        BreadcrumbComponent
     ],
     imports: [
         BrowserModule,
