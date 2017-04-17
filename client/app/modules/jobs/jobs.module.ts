@@ -7,6 +7,7 @@ import {RateCardSelectorModule} from "./rate-card-selector/rate-card-selector.mo
 import {JobsComponent} from "./jobs.component";
 import {DetailsComponent} from "./details/details.component";
 import {NewJobComponent} from "./new-job/new-job.component";
+import {NewJobConfirmComponent} from "./new-job-confirm/new-job-confirm.component";
 import {NewClientModule} from "../clients/new-client/new-client.module";
 import {SteveBotModule} from "../steve-bot/steve-bot.module";
 
@@ -20,7 +21,7 @@ import {SteveBotModule} from "../steve-bot/steve-bot.module";
         SteveBotModule,
         routing
     ],
-    declarations: [JobsComponent, DetailsComponent, NewJobComponent]
+    declarations: [JobsComponent, DetailsComponent, NewJobComponent, NewJobConfirmComponent]
 })
 export class JobsModule {
 }
