@@ -200,7 +200,6 @@ export class ApiService {
             .map(res => res.json());
     }
 
-
     /**********************
      * TRELLO INTEGRATION *
      **********************/
@@ -216,8 +215,7 @@ export class ApiService {
         return this.authHttp.post("/trello", body, options)
             .map(res => res.json());
     }
-
-
+    
     /*********************
      * SLACK INTEGRATION *
      *********************/
