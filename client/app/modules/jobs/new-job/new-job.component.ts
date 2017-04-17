@@ -444,7 +444,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         tenKUrl: null,
         boxUrl: null,
         trelloUrl: null
-    }; // TODO: replace this when we have custom fields
+    }; // TODO: consider removing this with custom fields
 
     private startFinalConfirmation() {
         this.rateCardProcessingState = "disabled";

@@ -37,7 +37,6 @@ export class ApiService {
             .map(res => <User> res.json());
     }
 
-
     /***********
      * CLIENTS *
      ***********/
@@ -83,7 +82,6 @@ export class ApiService {
         return this.authHttp.put("/client", body, options)
             .map(res => <Client> res.json());
     }
-
 
     /********
      * JOBS *
@@ -152,11 +150,6 @@ export class ApiService {
             .map(res => res.json())
     }
 
-    attachTagToProject() {
-        // TODO
-    }
-
-
     /*****************
      * CUSTOM FIELDS *
      *****************/
@@ -164,7 +157,6 @@ export class ApiService {
         return this.authHttp.get("/custom-field")
             .map(res => res.json())
     }
-
 
     getCustomFieldValues(id: number | string) {
         return this.authHttp.get("/custom-field/values/" + id)
@@ -191,7 +183,6 @@ export class ApiService {
         return this.authHttp.put("/auth/auth-status", body, options)
             .map(res => <User> res.json());
     }
-
 
     /*******************
      * BOX INTEGRATION *
