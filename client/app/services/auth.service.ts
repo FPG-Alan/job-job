@@ -33,6 +33,7 @@ export class AuthService {
             this.profile = JSON.parse(localStorage.getItem('profile'));
             if (this.profile) {
                 resolve();
+                return;
             }
             // TODO: catch error
 
