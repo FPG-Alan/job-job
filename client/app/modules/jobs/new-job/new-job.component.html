@@ -1,11 +1,12 @@
-<h1>
+<h1 [class.hidden]="submitted">
     Create New Job
 </h1>
 
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
       (keydown.enter)="$event.preventDefault()"
-      novalidate>
+      novalidate
+      [class.hidden]="submitted">
 
     <!--Final Generated Name-->
     <nav class="ui bottom fixed inverted menu inline fields segment"
@@ -208,12 +209,12 @@
                 <span *ngIf="!commonService.isEmptyString(job.name)">suggestions:</span>
                 <div class="ui black pointing label button"
                      *ngIf="!commonService.isEmptyString(job.name)"
-                     (click)="selectChannelNameSuggestion('noVowels')">
+                     (click)="onSlackChannelNameSelected('noVowels')">
                     {{finalName.result | slackChannelName:"noVowels"}}
                 </div>
                 <div class="ui black pointing label button"
                      *ngIf="!commonService.isEmptyString(job.name)"
-                     (click)="selectChannelNameSuggestion('abruptCut')">
+                     (click)="onSlackChannelNameSelected('abruptCut')">
                     {{finalName.result | slackChannelName:"abruptCut"}}
                 </div>
             </div>
@@ -256,4 +257,13 @@
 
 
 <!--Final Confirmation Screen-->
-<app-new-job-confirm></app-new-job-confirm>
+<app-new-job-confirm
+        *ngIf="submitted"
+        [userId]="userId"
+        [job]="job"
+        [finalName]="finalName"
+        [slackChannelName]="slackChannelName"
+        [usingFinalName]="usingFinalName"
+        (onCustomFieldCreateRequest)="createCustomFieldValues($event)"
+        (onFinished)="onFinished($event)">
+</app-new-job-confirm>
