@@ -16,8 +16,10 @@ export class NewJobConfirmComponent implements OnInit {
     @Input() slackChannelName: string;
     @Input() usingFinalName: boolean;
 
+    @Output() onJobCreated = new EventEmitter<Job>();
     @Output() onCustomFieldCreateRequest = new EventEmitter<any[]>();
     @Output() onFinished = new EventEmitter<boolean>();
+    @Output() onClickCheckItOut = new EventEmitter<boolean>();
     finished: boolean = false;
     rateCardProcessingState = "disabled";
     boxProcessingStates: any = {
@@ -46,6 +48,7 @@ export class NewJobConfirmComponent implements OnInit {
             .subscribe(
                 res => {
                     // TODO: this.rateCardSelectorComponent.newJob = res;
+                    this.onJobCreated.emit(res);
                     this.confirmInfo.tenKUrl =
                         "https://vnext.10000ft.com/viewproject?id=" + res.id;
                     let importantCustomValues = [{
@@ -86,6 +89,7 @@ export class NewJobConfirmComponent implements OnInit {
             if (this.servicesCount >= this.maxServicesCount) {
                 setTimeout(() => {
                     this.finished = true;
+                    this.onFinished.emit(this.finished);
                 }, 1000);
                 clearInterval(timeInterval);
             }
@@ -199,5 +203,9 @@ export class NewJobConfirmComponent implements OnInit {
                     console.log("Slack's done")
                 }
             );
+    }
+
+    checkItOut() {
+        this.onClickCheckItOut.emit(this.finished);
     }
 }

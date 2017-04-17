@@ -264,6 +264,8 @@
         [finalName]="finalName"
         [slackChannelName]="slackChannelName"
         [usingFinalName]="usingFinalName"
+        (onJobCreated)="onJobCreated($event)"
         (onCustomFieldCreateRequest)="createCustomFieldValues($event)"
-        (onFinished)="onFinished($event)">
+        (onFinished)="onFinished($event)"
+        (onclickcheckitout)="checkItOut($event)">
 </app-new-job-confirm>

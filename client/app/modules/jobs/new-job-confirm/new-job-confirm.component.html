@@ -2,11 +2,10 @@
     Almost there!
 </div>
 <div class="ui container">
-    <!--TODO: display message representing current action-->
     <div class="ui active centered inline loader"
-         *ngIf="!canEndConfirm"></div>
+         *ngIf="!finished"></div>
     <h2 class="ui center aligned icon header"
-        *ngIf="canEndConfirm">
+        *ngIf="finished">
         <i class="green circular checkmark icon"></i>
         Done
     </h2>
@@ -125,8 +124,17 @@
     </div>
 </div>
 
-<div class="ui positive button"
-     [class.disabled]="!finished"
-     (click)="onFinished.emit(finished)">
-    Check It Out<i class="chevron right icon"></i>
+
+<div class="ui grid">
+    <div class="row">
+        <div class="column">
+            <div class="ui large right floated buttons">
+                <div class="ui positive button"
+                     [class.disabled]="!finished"
+                     (click)="checkItOut()">
+                    Check It Out<i class="chevron right icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

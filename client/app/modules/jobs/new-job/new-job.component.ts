@@ -47,7 +47,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         {value: ' ', display: 'None (Manually Create on Trello)'}
     ];
     customFields: any;
-    customFieldValues = [];
 
     // passable data to children
     job: Job;
@@ -148,6 +147,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     /*******************
      * TWO-WAY BINDING *
      *******************/
+    /* JOB NUMBER */
     getClientProjectCount() {
         if (this.usingFinalName && !this.commonService.isEmptyString(this.job.client.name)) {
             this.generating = true;
@@ -167,6 +167,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    /* ADD NEW CLIENT */
     addNewClient() {
         $("#new-client-modal")
             .modal("setting", "closable", false)
@@ -186,6 +187,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         $("#new-client-modal").modal("hide");
     }
 
+    /* ADD NEW BRAND */
     addNewBrand(brand: string) {
         if (!this.commonService.isEmptyString(this.job.client.name)
             && !this.commonService.isEmptyString(brand)) {
@@ -213,6 +215,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    /* FORM CHANGE HANDLERS */
     updateFinalName() {
         // reinitiating as an empty string to make sure it's not a null addition
         this.finalName.result = "";
@@ -298,12 +301,12 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         // TODO: this.rateCardProcessingState = processingState || "";
         if (this.rateCardSelectorComponent.selectedTemplate
             && !this.commonService.isEmptyString(
-                this.rateCardSelectorComponent.selectedTemplate.name)) {
-            // prevent undefined
-            this.customFieldValues.push({
+                this.rateCardSelectorComponent.selectedTemplate.name)) { // prevent undefined
+            let fieldValues = [{
                 name: "Rate Card",
                 value: this.rateCardSelectorComponent.selectedTemplate.name
-            });
+            }];
+            this.createCustomFieldValues(fieldValues);
         }
     }
 
@@ -323,9 +326,14 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
             // compile what everything that hasn't been updated yet
             this.job.code = "" + this.finalName.clientCode + this.finalName.startYear + this.finalName.projectCount;
 
-            // TODO: hide the form and display the confirmation
+            // hide the form and display the confirmation
             this.submitted = true;
         }
+    }
+
+    onJobCreated(newJob: any) {
+        this.rateCardSelectorComponent.newJob = newJob;
+        this.rateCardSelectorComponent.updateBillRates();
     }
 
 
@@ -364,8 +372,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     createCustomFieldValues(valueList: any[]) {
         let valueWithIdList = this.fillCustomFieldId(valueList);
-        console.log("Custom Field Values:", valueWithIdList);
-
         // push the compiled custom field values
         this.apiService.createCustomFieldValues(
             this.rateCardSelectorComponent.newJob.id,
@@ -427,13 +433,18 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     onFinished(finished: boolean) {
         if (finished) {
             this.resetModels();
-            this.submitted = false;
-
             this.commonService.notifyMessage(
                 "success",
                 "Sweet!",
                 "Successfully created a new job"
             );
+        }
+    }
+
+    checkItOut(finished: boolean) {
+        this.submitted = false;
+        if (finished && this.rateCardSelectorComponent.newJob &&
+            this.rateCardSelectorComponent.newJob.id) {
             // borrowing New Job ID from child seems dependant
             this.router.navigate([
                 "/jobs/details",
