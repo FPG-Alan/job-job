@@ -442,9 +442,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     checkItOut(finished: boolean) {
-        this.submitted = false;
         if (finished && this.rateCardSelectorComponent.newJob &&
             this.rateCardSelectorComponent.newJob.id) {
+            this.submitted = false;
             // borrowing New Job ID from child seems dependant
             this.router.navigate([
                 "/jobs/details",
