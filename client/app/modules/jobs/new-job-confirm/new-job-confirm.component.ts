@@ -28,7 +28,7 @@ export class NewJobConfirmComponent implements OnInit {
             status: "active",
             details: "Working..."
         },
-        importantInfo: {
+        customFields: {
             status: "disabled",
             details: "Working..."
         },

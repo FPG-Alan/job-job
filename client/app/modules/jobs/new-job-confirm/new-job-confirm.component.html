@@ -32,88 +32,108 @@
     <div class="ui grid">
         <div class="centered ten wide mobile eight wide tablet six wide computer column">
 
-            <div *ngIf="rateCardProcessingState != 'disabled'"
-                 class="ui vertical segment">
-                <h4 class="ui header">Setting up project on 10,000ft...</h4>
+            <div class="ui vertical segment">
+                <h4 class="ui header">10,000ft</h4>
                 <div class="ui list">
                     <div class="item">
                         <i class="big icon"
-                           [ngClass]="{'active pulse': rateCardProcessingState == 'active',
-                               'money': rateCardProcessingState != 'completed'
-                                    && rateCardProcessingState != 'failed',
-                               'green checkmark': rateCardProcessingState == 'completed',
-                               'red remove': rateCardProcessingState == 'failed'}"></i>
+                           [ngClass]="{'active pulse': tenKProgress?.project?.status == 'active',
+                           'suitcase': tenKProgress?.project?.status != 'completed' && tenKProgress?.project?.status != 'failed',
+                           'green checkmark': tenKProgress?.project?.status == 'completed',
+                           'red remove': tenKProgress?.project?.status == 'failed'}"></i>
+                        <div class="content">
+                            <div class="header">Project</div>
+                            <div class="description">{{tenKProgress?.project?.details}}</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="big icon"
+                           [ngClass]="{'disabled': tenKProgress?.customFields?.status == 'disabled',
+                           'active pulse': tenKProgress?.customFields?.status == 'active',
+                           'info circle': tenKProgress?.customFields?.status != 'completed' && tenKProgress?.importantInfo?.status != 'failed',
+                           'green checkmark': tenKProgress?.customFields?.status == 'completed',
+                           'red remove': tenKProgress?.customFields?.status == 'failed'}"></i>
+                        <div class="content">
+                            <div class="header">Custom Fields</div>
+                            <div class="description">{{tenKProgress?.customFields?.details}}</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="big icon"
+                           [ngClass]="{'disabled': tenKProgress?.rateCard?.status == 'disabled',
+                           'active pulse': tenKProgress?.rateCard?.status == 'active',
+                           'money': tenKProgress?.rateCard?.status != 'completed' && tenKProgress?.rateCard?.status != 'failed',
+                           'green checkmark': tenKProgress?.rateCard?.status == 'completed',
+                           'red remove': tenKProgress?.rateCard?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Rate Card</div>
-                            <div class="description">Copying bill rates over from template rate card</div>
+                            <div class="description">{{tenKProgress?.rateCard?.details}}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="ui vertical segment">
-                <h4 class="ui header">Creating folders in Box...</h4>
+                <h4 class="ui header">Box</h4>
                 <div class="ui list">
                     <div class="item">
                         <i class="big icon"
-                           [ngClass]="{'disabled': boxProcessingStates.client == 'disabled',
-                           'active pulse': boxProcessingStates.client == 'active',
-                           'users': boxProcessingStates.client != 'completed' && boxProcessingStates.client != 'failed',
-                           'green checkmark': boxProcessingStates.client == 'completed',
-                           'red remove': boxProcessingStates.client == 'failed'}"></i>
+                           [ngClass]="{'disabled': boxProgress?.client?.status == 'disabled',
+                           'active pulse': boxProgress?.client?.status == 'active',
+                           'users': boxProgress?.client?.status != 'completed' && boxProgress?.client?.status != 'failed',
+                           'green checkmark': boxProgress?.client?.status == 'completed',
+                           'red remove': boxProgress?.client?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Client</div>
-                            <div class="description">Finding a folder with the client's name</div>
+                            <div class="description">{{boxProgress?.client?.details}}</div>
                         </div>
                     </div>
                     <div class="item">
-                        <i class="big icon {{boxProcessingStates.job}}"
-                           [ngClass]="{'disabled': boxProcessingStates.job == 'disabled',
-                           'active pulse': boxProcessingStates.job == 'active',
-                           'suitcase': boxProcessingStates.job != 'completed' && boxProcessingStates.job != 'failed',
-                           'green checkmark': boxProcessingStates.job == 'completed',
-                           'red remove': boxProcessingStates.job == 'failed'}"></i>
+                        <i class="big icon"
+                           [ngClass]="{'disabled': boxProgress?.job?.status == 'disabled',
+                           'active pulse': boxProgress?.job?.status == 'active',
+                           'folder': boxProgress?.job?.status != 'completed' && boxProgress?.job?.status != 'failed',
+                           'green checkmark': boxProgress?.job?.status == 'completed',
+                           'red remove': boxProgress?.job?.status == 'failed'}"></i>
                         <div class=" content">
                             <div class="header">Job</div>
-                            <div class="description no-padding">Creating a folder with the job's coded name</div>
+                            <div class="description no-padding">{{boxProgress?.job?.details}}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div *ngIf="trelloProcessingState != 'disabled'"
+            <div *ngIf="trelloProgress?.board?.status != 'disabled'"
                  class="ui vertical segment">
-                <h4 class="ui header">Copying Trello board...</h4>
+                <h4 class="ui header">Trello</h4>
                 <div class="ui list">
                     <div class="item">
-                        <i class="big icon {{trelloProcessingState}}"
-                           [ngClass]="{'active pulse': trelloProcessingState == 'active',
-                               'trello': trelloProcessingState != 'completed'
-                                    && trelloProcessingState != 'failed',
-                               'green checkmark': trelloProcessingState == 'completed',
-                               'red remove': trelloProcessingState == 'failed'}"></i>
+                        <i class="big icon"
+                           [ngClass]="{'active pulse': trelloProgress?.board?.status == 'active',
+                           'trello': trelloProgress?.board?.status != 'completed' && trelloProgress?.board?.status != 'failed',
+                           'green checkmark': trelloProgress?.board?.status == 'completed',
+                           'red remove': trelloProgress?.board?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Board</div>
-                            <div class="description">Creating a new board using FPG template</div>
+                            <div class="description">{{trelloProgress?.board?.details}}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div *ngIf="slackProcessingState != 'disabled'"
+            <div *ngIf="slackProgress?.channel?.status != 'disabled'"
                  class="ui vertical segment">
-                <h4 class="ui header">Creating new Slack channel...</h4>
+                <h4 class="ui header">Slack</h4>
                 <div class="ui list">
                     <div class="item">
-                        <i class="big icon {{slackProcessingState}}"
-                           [ngClass]="{'active pulse': slackProcessingState == 'active',
-                                               'hashtag': slackProcessingState != 'completed'
-                                                    && slackProcessingState != 'failed',
-                                               'green checkmark': slackProcessingState == 'completed',
-                                               'red remove': slackProcessingState == 'failed'}"></i>
+                        <i class="big icon"
+                           [ngClass]="{'active pulse': slackProgress?.channel?.status == 'active',
+                           'hashtag': slackProgress?.channel?.status != 'completed' && slackProgress?.channel?.status != 'failed',
+                           'green checkmark': slackProgress?.channel?.status == 'completed',
+                           'red remove': slackProgress?.channel?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Channel</div>
-                            <div class="description">Creating a new channel in Slack</div>
+                            <div class="description">{{slackProgress?.channel?.details}}</div>
                         </div>
                     </div>
                 </div>
