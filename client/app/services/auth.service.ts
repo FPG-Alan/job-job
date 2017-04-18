@@ -33,12 +33,12 @@ export class AuthService {
             this.profile = JSON.parse(localStorage.getItem('profile'));
             if (this.profile) {
                 resolve();
-                return;
             }
             // TODO: catch error
 
             // add callback for lock "authenticated" event
             this.lock.on("authenticated", (authResult) => {
+                this.lock.removeAllListeners("authenticated"); // prevent memory leak
                 localStorage.setItem("id_token", authResult.idToken);
                 this.lock.getProfile(authResult.idToken, (err, profile) => {
                     if (err) {
@@ -56,7 +56,7 @@ export class AuthService {
                         .subscribe(
                             res => console.log(res),
                             err => {
-                                this.commonService.handleError(err);
+                                console.log(err);
                                 this.logout();
                             },
                             () => {
