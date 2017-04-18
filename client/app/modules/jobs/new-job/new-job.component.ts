@@ -296,20 +296,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    onRateUpdated(processingState: string) {
-        // TODO: this.servicesCount++;
-        // TODO: this.rateCardProcessingState = processingState || "";
-        if (this.rateCardSelectorComponent.selectedTemplate
-            && !this.commonService.isEmptyString(
-                this.rateCardSelectorComponent.selectedTemplate.name)) { // prevent undefined
-            let fieldValues = [{
-                name: "Rate Card",
-                value: this.rateCardSelectorComponent.selectedTemplate.name
-            }];
-            this.createCustomFieldValues(fieldValues);
-        }
-    }
-
     onSlackChannelNameSelected(type: string) {
         if (type) {
             this.slackChannelName = new SlackChannelNamePipe()
@@ -336,6 +322,20 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         this.rateCardSelectorComponent.updateBillRates();
     }
 
+    onRateUpdated(processingState: string) {
+        this.newJobConfirmComponent.servicesCount++;
+        // TODO: this.rateCardProcessingState = processingState || "";
+        if (this.rateCardSelectorComponent.selectedTemplate
+            && !this.commonService.isEmptyString(
+                this.rateCardSelectorComponent.selectedTemplate.name)) { // prevent undefined
+            let fieldValues = [{
+                name: "Rate Card",
+                value: this.rateCardSelectorComponent.selectedTemplate.name
+            }];
+            this.newJobConfirmComponent.createCustomFieldValues(fieldValues);
+        }
+    }
+
 
     /*****************
      * CUSTOM FIELDS *
@@ -354,32 +354,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 err => this.commonService.handleError(err)
             )
-    }
-
-    private fillCustomFieldId(valueList) {
-        // find same name custom field objects and inject custom field ID for those objects
-        let valueWithIdList = valueList;
-        for (let value of valueWithIdList) {
-            let sameNameFields = this.customFields.filter(function isSameFieldName(field) {
-                return value.name == field.name;
-            });
-            if (sameNameFields.length > 0) {
-                value.custom_field_id = sameNameFields[0].id;
-            }
-        }
-        return valueWithIdList;
-    }
-
-    createCustomFieldValues(valueList: any[]) {
-        let valueWithIdList = this.fillCustomFieldId(valueList);
-        // push the compiled custom field values
-        this.apiService.createCustomFieldValues(
-            this.rateCardSelectorComponent.newJob.id,
-            valueWithIdList
-        ).subscribe(
-            res => console.log("Custom field values creation success:", res),
-            err => this.commonService.handleError(err)
-        )
     }
 
 

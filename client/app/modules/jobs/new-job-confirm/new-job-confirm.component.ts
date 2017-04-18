@@ -11,35 +11,71 @@ import {Job} from "../../../classes/job";
 export class NewJobConfirmComponent implements OnInit {
 
     @Input() userId: string;
+    @Input() customFields: any;
+
     @Input() job: Job;
     @Input() finalName;
     @Input() slackChannelName: string;
     @Input() usingFinalName: boolean;
 
     @Output() onJobCreated = new EventEmitter<Job>();
-    @Output() onCustomFieldCreateRequest = new EventEmitter<any[]>();
     @Output() onFinished = new EventEmitter<boolean>();
     @Output() onClickCheckItOut = new EventEmitter<boolean>();
-    finished: boolean = false;
-    rateCardProcessingState = "disabled";
-    boxProcessingStates: any = {
-        client: "disabled",
-        job: "disabled"
+    private finished: boolean = false;
+    private newJob: any = null;
+    tenKProgress = {
+        project: {
+            status: "active",
+            details: "Working..."
+        },
+        importantInfo: {
+            status: "disabled",
+            details: "Working..."
+        },
+        rateCard: {
+            status: "disabled",
+            details: "Working..."
+        }
     };
-    trelloProcessingState = "disabled";
-    slackProcessingState = "disabled";
-
+    boxProgress = {
+        client: {
+            status: "disabled",
+            details: "Working..."
+        },
+        job: {
+            status: "disabled",
+            details: "Working..."
+        }
+    };
+    trelloProgress = {
+        board: {
+            status: "disabled",
+            details: "Working..."
+        }
+    };
+    slackProgress = {
+        channel: {
+            status: "disabled",
+            details: "Working..."
+        }
+    };
     servicesCount: number = 0; // TODO: start timeInterval on when to stop
-    maxServicesCount: number = 3; // current number of features on the modal
-    confirmInfo = {
+    // current number of features on the modal
+    // 1. rate card (service increments in parent component)
+    // 2. custom fields
+    // 3. box
+    // 4. trello
+    // 5. slack
+    private maxServicesCount: number = 5;
+    private confirmInfo = {
         tenKUrl: null,
         boxUrl: null,
         trelloUrl: null
     }; // TODO: consider removing this with custom fields
 
+
     constructor(private commonService: CommonService,
                 private apiService: ApiService) {
-        // TODO: wait for 10k first
     }
 
     ngOnInit() {
@@ -47,8 +83,9 @@ export class NewJobConfirmComponent implements OnInit {
         this.apiService.createNewJob(this.job, submittedName)
             .subscribe(
                 res => {
-                    // TODO: this.rateCardSelectorComponent.newJob = res;
-                    this.onJobCreated.emit(res);
+                    this.tenKProgress.project = "completed";
+                    this.requestRateCardChange(res);
+                    this.newJob = res;
                     this.confirmInfo.tenKUrl =
                         "https://vnext.10000ft.com/viewproject?id=" + res.id;
                     let importantCustomValues = [{
@@ -61,11 +98,8 @@ export class NewJobConfirmComponent implements OnInit {
                         name: "Type",
                         value: this.job.serviceType
                     }];
-                    // TODO: emit an event to edit bill rates
-                    // TODO: this.rateCardSelectorComponent.updateBillRates();
                     // emit an event to create custom field values
-                    // TODO: display progress
-                    this.onCustomFieldCreateRequest.emit(importantCustomValues);
+                    this.createCustomFieldValues(importantCustomValues);
                     // start integrations
                     this.startIntegrations();
                 },
@@ -96,6 +130,42 @@ export class NewJobConfirmComponent implements OnInit {
         }, 500)
     }
 
+
+    /***************************
+     * 10,000FT CUSTOM SERVICE *
+     ***************************/
+    /* Rate Card */
+    requestRateCardChange(job: any) {
+        this.onJobCreated.emit(job);
+    }
+
+    /* Custom Fields */
+    private fillCustomFieldId(valueList) {
+        // find same name custom field objects and inject custom field ID for those objects
+        let valueWithIdList = valueList;
+        for (let value of valueWithIdList) {
+            let sameNameFields = this.customFields.filter(function isSameFieldName(field) {
+                return value.name == field.name;
+            });
+            if (sameNameFields.length > 0) {
+                value.custom_field_id = sameNameFields[0].id;
+            }
+        }
+        return valueWithIdList;
+    }
+
+    createCustomFieldValues(valueList: any[]) {
+        let valueWithIdList = this.fillCustomFieldId(valueList);
+        // push the compiled custom field values
+        this.apiService.createCustomFieldValues(
+            this.newJob.id,
+            valueWithIdList
+        ).subscribe(
+            res => console.log("Custom field values creation success:", res),
+            err => this.commonService.handleError(err)
+        )
+    }
+
     /*******************
      * BOX INTEGRATION *
      *******************/
@@ -114,11 +184,11 @@ export class NewJobConfirmComponent implements OnInit {
             var nextType = "";
 
             if (type == "client") {
-                this.boxProcessingStates.client = "active";
+                this.boxProgress.client = "active";
                 folderName = this.job.client.name;
                 nextType = "job";
             } else if (type == "job") {
-                this.boxProcessingStates.job = "active";
+                this.boxProgress.job = "active";
                 folderName = this.usingFinalName ? this.finalName.result : this.job.name;
                 nextType = "confirm";
             } else {
@@ -138,15 +208,15 @@ export class NewJobConfirmComponent implements OnInit {
                                     name: "Box Location",
                                     value: this.confirmInfo.boxUrl
                                 }];
-                                this.onCustomFieldCreateRequest.emit(fieldValues);
+                                this.createCustomFieldValues(fieldValues);
                             }
-                            this.boxProcessingStates[type] = "completed";
+                            this.boxProgress[type] = "completed";
                             let parentId = res.id;
                             this.createNewFolder(parentId, nextType);
                         },
                         err => {
                             this.servicesCount++;
-                            this.boxProcessingStates[type] = "failed";
+                            this.boxProgress[type] = "failed";
                             this.commonService.handleError(err);
                         }
                     );
@@ -170,7 +240,7 @@ export class NewJobConfirmComponent implements OnInit {
                         name: "Trello Location",
                         value: this.confirmInfo.trelloUrl
                     }];
-                    this.onCustomFieldCreateRequest.emit(fieldValues);
+                    this.createCustomFieldValues(fieldValues);
                 },
                 err => {
                     this.servicesCount++;

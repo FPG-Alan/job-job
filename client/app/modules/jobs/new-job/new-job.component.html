@@ -260,12 +260,12 @@
 <app-new-job-confirm
         *ngIf="submitted"
         [userId]="userId"
+        [customFields]="customFields"
         [job]="job"
         [finalName]="finalName"
         [slackChannelName]="slackChannelName"
         [usingFinalName]="usingFinalName"
         (onJobCreated)="onJobCreated($event)"
-        (onCustomFieldCreateRequest)="createCustomFieldValues($event)"
         (onFinished)="onFinished($event)"
         (onClickCheckItOut)="checkItOut($event)">
 </app-new-job-confirm>

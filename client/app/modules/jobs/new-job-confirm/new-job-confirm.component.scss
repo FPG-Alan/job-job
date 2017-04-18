@@ -1,0 +1,20 @@
+/*
+ * Pulse by Nathan B. Weller
+ */
+.pulse {
+    animation: pulse 1s ease infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
