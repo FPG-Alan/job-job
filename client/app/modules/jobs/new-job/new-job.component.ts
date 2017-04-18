@@ -324,7 +324,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onRateUpdated(processingState: string) {
         this.newJobConfirmComponent.servicesCount++;
-        // TODO: this.rateCardProcessingState = processingState || "";
+        this.newJobConfirmComponent.tenKProgress.rateCard.status = processingState;
         if (this.rateCardSelectorComponent.selectedTemplate
             && !this.commonService.isEmptyString(
                 this.rateCardSelectorComponent.selectedTemplate.name)) { // prevent undefined
@@ -332,8 +332,12 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 name: "Rate Card",
                 value: this.rateCardSelectorComponent.selectedTemplate.name
             }];
-            this.newJobConfirmComponent.createCustomFieldValues(fieldValues);
+            this.newJobConfirmComponent.createCustomFieldValues(fieldValues, null);
         }
+    }
+
+    onRateUpdateFailed(err: any) {
+        this.newJobConfirmComponent.handleError(err, "tenK", "rateCard")
     }
 
 

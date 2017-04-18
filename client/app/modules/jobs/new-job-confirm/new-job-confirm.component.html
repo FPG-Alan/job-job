@@ -1,11 +1,19 @@
 <div class="ui container">
-    <div class="ui active centered inline loader"
-         *ngIf="!finished"></div>
-    <h2 class="ui center aligned icon header"
-        *ngIf="finished">
+    <div class="ui active centered inline loader" *ngIf="!finished && !hasError"
+    style="z-index: 100"></div>
+    <h2 class="ui center aligned icon header" *ngIf="finished && !hasError">
         <i class="green circular checkmark icon"></i>
-        Done
+        All Done
     </h2>
+    <h2 class="ui center aligned icon header" *ngIf="hasError">
+        <i class="orange warning sing icon"></i>
+        Error Found
+    </h2>
+    <div class="ui warning message" *ngIf="hasError">
+        While some services failed, the completed ones are already applied.<br>
+        If applicable, use the retry buttons (on this page or after you click "Check It Out).<br>
+        Otherwise, you might want to fix those tasks manually.
+    </div>
     <h3 class="ui center aligned small header">
             <span *ngIf="confirmInfo.tenKUrl">
                 10,000 Project URL:
@@ -31,7 +39,6 @@
 
     <div class="ui grid">
         <div class="centered ten wide mobile eight wide tablet six wide computer column">
-
             <div class="ui vertical segment">
                 <h4 class="ui header">10,000ft</h4>
                 <div class="ui list">
@@ -43,7 +50,14 @@
                            'red remove': tenKProgress?.project?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Project</div>
-                            <div class="description">{{tenKProgress?.project?.details}}</div>
+                            <div class="description"
+                                 *ngIf="tenKProgress?.project?.status != 'completed'">
+                                {{tenKProgress?.project?.details}}
+                            </div>
+                            <div class="description"
+                                 *ngIf="tenKProgress?.project?.status == 'completed'">
+                                Completed
+                            </div>
                         </div>
                     </div>
                     <div class="item">
@@ -55,7 +69,14 @@
                            'red remove': tenKProgress?.customFields?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Custom Fields</div>
-                            <div class="description">{{tenKProgress?.customFields?.details}}</div>
+                            <div class="description"
+                                 *ngIf="tenKProgress?.customFields?.status != 'completed'">
+                                {{tenKProgress?.customFields?.details}}
+                            </div>
+                            <div class="description"
+                                 *ngIf="tenKProgress?.customFields?.status == 'completed'">
+                                Completed
+                            </div>
                         </div>
                     </div>
                     <div class="item">
@@ -67,13 +88,21 @@
                            'red remove': tenKProgress?.rateCard?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Rate Card</div>
-                            <div class="description">{{tenKProgress?.rateCard?.details}}</div>
+                            <div class="description"
+                                 *ngIf="tenKProgress?.rateCard?.status != 'completed'">
+                                {{tenKProgress?.rateCard?.details}}
+                            </div>
+                            <div class="description"
+                                 *ngIf="tenKProgress?.rateCard?.status == 'completed'">
+                                Completed
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="ui vertical segment">
+            <div *ngIf="boxProgress?.client?.status != 'disabled'"
+                 class="ui vertical segment">
                 <h4 class="ui header">Box</h4>
                 <div class="ui list">
                     <div class="item">
@@ -85,7 +114,14 @@
                            'red remove': boxProgress?.client?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Client</div>
-                            <div class="description">{{boxProgress?.client?.details}}</div>
+                            <div class="description"
+                                 *ngIf="boxProgress?.client?.status != 'completed'">
+                                {{boxProgress?.client?.details}}
+                            </div>
+                            <div class="description"
+                                 *ngIf="boxProgress?.client?.status == 'completed'">
+                                Completed
+                            </div>
                         </div>
                     </div>
                     <div class="item">
@@ -95,9 +131,16 @@
                            'folder': boxProgress?.job?.status != 'completed' && boxProgress?.job?.status != 'failed',
                            'green checkmark': boxProgress?.job?.status == 'completed',
                            'red remove': boxProgress?.job?.status == 'failed'}"></i>
-                        <div class=" content">
+                        <div class="content">
                             <div class="header">Job</div>
-                            <div class="description no-padding">{{boxProgress?.job?.details}}</div>
+                            <div class="description"
+                                 *ngIf="boxProgress?.job?.status != 'completed'">
+                                {{boxProgress?.job?.details}}
+                            </div>
+                            <div class="description"
+                                 *ngIf="boxProgress?.job?.status == 'completed'">
+                                Completed
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -115,7 +158,14 @@
                            'red remove': trelloProgress?.board?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Board</div>
-                            <div class="description">{{trelloProgress?.board?.details}}</div>
+                            <div class="description"
+                                 *ngIf="trelloProgress?.board?.status != 'completed'">
+                                {{trelloProgress?.board?.details}}
+                            </div>
+                            <div class="description"
+                                 *ngIf="trelloProgress?.board?.status == 'completed'">
+                                Completed
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,7 +183,14 @@
                            'red remove': slackProgress?.channel?.status == 'failed'}"></i>
                         <div class="content">
                             <div class="header">Channel</div>
-                            <div class="description">{{slackProgress?.channel?.details}}</div>
+                            <div class="description"
+                                 *ngIf="slackProgress?.channel?.status != 'completed'">
+                                {{slackProgress?.channel?.details}}
+                            </div>
+                            <div class="description"
+                                 *ngIf="slackProgress?.channel?.status == 'completed'">
+                                Completed
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,6 @@
 import {Component, OnInit, EventEmitter, Output, Input} from "@angular/core";
+import {Response} from "@angular/http";
+import {Observable} from "rxjs";
 import {ApiService} from "../../../services/api.service";
 import {CommonService} from "../../../services/common.service";
 import {Job} from "../../../classes/job";
@@ -19,9 +21,11 @@ export class NewJobConfirmComponent implements OnInit {
     @Input() usingFinalName: boolean;
 
     @Output() onJobCreated = new EventEmitter<Job>();
+    @Output() onJobCreateFailed = new EventEmitter<boolean>();
     @Output() onFinished = new EventEmitter<boolean>();
     @Output() onClickCheckItOut = new EventEmitter<boolean>();
     private finished: boolean = false;
+    private hasError: boolean = false;
     private newJob: any = null;
     tenKProgress = {
         project: {
@@ -83,11 +87,13 @@ export class NewJobConfirmComponent implements OnInit {
         this.apiService.createNewJob(this.job, submittedName)
             .subscribe(
                 res => {
-                    this.tenKProgress.project = "completed";
+                    this.tenKProgress.project.status = "completed";
+                    // rate cards
                     this.requestRateCardChange(res);
                     this.newJob = res;
                     this.confirmInfo.tenKUrl =
                         "https://vnext.10000ft.com/viewproject?id=" + res.id;
+                    // custom values
                     let importantCustomValues = [{
                         name: "Brand",
                         value: this.job.brand
@@ -98,12 +104,25 @@ export class NewJobConfirmComponent implements OnInit {
                         name: "Type",
                         value: this.job.serviceType
                     }];
-                    // emit an event to create custom field values
-                    this.createCustomFieldValues(importantCustomValues);
+                    this.createCustomFieldValues(importantCustomValues, "customFields");
                     // start integrations
                     this.startIntegrations();
+
+                    let timeInterval = setInterval(() => {
+                        if (this.servicesCount >= this.maxServicesCount) {
+                            setTimeout(() => {
+                                this.finished = true;
+                                this.onFinished.emit(this.finished);
+                            }, 1000);
+                            clearInterval(timeInterval);
+                        }
+                    }, 500)
                 },
-                err => this.commonService.handleError(err)
+                err => {
+                    // don't do anything if project isn't created on 10,000ft
+                    this.commonService.handleError(err);
+                    this.onJobCreateFailed.emit(true);
+                }
             );
     }
 
@@ -118,16 +137,46 @@ export class NewJobConfirmComponent implements OnInit {
         if (!this.commonService.isEmptyString(this.slackChannelName)) {
             this.createNewChannel(this.slackChannelName);
         } else { this.servicesCount++; }
+    }
 
-        let timeInterval = setInterval(() => {
-            if (this.servicesCount >= this.maxServicesCount) {
-                setTimeout(() => {
-                    this.finished = true;
-                    this.onFinished.emit(this.finished);
-                }, 1000);
-                clearInterval(timeInterval);
-            }
-        }, 500)
+    checkItOut() {
+        this.onClickCheckItOut.emit(this.finished);
+    }
+
+    handleError(error: Response | any, service: string, type: string) {
+        this.hasError = true;
+        // in a real world app, we might use a remote logging infrastructure
+        let errMsg: string;
+        if (error instanceof Response) {
+            const body = error.json() || '';
+            const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+
+            // display error on specific progress display
+            let customError = (body.header || "Something failed");
+            customError += body.message ? ". " + body.message : "";
+            this.setProgressDetails(customError, service, type);
+        } else {
+            errMsg = error.message ? error.message : error.toString();
+
+            // display error on specific progress display
+            let customError = "Something failed. " + errMsg || "";
+            this.setProgressDetails(customError, service, type);
+        }
+        console.error(errMsg);
+        return Observable.throw(errMsg);
+    }
+
+    private setProgressDetails(message: string, service: string, type: string) {
+        if (service == "tenK" && this.tenKProgress[type]) {
+            this.tenKProgress[type].details = message;
+        } else if (service == "box" && this.boxProgress[type]) {
+            this.boxProgress[type].details = message;
+        } else if (service == "trello" && this.trelloProgress[type]) {
+            this.trelloProgress[type].details = message;
+        } else if (service == "slack" && this.slackProgress[type]) {
+            this.slackProgress[type].details = message;
+        }
     }
 
 
@@ -154,16 +203,25 @@ export class NewJobConfirmComponent implements OnInit {
         return valueWithIdList;
     }
 
-    createCustomFieldValues(valueList: any[]) {
-        let valueWithIdList = this.fillCustomFieldId(valueList);
-        // push the compiled custom field values
-        this.apiService.createCustomFieldValues(
-            this.newJob.id,
-            valueWithIdList
-        ).subscribe(
-            res => console.log("Custom field values creation success:", res),
-            err => this.commonService.handleError(err)
-        )
+    createCustomFieldValues(valueList: any[], type: string) {
+        if (this.newJob && this.newJob.id) {
+            let valueWithIdList = this.fillCustomFieldId(valueList);
+            // push the compiled custom field values
+            this.apiService.createCustomFieldValues(
+                this.newJob.id,
+                valueWithIdList
+            ).subscribe(
+                res => {
+                    this.servicesCount++;
+                    if (type == "customFields") this.tenKProgress.customFields.status = "completed";
+                },
+                err => {
+                    this.servicesCount++;
+                    if (type == "customFields") this.handleError(err, "tenK", "customFields");
+                    console.log(err)
+                }
+            )
+        }
     }
 
     /*******************
@@ -184,11 +242,11 @@ export class NewJobConfirmComponent implements OnInit {
             var nextType = "";
 
             if (type == "client") {
-                this.boxProgress.client = "active";
+                this.boxProgress.client.status = "active";
                 folderName = this.job.client.name;
                 nextType = "job";
             } else if (type == "job") {
-                this.boxProgress.job = "active";
+                this.boxProgress.job.status = "active";
                 folderName = this.usingFinalName ? this.finalName.result : this.job.name;
                 nextType = "confirm";
             } else {
@@ -208,16 +266,16 @@ export class NewJobConfirmComponent implements OnInit {
                                     name: "Box Location",
                                     value: this.confirmInfo.boxUrl
                                 }];
-                                this.createCustomFieldValues(fieldValues);
+                                this.createCustomFieldValues(fieldValues, null);
                             }
-                            this.boxProgress[type] = "completed";
+                            if (this.boxProgress[type]) this.boxProgress[type].status = "completed";
                             let parentId = res.id;
                             this.createNewFolder(parentId, nextType);
                         },
                         err => {
                             this.servicesCount++;
-                            this.boxProgress[type] = "failed";
-                            this.commonService.handleError(err);
+                            if (this.boxProgress[type]) this.boxProgress[type].status = "failed";
+                            this.handleError(err, "box", type);
                         }
                     );
             }
@@ -228,27 +286,24 @@ export class NewJobConfirmComponent implements OnInit {
      * TRELLO INTEGRATION *
      **********************/
     copyBoard(boardName, serviceType) {
-        this.trelloProcessingState = "active";
+        this.trelloProgress.board.status = "active";
         this.apiService.copyBoard(this.userId, boardName, serviceType)
             .subscribe(
                 res => {
                     this.servicesCount++;
-                    this.trelloProcessingState = "completed";
+                    this.trelloProgress.board.status = "completed";
                     this.confirmInfo.trelloUrl =
                         "https://trello.com/b/" + res.id;
                     let fieldValues = [{
                         name: "Trello Location",
                         value: this.confirmInfo.trelloUrl
                     }];
-                    this.createCustomFieldValues(fieldValues);
+                    this.createCustomFieldValues(fieldValues, null);
                 },
                 err => {
                     this.servicesCount++;
-                    this.trelloProcessingState = "failed";
-                    this.commonService.handleError(err);
-                },
-                () => {
-                    console.log("Trello's done")
+                    this.trelloProgress.board.status = "failed";
+                    this.handleError(err, "trello", "board");
                 }
             );
     }
@@ -257,25 +312,18 @@ export class NewJobConfirmComponent implements OnInit {
      * SLACK INTEGRATION *
      *********************/
     createNewChannel(channelName) {
-        this.slackProcessingState = "active";
+        this.slackProgress.channel.status = "active";
         this.apiService.createNewChannel(this.userId, channelName)
             .subscribe(
                 res => {
                     this.servicesCount++;
-                    this.slackProcessingState = "completed";
+                    this.slackProgress.channel.status = "completed";
                 },
                 err => {
                     this.servicesCount++;
-                    this.slackProcessingState = "failed";
-                    this.commonService.handleError(err);
-                },
-                () => {
-                    console.log("Slack's done")
+                    this.slackProgress.channel.status = "failed";
+                    this.handleError(err, "slack", "channel");
                 }
             );
-    }
-
-    checkItOut() {
-        this.onClickCheckItOut.emit(this.finished);
     }
 }

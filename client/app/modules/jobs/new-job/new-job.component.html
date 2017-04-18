@@ -172,6 +172,7 @@
         <!--Rate Card Selector-->
         <app-rate-card-selector
                 (onRateUpdated)="onRateUpdated($event)"
+                (onRateUpdateFailed)="onRateUpdateFailed($event)"
                 #rateCardSelector>
         </app-rate-card-selector>
     </div>
@@ -266,6 +267,8 @@
         [slackChannelName]="slackChannelName"
         [usingFinalName]="usingFinalName"
         (onJobCreated)="onJobCreated($event)"
+        (onJobCreateFailed)="submitted = false"
         (onFinished)="onFinished($event)"
-        (onClickCheckItOut)="checkItOut($event)">
+        (onClickCheckItOut)="checkItOut($event)"
+        #newJobConfirm>
 </app-new-job-confirm>

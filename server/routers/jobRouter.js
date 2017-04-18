@@ -74,7 +74,7 @@ jobRouter.get("/by-client/:client", function (req, res) {
         .end(function (response) {
             if (response.status !== 200) {
                 res.status(500).send({header: "Could not find projects by client name"});
-                console.log(response);
+                console.log(response.body);
                 return;
             }
             var jobs = response.body.data.filter(function (job) {
