@@ -7,6 +7,8 @@ import {IntegrationsGuard} from "../../services/integrations.guard";
 
 export const routes: Routes = [
     {
+        // tricky; having a componentless parent route will hide parent content
+        // if children's contents are activated
         path: "jobs",
         data: {title: "Jobs"},
         children: [{

@@ -192,6 +192,7 @@ authRouter.put("/auth-status", function (req, res) {
         }
         Promise.all([boxAuthed(id), trelloAuthed(id), slackAuthed(id)])
             .done(function (results) {
+                    console.log("Auth results for user", id + ":", results);
                     user.boxAuthenticated = results[0];
                     user.trelloAuthenticated = results[1];
                     user.slackAuthenticated = results[2];

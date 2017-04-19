@@ -13,7 +13,11 @@ form > * {
 
 @media (max-width: 767px) {
   .ui.table tbody tr td.selectable > a:not(.ui) {
-    padding: 0; } }
+    padding: 0; }
+
+  .sixteen.wide.mobile.column {
+    padding-left: 0 !important;
+    padding-right: 0 !important; } }
 @media only screen and (min-width: 767px) {
   .ui.grid [class*="right floated"].column {
     margin-left: 1em !important; } }

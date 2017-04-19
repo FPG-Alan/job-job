@@ -1,11 +1,12 @@
-<h1>
+<h1 [class.hidden]="submitted">
     Create New Job
 </h1>
 
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
       (keydown.enter)="$event.preventDefault()"
-      novalidate>
+      novalidate
+      [class.hidden]="submitted">
 
     <!--Final Generated Name-->
     <nav class="ui bottom fixed inverted menu inline fields segment"
@@ -171,6 +172,7 @@
         <!--Rate Card Selector-->
         <app-rate-card-selector
                 (onRateUpdated)="onRateUpdated($event)"
+                (onRateUpdateFailed)="onRateUpdateFailed($event)"
                 #rateCardSelector>
         </app-rate-card-selector>
     </div>
@@ -208,12 +210,12 @@
                 <span *ngIf="!commonService.isEmptyString(job.name)">suggestions:</span>
                 <div class="ui black pointing label button"
                      *ngIf="!commonService.isEmptyString(job.name)"
-                     (click)="selectChannelNameSuggestion('noVowels')">
+                     (click)="onSlackChannelNameSelected('noVowels')">
                     {{finalName.result | slackChannelName:"noVowels"}}
                 </div>
                 <div class="ui black pointing label button"
                      *ngIf="!commonService.isEmptyString(job.name)"
-                     (click)="selectChannelNameSuggestion('abruptCut')">
+                     (click)="onSlackChannelNameSelected('abruptCut')">
                     {{finalName.result | slackChannelName:"abruptCut"}}
                 </div>
             </div>
@@ -256,143 +258,17 @@
 
 
 <!--Final Confirmation Screen-->
-<div class="ui scrolling modal" id="confirm-new-job">
-    <!--<i class="close icon"></i>-->
-    <div class="header">
-        Almost there!
-    </div>
-    <div class="content">
-        <!--TODO: display message representing current action-->
-        <div class="ui active centered inline loader"
-             *ngIf="!canEndConfirm"></div>
-        <h2 class="ui center aligned icon header"
-            *ngIf="canEndConfirm">
-            <i class="green circular checkmark icon"></i>
-            Done
-        </h2>
-        <h3 class="ui center aligned small header">
-            <span *ngIf="confirmInfo.tenKUrl">
-                10,000 Project URL:
-                <a target="_blank" href="{{confirmInfo.tenKUrl}}">
-                    {{confirmInfo.tenKUrl | characterLimit: 35}}
-                </a>
-            </span><br *ngIf="confirmInfo.tenKUrl ">
-            <span *ngIf="confirmInfo.boxUrl">
-                Box Folder URL:
-                <a target="_blank" href="{{confirmInfo.boxUrl}}">
-                    {{confirmInfo.boxUrl | characterLimit: 35}}
-                </a>
-            </span><br *ngIf="confirmInfo.boxUrl">
-            <span *ngIf="confirmInfo.trelloUrl">
-                Trello Board URL:
-                <a target="_blank" href="{{confirmInfo.trelloUrl}}">
-                    {{confirmInfo.trelloUrl | characterLimit: 35}}
-                </a>
-            </span>
-        </h3>
-        <hr>
-        <br>
-
-        <div class="ui grid">
-            <div class="centered ten wide mobile eight wide tablet six wide computer column">
-                <div *ngIf="rateCardProcessingState != 'disabled'"
-                     class="ui vertical segment">
-                    <h4 class="ui header">Processing rate card...</h4>
-                    <div class="ui list">
-                        <div class="item">
-                            <i class="big icon"
-                               [ngClass]="{'active pulse': rateCardProcessingState == 'active',
-                               'money': rateCardProcessingState != 'completed'
-                                    && rateCardProcessingState != 'failed',
-                               'green checkmark': rateCardProcessingState == 'completed',
-                               'red remove': rateCardProcessingState == 'failed'}"></i>
-                            <div class="content">
-                                <div class="header">Rate Card</div>
-                                <div class="description">Copying bill rates over from template rate card</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="ui vertical segment">
-                    <h4 class="ui header">Creating folders in Box...</h4>
-                    <div class="ui list">
-                        <div class="item">
-                            <i class="big icon"
-                               [ngClass]="{'disabled': boxProcessingStates.client == 'disabled',
-                           'active pulse': boxProcessingStates.client == 'active',
-                           'users': boxProcessingStates.client != 'completed' && boxProcessingStates.client != 'failed',
-                           'green checkmark': boxProcessingStates.client == 'completed',
-                           'red remove': boxProcessingStates.client == 'failed'}"></i>
-                            <div class="content">
-                                <div class="header">Client</div>
-                                <div class="description">Finding a folder with the client's name</div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <i class="big icon {{boxProcessingStates.job}}"
-                               [ngClass]="{'disabled': boxProcessingStates.job == 'disabled',
-                           'active pulse': boxProcessingStates.job == 'active',
-                           'suitcase': boxProcessingStates.job != 'completed' && boxProcessingStates.job != 'failed',
-                           'green checkmark': boxProcessingStates.job == 'completed',
-                           'red remove': boxProcessingStates.job == 'failed'}"></i>
-                            <div class=" content">
-                                <div class="header">Job</div>
-                                <div class="description no-padding">Creating a folder with the job's coded name</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div *ngIf="trelloProcessingState != 'disabled'"
-                     class="ui vertical segment">
-                    <h4 class="ui header">Copying Trello board...</h4>
-                    <div class="ui list">
-                        <div class="item">
-                            <i class="big icon {{trelloProcessingState}}"
-                               [ngClass]="{'active pulse': trelloProcessingState == 'active',
-                               'trello': trelloProcessingState != 'completed'
-                                    && trelloProcessingState != 'failed',
-                               'green checkmark': trelloProcessingState == 'completed',
-                               'red remove': trelloProcessingState == 'failed'}"></i>
-                            <div class="content">
-                                <div class="header">Board</div>
-                                <div class="description">Creating a new board using FPG template</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div *ngIf="slackProcessingState != 'disabled'"
-                     class="ui vertical segment">
-                    <h4 class="ui header">Creating new Slack channel...</h4>
-                    <div class="ui list">
-                        <div class="item">
-                            <i class="big icon {{slackProcessingState}}"
-                               [ngClass]="{'active pulse': slackProcessingState == 'active',
-                                               'hashtag': slackProcessingState != 'completed'
-                                                    && slackProcessingState != 'failed',
-                                               'green checkmark': slackProcessingState == 'completed',
-                                               'red remove': slackProcessingState == 'failed'}"></i>
-                            <div class="content">
-                                <div class="header">Channel</div>
-                                <div class="description">Creating a new channel in Slack</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="actions">
-        <a class="ui button" routerLink="/jobs">
-            <i class="chevron left icon"></i>Back to List
-        </a>
-        <div class="ui positive button"
-             [class.disabled]="!canEndConfirm"
-             (click)="endFinalConfirmation()">
-            Check It Out<i class="chevron right icon"></i>
-        </div>
-    </div>
-</div>
+<app-confirm
+        *ngIf="submitted"
+        [userId]="userId"
+        [customFields]="customFields"
+        [job]="job"
+        [finalName]="finalName"
+        [slackChannelName]="slackChannelName"
+        [usingFinalName]="usingFinalName"
+        (onJobCreated)="onJobCreated($event)"
+        (onJobCreateFailed)="submitted = false"
+        (onFinished)="onFinished($event)"
+        (onClickCheckItOut)="checkItOut($event)"
+        #confirm>
+</app-confirm>

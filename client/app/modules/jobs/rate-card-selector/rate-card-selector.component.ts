@@ -12,6 +12,7 @@ declare var $;
 export class RateCardSelectorComponent implements OnInit {
 
     @Output() onRateUpdated = new EventEmitter<string>();
+    @Output() onRateUpdateFailed = new EventEmitter<any>();
     @Input() newJob: any = null;
     newJobDefaultRates: any[] = [];
     selectedTemplate: any = null;
@@ -65,9 +66,9 @@ export class RateCardSelectorComponent implements OnInit {
                         let templateRates = res.data;
 
                         // for each current rate
-                        //      filter where curr.role == temp.role
-                        //      filter where curr.discipline == temp.role
-                        //      filter where curr.rate != temp.rate
+                        //   filter where curr.role == temp.role
+                        //   filter where curr.discipline == temp.role
+                        //   filter where curr.rate != temp.rate
                         let toUpdateRates = []; // the rates that we will update
                         for (let currRate of this.newJobDefaultRates) {
                             let newRates = templateRates.filter(function (tempRate) {
@@ -92,7 +93,7 @@ export class RateCardSelectorComponent implements OnInit {
                         this.apiService.updateBillRates(this.newJob.id, toUpdateRates)
                             .subscribe(
                                 res => this.onRateUpdated.emit("completed"),
-                                err => this.onRateUpdated.emit("failed")
+                                err => this.onRateUpdateFailed.emit(err)
                             );
                     },
                     err => this.commonService.handleError(err)

@@ -66,7 +66,7 @@ clientRouter.get("/count-by-year", function (req, res) {
 
                     var greatestCode = codes[0];
                     if (!greatestCode) {
-                        formattedCount = "001";
+                        formattedCount = "000";
                     } else {
                         var formattedCount = greatestCode + 1 >= 100
                             ? "" + (greatestCode + 1)

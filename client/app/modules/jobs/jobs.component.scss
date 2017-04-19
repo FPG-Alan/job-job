@@ -20,6 +20,10 @@ form > * { margin-bottom: 0.25em !important }
     .ui.table tbody tr td.selectable > a:not(.ui) {
         padding: 0;
     }
+    .sixteen.wide.mobile.column {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 }
 
 @media only screen and (min-width: 767px) {

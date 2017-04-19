@@ -6,8 +6,9 @@ import {Client} from "../../../classes/client";
 import {CommonService} from "../../../services/common.service";
 import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
-import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
 import {NewClientComponent} from "../../clients/new-client/new-client.component";
+import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
+import {ConfirmComponent} from "../confirm/confirm.component";
 import {SteveBotComponent} from "../../steve-bot/steve-bot.component";
 import {AuthService} from "../../../services/auth.service";
 import {SlackChannelNamePipe} from "../../../pipes/slack-channel-name.pipe";
@@ -22,10 +23,12 @@ declare var Typed;
 })
 export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    @ViewChild('rateCardSelector')
-    private rateCardSelectorComponent: RateCardSelectorComponent;
     @ViewChild('newClient')
     private newClientComponent: NewClientComponent;
+    @ViewChild('rateCardSelector')
+    private rateCardSelectorComponent: RateCardSelectorComponent;
+    @ViewChild('confirm')
+    private confirmComponent: ConfirmComponent;
     @ViewChild('steveBot')
     private steveBotComponent: SteveBotComponent;
 
@@ -34,6 +37,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     settings = {
         "steve": true
     };
+    generating = false; // for loader to appear on the Generated Name field
 
     clients: Client[] = [];
     producers: string[] = [];
@@ -43,22 +47,21 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         {value: ' ', display: 'None (Manually Create on Trello)'}
     ];
     customFields: any;
-    customFieldValues = [];
 
+    // passable data to children
     job: Job;
     finalName: any = {
         result: "",
         clientCode: "",
         startYear: "",
-        projectCount: "001",
+        projectCount: "000",
         brand: "",
         formattedName: ""
     };
     slackChannelName = "";
+    usingFinalName = true;
 
     submitted = false;
-    generating = false; // for loader to appear on the Generated Name field
-    usingFinalName = true;
 
     constructor(private router: Router,
                 private commonService: CommonService,
@@ -117,8 +120,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         // avoid duplicate modals
         $("#confirm-reset-job").modal("hide");
         $("#confirm-reset-job").remove();
-        $("#confirm-new-job").modal("hide");
-        $("#confirm-new-job").remove();
         $("#new-client-modal").modal("hide");
         $("#new-client-modal").remove();
     }
@@ -140,13 +141,13 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     onSteveStop(event: any) {
         this.settings.steve = false;
         localStorage.setItem("settings", JSON.stringify(this.settings));
-
     }
 
 
     /*******************
      * TWO-WAY BINDING *
      *******************/
+    /* JOB NUMBER */
     getClientProjectCount() {
         if (this.usingFinalName && !this.commonService.isEmptyString(this.job.client.name)) {
             this.generating = true;
@@ -166,6 +167,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    /* ADD NEW CLIENT */
     addNewClient() {
         $("#new-client-modal")
             .modal("setting", "closable", false)
@@ -185,6 +187,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         $("#new-client-modal").modal("hide");
     }
 
+    /* ADD NEW BRAND */
     addNewBrand(brand: string) {
         if (!this.commonService.isEmptyString(this.job.client.name)
             && !this.commonService.isEmptyString(brand)) {
@@ -212,6 +215,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    /* FORM CHANGE HANDLERS */
     updateFinalName() {
         // reinitiating as an empty string to make sure it's not a null addition
         this.finalName.result = "";
@@ -292,17 +296,12 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    onRateUpdated(processingState: string) {
-        this.servicesCount++;
-        this.rateCardProcessingState = processingState || "";
-        if (this.rateCardSelectorComponent.selectedTemplate
-            && !this.commonService.isEmptyString(
-                this.rateCardSelectorComponent.selectedTemplate.name)) {
-            // prevent undefined
-            this.customFieldValues.push({
-                name: "Rate Card",
-                value: this.rateCardSelectorComponent.selectedTemplate.name
-            });
+    onSlackChannelNameSelected(type: string) {
+        if (type) {
+            this.slackChannelName = new SlackChannelNamePipe()
+                .transform(this.finalName.result, type);
+        } else {
+            return
         }
     }
 
@@ -310,40 +309,42 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         if (form.valid && !this.submitted
             && !this.commonService
                 .isEmptyString(this.rateCardSelectorComponent.selectedTemplate)) {
-            // validation set to submitted to avoid spamming
-            this.submitted = true;
             // compile what everything that hasn't been updated yet
             this.job.code = "" + this.finalName.clientCode + this.finalName.startYear + this.finalName.projectCount;
 
-            let submittedName = this.usingFinalName ? this.finalName.result : this.job.name;
-            this.apiService.createNewJob(this.job, submittedName)
-                .subscribe(
-                    res => {
-                        this.rateCardSelectorComponent.newJob = res;
-                        this.confirmInfo.tenKUrl =
-                            "https://vnext.10000ft.com/viewproject?id=" + res.id;
-                        this.customFieldValues.push({
-                            name: "Brand",
-                            value: this.job.brand
-                        }, {
-                            name: "Producer",
-                            value: this.job.producer
-                        }, {
-                            name: "Type",
-                            value: this.job.serviceType
-                        });
-                        this.startFinalConfirmation();
-                    },
-                    err => this.commonService.handleError(err)
-                );
+            // hide the form and display the confirmation
+            this.submitted = true;
         }
+    }
+
+    onJobCreated(newJob: any) {
+        this.rateCardSelectorComponent.newJob = newJob;
+        this.rateCardSelectorComponent.updateBillRates();
+    }
+
+    onRateUpdated(processingState: string) {
+        this.confirmComponent.servicesCount++;
+        this.confirmComponent.tenKProgress.rateCard.status = processingState;
+        if (this.rateCardSelectorComponent.selectedTemplate
+            && !this.commonService.isEmptyString(
+                this.rateCardSelectorComponent.selectedTemplate.name)) { // prevent undefined
+            let fieldValues = [{
+                name: "Rate Card",
+                value: this.rateCardSelectorComponent.selectedTemplate.name
+            }];
+            this.confirmComponent.createCustomFieldValues(fieldValues, null);
+        }
+    }
+
+    onRateUpdateFailed(err: any) {
+        this.confirmComponent.handleError(err, "tenK", "rateCard")
     }
 
 
     /*****************
      * CUSTOM FIELDS *
      *****************/
-    getCustomFields() {
+    private getCustomFields() {
         this.apiService.getCustomFields()
             .subscribe(
                 res => {
@@ -357,29 +358,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 err => this.commonService.handleError(err)
             )
-    }
-
-    /* Call this before creating new custom field values */
-    private fillCustomFieldId() {
-        for (let value of this.customFieldValues) {
-            let sameNameFields = this.customFields.filter(function isSameFieldName(field) {
-                return value.name == field.name;
-            });
-            if (sameNameFields.length > 0) {
-                value.custom_field_id = sameNameFields[0].id;
-            }
-        }
-    }
-
-    private createCustomFieldValues() {
-        console.log("Custom Field Values:", this.customFieldValues);
-        this.apiService.createCustomFieldValues(
-            this.rateCardSelectorComponent.newJob.id,
-            this.customFieldValues
-        ).subscribe(
-            res => console.log("Custom field values creation success:", res),
-            err => this.commonService.handleError(err)
-        )
     }
 
 
@@ -430,206 +408,26 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     /*****************************
      * FINAL CONFIRMATION SCREEN *
      *****************************/
-    rateCardProcessingState = "disabled";
-    boxProcessingStates: any = {
-        client: "disabled",
-        job: "disabled"
-    };
-    trelloProcessingState = "disabled";
-    slackProcessingState = "disabled";
-    servicesCount: number = 0; // TODO: start timeInterval on when to stop
-    maxServicesCount: number = 4; // current number of features on the modal
-    canEndConfirm = false;
-    confirmInfo = {
-        tenKUrl: null,
-        boxUrl: null,
-        trelloUrl: null
-    }; // TODO: consider removing this with custom fields
-
-    private startFinalConfirmation() {
-        this.rateCardProcessingState = "disabled";
-        this.boxProcessingStates = {
-            client: "disabled",
-            job: "disabled"
-        };
-        this.servicesCount = 0;
-        // open modal for the workflow
-        $("#confirm-new-job")
-            .modal("setting", "closable", false)
-            .modal("show");
-        setTimeout(() => {
-            $("#confirm-new-job").modal("refresh");
-        }, 500); // fix modal unscrollable at start
-
-        // rate card progress UI
-        this.rateCardProcessingState = "active";
-        this.rateCardSelectorComponent.updateBillRates();
-        this.createNewFolder(null, "client");
-        if (!this.commonService.isEmptyString(this.job.serviceType)) {
-            this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.job.serviceType);
-        } else { this.servicesCount++; }
-        if (!this.commonService.isEmptyString(this.slackChannelName)) {
-            this.createNewChannel(this.slackChannelName);
-        } else { this.servicesCount++; }
-
-        // TODO: put this in a separate function
-        let timeInterval = setInterval(() => {
-            if (this.servicesCount >= this.maxServicesCount) {
-                setTimeout(() => {
-                    this.resetModels();
-                    this.submitted = false;
-                    this.canEndConfirm = true;
-
-                    // push the compiled custom field values
-                    this.fillCustomFieldId();
-                    this.createCustomFieldValues();
-                }, 1000);
-                setTimeout(() => {
-                    $("#confirm-new-job").modal("refresh");
-                }, 1100);
-                clearInterval(timeInterval);
-            }
-        }, 500)
-    }
-
-    endFinalConfirmation() {
-        if (this.canEndConfirm) {
-            $("#confirm-new-job")
-                .modal({
-                    onHidden: () => {
-                        this.commonService.notifyMessage(
-                            "success",
-                            "Sweet!",
-                            "Successfully created a new job"
-                        );
-                        this.router.navigate([
-                            "/jobs/details",
-                            this.rateCardSelectorComponent.newJob.id
-                        ]);
-                    }
-                })
-                .modal("hide");
+    onFinished(finished: boolean) {
+        if (finished) {
+            this.resetModels();
+            this.commonService.notifyMessage(
+                "success",
+                "Sweet!",
+                "Successfully created a new job"
+            );
         }
     }
 
-
-    /*******************
-     * BOX INTEGRATION *
-     *******************/
-    /* the integration needs a full job object (due to 10Kft not saving Brands)
-     * and also needs the final name that gets submitted (generated name or custom name?)
-     */
-    createNewFolder(parentFolderId: string, type: string) {
-        $("#confirm-new-job").modal("refresh");
-        // NOTE: feature is currently only for projects with clients
-        // also check if the type is empty
-        if (this.commonService.isEmptyString(this.job.client.name) ||
-            this.commonService.isEmptyString(type)) {
-            this.servicesCount++;
-            return;
-        } else {
-            var folderName = "";
-            var nextType = "";
-
-            if (type == "client") {
-                this.boxProcessingStates.client = "active";
-                folderName = this.job.client.name;
-                nextType = "job";
-            } else if (type == "job") {
-                this.boxProcessingStates.job = "active";
-                folderName = this.usingFinalName ? this.finalName.result : this.job.name;
-                nextType = "confirm";
-            } else {
-                this.servicesCount++;
-                return;
-            }
-
-            // recursive folder creation
-            if (!this.commonService.isEmptyString(folderName)) {
-                this.apiService.createNewFolder(this.userId, folderName, parentFolderId)
-                    .subscribe(
-                        res => {
-                            if (type == "job") {
-                                this.confirmInfo.boxUrl =
-                                    "https://fancypantsgroup.app.box.com/files/0/f/" + res.id;
-                                this.customFieldValues.push({
-                                    name: "Box Location",
-                                    value: this.confirmInfo.boxUrl
-                                });
-                            }
-                            this.boxProcessingStates[type] = "completed";
-                            let parentId = res.id;
-                            this.createNewFolder(parentId, nextType);
-                        },
-                        err => {
-                            this.servicesCount++;
-                            this.boxProcessingStates[type] = "failed";
-                            this.commonService.handleError(err);
-                            $("#confirm-new-job").modal("refresh");
-                        }
-                    );
-            }
-        }
-    }
-
-    /**********************
-     * TRELLO INTEGRATION *
-     **********************/
-    copyBoard(boardName, serviceType) {
-        this.trelloProcessingState = "active";
-        this.apiService.copyBoard(this.userId, boardName, serviceType)
-            .subscribe(
-                res => {
-                    this.servicesCount++;
-                    this.trelloProcessingState = "completed";
-                    this.confirmInfo.trelloUrl =
-                        "https://trello.com/b/" + res.id;
-                    this.customFieldValues.push({
-                        name: "Trello Location",
-                        value: this.confirmInfo.trelloUrl
-                    });
-                },
-                err => {
-                    this.servicesCount++;
-                    this.trelloProcessingState = "failed";
-                    this.commonService.handleError(err);
-                },
-                () => {
-                    $("#confirm-new-job").modal("refresh");
-                    console.log("Trello's done")
-                }
-            );
-    }
-
-    /*********************
-     * SLACK INTEGRATION *
-     *********************/
-    createNewChannel(channelName) {
-        this.slackProcessingState = "active";
-        this.apiService.createNewChannel(this.userId, channelName)
-            .subscribe(
-                res => {
-                    this.servicesCount++;
-                    this.slackProcessingState = "completed";
-                },
-                err => {
-                    this.servicesCount++;
-                    this.slackProcessingState = "failed";
-                    this.commonService.handleError(err);
-                },
-                () => {
-                    $("#confirm-new-job").modal("refresh");
-                    console.log("Slack's done")
-                }
-            );
-    }
-
-    selectChannelNameSuggestion(type: string) {
-        if (type) {
-            this.slackChannelName = new SlackChannelNamePipe()
-                .transform(this.finalName.result, type);
-        } else {
-            return
+    checkItOut(finished: boolean) {
+        if (finished && this.rateCardSelectorComponent.newJob &&
+            this.rateCardSelectorComponent.newJob.id) {
+            this.submitted = false;
+            // borrowing New Job ID from child seems dependant
+            this.router.navigate([
+                "/jobs/details",
+                this.rateCardSelectorComponent.newJob.id
+            ]);
         }
     }
 }
