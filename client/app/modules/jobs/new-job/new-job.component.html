@@ -28,7 +28,7 @@
                 <input readonly="" type="text"
                        [(ngModel)]="finalName.result"
                        name="finalName"
-                       (click)="steveBotComponent.say(['*slap wrist* This field is auto-generated for you. Don\'t touch!']);">
+                       (click)="steveBotComponent.sayOnce(['*slap wrist* This field is auto-generated for you. Don\'t touch!'], 'finalName');">
             </div>
         </div>
     </nav>
@@ -206,7 +206,8 @@
                        #slackChannel="ngModel"
                        maxlength="21"
                        style="margin-bottom:2px"
-                       (focus)="steveBotComponent.sayOnce(['Bee tee dubs, those name suggestions are clickable.'],'slackChannel')">
+                       (focus)="commonService.isEmptyString(job.name) ? null :
+                            steveBotComponent.sayOnce(['Bee tee dubs, those name suggestions are clickable.'],'slackChannel')">
                 <span *ngIf="!commonService.isEmptyString(job.name)">suggestions:</span>
                 <div class="ui black pointing label button"
                      *ngIf="!commonService.isEmptyString(job.name)"
