@@ -33,8 +33,10 @@ export class AuthService {
             this.profile = JSON.parse(localStorage.getItem('profile'));
             if (this.profile) {
                 resolve();
+            } else {
+                // TODO: catch error
+                console.log("No local profile found")
             }
-            // TODO: catch error
 
             // add callback for lock "authenticated" event
             this.lock.on("authenticated", (authResult) => {
@@ -89,7 +91,9 @@ export class AuthService {
                                 resolve();
                             }
                         },
-                        err => this.commonService.handleError(err)
+                        err => {
+                            console.log(err)
+                        }
                     )
             })
         });

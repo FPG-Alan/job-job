@@ -3,6 +3,9 @@
     <a *ngIf="authService.allSynced" class="ui right floated button" routerLink="/jobs/new">
         <i class="add icon"></i>Create New Job
     </a>
+    <a *ngIf="!authService.allSynced" class="ui right floated button disabled">
+        <i class="add icon"></i>Create New Job
+    </a>
 </div>
 
 <div class="ui stackable grid">

@@ -63,7 +63,7 @@ export class NewJobConfirmComponent implements OnInit {
             details: "Working..."
         }
     };
-    servicesCount: number = 0; // TODO: start timeInterval on when to stop
+    servicesCount: number = 0;
     // current number of features on the modal
     // 1. rate card (service increments in parent component)
     // 2. custom fields
@@ -75,7 +75,7 @@ export class NewJobConfirmComponent implements OnInit {
         tenKUrl: null,
         boxUrl: null,
         trelloUrl: null
-    }; // TODO: consider removing this with custom fields
+    };
 
 
     constructor(private commonService: CommonService,
