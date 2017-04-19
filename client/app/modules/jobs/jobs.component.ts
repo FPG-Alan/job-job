@@ -29,12 +29,11 @@ export class JobsComponent implements OnInit {
     constructor(private apiService: ApiService,
                 private commonService: CommonService,
                 private authService: AuthService) {
+        this.authService.updateIntegrationStatus();
     }
 
     ngOnInit() {
         $(".ui.selection.dropdown").dropdown();
-
-        this.authService.updateIntegrationStatus();
 
         this.loading = true;
         this.apiService.getAllJobs()

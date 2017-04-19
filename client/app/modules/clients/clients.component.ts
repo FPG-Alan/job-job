@@ -20,16 +20,9 @@ export class ClientsComponent implements OnInit {
     constructor(private apiService: ApiService,
                 private commonService: CommonService,
                 private authService: AuthService) {
-        if (!this.authService.profile) {
-            this.authService.setUpUser().then(() => {
-                let profile = this.authService.profile;
-                if (profile.app_metadata && profile.app_metadata.roles)
-                    this.role = profile.app_metadata.roles[0];
-            });
-        } else {
-            let profile = this.authService.profile;
-            if (profile.app_metadata && profile.app_metadata.roles)
-                this.role = profile.app_metadata.roles[0];
+        let profile = this.authService.profile;
+        if (profile.app_metadata && profile.app_metadata.roles) {
+            this.role = profile.app_metadata.roles[0];
         }
     }
 

@@ -24,82 +24,67 @@ export class AuthService {
     constructor(private router: Router,
                 private commonService: CommonService,
                 private apiService: ApiService) {
-        this.getMyUser(false);
+        // if getting profile fails, AuthGuard will prevent users from activating guarded components
+        this.getAuthProfile();
     }
 
-    public setUpUser() {
-        return new Promise<void>(resolve => {
-            // set userProfile attribute if already saved profile
-            this.profile = JSON.parse(localStorage.getItem('profile'));
-            if (this.profile) {
-                resolve();
-            } else {
-                // TODO: catch error
-                console.log("No local profile found")
-            }
-
-            // add callback for lock "authenticated" event
-            this.lock.on("authenticated", (authResult) => {
-                this.lock.removeAllListeners("authenticated"); // prevent memory leak
-                localStorage.setItem("id_token", authResult.idToken);
-                this.lock.getProfile(authResult.idToken, (err, profile) => {
-                    if (err) {
-                        alert(err);
-                        return;
-                    }
-                    localStorage.setItem("profile", JSON.stringify(profile));
-                    this.profile = profile;
-                    // store User in database
-                    let u = new User("", "", "", false, false, false);
-                    u.userId = this.profile.user_id;
-                    u.name = this.profile.name;
-                    u.email = this.profile.email;
-                    this.apiService.getOrCreateMyUser(u)
-                        .subscribe(
-                            res => console.log(res),
-                            err => {
-                                console.log(err);
-                                this.logout();
-                            },
-                            () => {
-                                resolve();
-                                this.router.navigate(["/"]);
-                            }
-                        )
-                });
-            });
-        })
+    public getAuthProfile() {
+        this.profile = JSON.parse(localStorage.getItem('profile'));
     }
 
     public getMyUser(updateAuthStatus: boolean) {
-        return new Promise<void>(resolve => {
-            this.setUpUser().then(() => {
+        return new Promise<void>(
+            resolve => {
+                if (!this.profile) {
+                    return;
+                }
                 this.apiService.getMyUser(this.profile.user_id)
                     .subscribe(
                         res => {
                             this.user = res;
                             if (updateAuthStatus) {
                                 this.apiService.updateAuthStatus(this.user.userId)
-                                    .subscribe(res=> {
-                                        this.user = res;
-                                        resolve();
-                                    }, err => {
-                                        console.log(err);
-                                        resolve();
-                                    });
-                            } else {
-                                resolve();
+                                    .subscribe(
+                                        res => this.user = res,
+                                        err => this.commonService.handleError(err)
+                                    );
                             }
                         },
                         err => {
-                            console.log(err)
+                            this.commonService.handleError(err);
+                            this.logout();
                         }
                     )
-            })
-        });
+            }
+        )
     }
 
     public login() {
+        // add callback for lock "authenticated" event
+        this.lock.on("authenticated", (authResult) => {
+            localStorage.setItem("id_token", authResult.idToken);
+            this.lock.getProfile(authResult.idToken, (err, profile) => {
+                if (err) {
+                    alert(err);
+                    return;
+                }
+                localStorage.setItem("profile", JSON.stringify(profile));
+                this.profile = profile;
+                // store User in database
+                let u = new User("", "", "", false, false, false);
+                u.userId = this.profile.user_id;
+                u.name = this.profile.name;
+                u.email = this.profile.email;
+                this.apiService.getOrCreateMyUser(u)
+                    .subscribe(
+                        res => {
+                            console.log(res);
+                            this.router.navigate(["/"]);
+                        },
+                        err => this.commonService.handleError(err)
+                    )
+            });
+        });
         // call the show method to display the widget.
         this.lock.show();
     };
@@ -107,7 +92,7 @@ export class AuthService {
     public authenticated() {
         // check if there's an unexpired JWT
         // this searches for an item in localStorage with key == 'id_token'
-        return tokenNotExpired();
+        return tokenNotExpired() && this.profile;
     };
 
     public logout() {
@@ -118,29 +103,36 @@ export class AuthService {
     };
 
     /**
-     * Update user to see if authorized/authenticated all required integrations
-     * for real time observers
+     * Update user status to see if authorized/authenticated all required integrations
+     * for template rendering
      */
-    public updateIntegrationStatus(): Promise<void> {
-        // the condition is a Boolean and not primitive boolean
-        return new Promise<void>(resolve => {
-            this.getMyUser(true).then(
-                resolve => {
-                    if (this.user.boxAuthenticated &&
-                        this.user.trelloAuthenticated &&
-                        this.user.slackAuthenticated) {
-                        this.allSynced = true;
-                    } else {
-                        this.allSynced = false;
-                    }
-                })
-        });
+    public updateIntegrationStatus() {
+        // the IF condition below would return a Boolean and not primitive boolean,
+        // hence we don't assign it directly to allSynced
+        this.getMyUser(true).then(
+            resolve => {
+                if (this.user &&
+                    this.user.boxAuthenticated &&
+                    this.user.trelloAuthenticated &&
+                    this.user.slackAuthenticated) {
+                    this.allSynced = true;
+                } else {
+                    this.allSynced = false;
+                }
+            })
     }
 
+    /**
+     * Returns whether user has authorized/authenticated all required integrations
+     * for guards (pre-rendering)
+     */
     public getIntegrationSyncedStatus(): Promise<boolean> {
+        // the IF condition below would return a Boolean and not primitive boolean,
+        // hence we don't return the condition directly
         return this.getMyUser(true).then(
             resolve => {
-                if (this.user.boxAuthenticated &&
+                if (this.user &&
+                    this.user.boxAuthenticated &&
                     this.user.trelloAuthenticated &&
                     this.user.slackAuthenticated) {
                     return true;

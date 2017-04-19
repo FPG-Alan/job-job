@@ -67,13 +67,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 private commonService: CommonService,
                 private apiService: ApiService,
                 private authService: AuthService) {
-        if (!this.authService.profile) {
-            this.authService.setUpUser().then(() => {
-                this.userId = this.authService.profile.user_id;
-            });
-        } else {
-            this.userId = this.authService.profile.user_id;
-        }
+        this.authService.getAuthProfile();
+        this.userId = this.authService.profile.user_id;
+
         if (localStorage.getItem("settings")) {
             this.settings = JSON.parse(localStorage.getItem("settings"))
         } else {

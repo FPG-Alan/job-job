@@ -12,8 +12,7 @@ export class AuthGuard implements CanActivate {
         if (this.authService.authenticated()) {
             return true;
         } else {
-            // Save URL to redirect to after login and fetching profile to get roles
-            this.router.navigate(['/login']);
+            this.authService.logout();
             return false;
         }
     }
