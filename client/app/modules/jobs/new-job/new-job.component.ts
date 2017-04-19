@@ -8,7 +8,7 @@ import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
 import {NewClientComponent} from "../../clients/new-client/new-client.component";
 import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
-import {NewJobConfirmComponent} from "../new-job-confirm/new-job-confirm.component";
+import {ConfirmComponent} from "../confirm/confirm.component";
 import {SteveBotComponent} from "../../steve-bot/steve-bot.component";
 import {AuthService} from "../../../services/auth.service";
 import {SlackChannelNamePipe} from "../../../pipes/slack-channel-name.pipe";
@@ -27,8 +27,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     private newClientComponent: NewClientComponent;
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
-    @ViewChild('newJobConfirm')
-    private newJobConfirmComponent: NewJobConfirmComponent;
+    @ViewChild('confirm')
+    private confirmComponent: ConfirmComponent;
     @ViewChild('steveBot')
     private steveBotComponent: SteveBotComponent;
 
@@ -323,8 +323,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onRateUpdated(processingState: string) {
-        this.newJobConfirmComponent.servicesCount++;
-        this.newJobConfirmComponent.tenKProgress.rateCard.status = processingState;
+        this.confirmComponent.servicesCount++;
+        this.confirmComponent.tenKProgress.rateCard.status = processingState;
         if (this.rateCardSelectorComponent.selectedTemplate
             && !this.commonService.isEmptyString(
                 this.rateCardSelectorComponent.selectedTemplate.name)) { // prevent undefined
@@ -332,12 +332,12 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 name: "Rate Card",
                 value: this.rateCardSelectorComponent.selectedTemplate.name
             }];
-            this.newJobConfirmComponent.createCustomFieldValues(fieldValues, null);
+            this.confirmComponent.createCustomFieldValues(fieldValues, null);
         }
     }
 
     onRateUpdateFailed(err: any) {
-        this.newJobConfirmComponent.handleError(err, "tenK", "rateCard")
+        this.confirmComponent.handleError(err, "tenK", "rateCard")
     }
 
 

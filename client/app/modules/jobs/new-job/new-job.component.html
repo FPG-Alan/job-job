@@ -258,7 +258,7 @@
 
 
 <!--Final Confirmation Screen-->
-<app-new-job-confirm
+<app-confirm
         *ngIf="submitted"
         [userId]="userId"
         [customFields]="customFields"
@@ -270,5 +270,5 @@
         (onJobCreateFailed)="submitted = false"
         (onFinished)="onFinished($event)"
         (onClickCheckItOut)="checkItOut($event)"
-        #newJobConfirm>
-</app-new-job-confirm>
+        #confirm>
+</app-confirm>

@@ -6,11 +6,11 @@ import {CommonService} from "../../../services/common.service";
 import {Job} from "../../../classes/job";
 
 @Component({
-    selector: 'app-new-job-confirm',
-    templateUrl: './new-job-confirm.component.html',
-    styleUrls: ['./new-job-confirm.component.scss']
+    selector: 'app-confirm',
+    templateUrl: 'confirm.component.html',
+    styleUrls: ['confirm.component.scss']
 })
-export class NewJobConfirmComponent implements OnInit {
+export class ConfirmComponent implements OnInit {
 
     @Input() userId: string;
     @Input() customFields: any;
