@@ -7,6 +7,16 @@
         <i class="add icon"></i>Create New Job
     </a>
 </div>
+<div *ngIf="!authService.allSynced" class="ui info message">
+    <div class="header">
+        The first steps
+    </div>
+    <div class="content">
+        Please authenticate the following apps in order to use our awesome services
+        <img class="ui inline bottom aligned mini image" src="assets/parrot.gif">
+    </div>
+</div>
+
 
 <div class="ui stackable grid">
     <form class="ui form four wide computer five wide tablet sixteen wide mobile left floated column" #f="ngForm">
