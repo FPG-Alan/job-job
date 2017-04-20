@@ -80,6 +80,14 @@ export class ConfirmComponent implements OnInit {
 
     constructor(private commonService: CommonService,
                 private apiService: ApiService) {
+        window.onbeforeunload = () => {
+            if (!this.finished) {
+                let message = "Are you sure you want to invoke Divine Intervention and leave the page, " +
+                    "even though it will have various consequences?";
+                if (confirm(message)) return true;
+                else return false;
+            }
+        }
     }
 
     ngOnInit() {
@@ -207,24 +215,21 @@ export class ConfirmComponent implements OnInit {
         if (this.newJob && this.newJob.id) {
             let valueWithIdList = this.fillCustomFieldId(valueList);
             // push the compiled custom field values
-            this.apiService.createCustomFieldValues(
-                this.newJob.id,
-                valueWithIdList
-            ).subscribe(
-                res => {
-                    if (type == "customFields") {
-                        this.servicesCount++;
-                        this.tenKProgress.customFields.status = "completed";
-                    }
-                },
-                err => {
-                    if (type == "customFields") {
-                        this.servicesCount++;
-                        this.handleError(err, "tenK", "customFields");
-                    }
-                    console.log(err)
-                }
-            )
+            this.apiService.createCustomFieldValues(this.newJob.id, valueWithIdList)
+                .subscribe(
+                    res => {
+                        if (type == "customFields") {
+                            this.servicesCount++;
+                            this.tenKProgress.customFields.status = "completed";
+                        }
+                    },
+                    err => {
+                        if (type == "customFields") {
+                            this.servicesCount++;
+                            this.handleError(err, "tenK", "customFields");
+                        }
+                        console.log(err)
+                    });
         }
     }
 
