@@ -5,17 +5,9 @@ import {CommonService} from "./common.service";
 import {ApiService} from "./api.service";
 import {User} from "../classes/user";
 
-// avoid name not found warnings
-declare var Auth0Lock: any;
 
 @Injectable()
 export class AuthService {
-    // configure Auth0
-    options = {
-        auth: {redirect: false},
-        autoclose: true
-    };
-    lock = new Auth0Lock('1CD38zBzoOUTvLzrWlredXlx0Q1IRJNJ', 'davefpg.auth0.com', this.options);
 
     user: User = new User("", "", "", false, false, false);
     profile: any;
@@ -32,7 +24,7 @@ export class AuthService {
         this.profile = JSON.parse(localStorage.getItem('profile'));
     }
 
-    public getMyUser(updateAuthStatus: boolean) {
+    public getMyUser(updateAuthStatus: boolean): Promise<void> {
         return new Promise<void>(
             resolve => {
                 if (!this.profile) {
@@ -45,49 +37,23 @@ export class AuthService {
                             if (updateAuthStatus) {
                                 this.apiService.updateAuthStatus(this.user.userId)
                                     .subscribe(
-                                        res => this.user = res,
+                                        res => {
+                                            this.user = res;
+                                            resolve()
+                                        },
                                         err => this.commonService.handleError(err)
                                     );
-                            }
+                            } else resolve();
                         },
                         err => {
                             this.commonService.handleError(err);
                             this.logout();
+                            resolve();
                         }
                     )
             }
         )
     }
-
-    public login() {
-        // add callback for lock "authenticated" event
-        this.lock.on("authenticated", (authResult) => {
-            localStorage.setItem("id_token", authResult.idToken);
-            this.lock.getProfile(authResult.idToken, (err, profile) => {
-                if (err) {
-                    alert(err);
-                    return;
-                }
-                localStorage.setItem("profile", JSON.stringify(profile));
-                this.profile = profile;
-                // store User in database
-                let u = new User("", "", "", false, false, false);
-                u.userId = this.profile.user_id;
-                u.name = this.profile.name;
-                u.email = this.profile.email;
-                this.apiService.getOrCreateMyUser(u)
-                    .subscribe(
-                        res => {
-                            console.log(res);
-                            this.router.navigate(["/"]);
-                        },
-                        err => this.commonService.handleError(err)
-                    )
-            });
-        });
-        // call the show method to display the widget.
-        this.lock.show();
-    };
 
     public authenticated() {
         // check if there's an unexpired JWT
@@ -109,8 +75,8 @@ export class AuthService {
     public updateIntegrationStatus() {
         // the IF condition below would return a Boolean and not primitive boolean,
         // hence we don't assign it directly to allSynced
-        this.getMyUser(true).then(
-            resolve => {
+        this.getMyUser(true)
+            .then(() => {
                 if (this.user &&
                     this.user.boxAuthenticated &&
                     this.user.trelloAuthenticated &&
@@ -119,7 +85,7 @@ export class AuthService {
                 } else {
                     this.allSynced = false;
                 }
-            })
+            });
     }
 
     /**
@@ -129,16 +95,17 @@ export class AuthService {
     public getIntegrationSyncedStatus(): Promise<boolean> {
         // the IF condition below would return a Boolean and not primitive boolean,
         // hence we don't return the condition directly
-        return this.getMyUser(true).then(
-            resolve => {
+        return new Promise<boolean>(resolve => {
+            this.getMyUser(true).then(() => {
                 if (this.user &&
                     this.user.boxAuthenticated &&
                     this.user.trelloAuthenticated &&
                     this.user.slackAuthenticated) {
-                    return true;
+                    resolve(true);
                 } else {
-                    return false;
+                    resolve(false);
                 }
-            })
+            });
+        });
     }
 }
