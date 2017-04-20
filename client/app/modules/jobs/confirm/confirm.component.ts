@@ -212,12 +212,16 @@ export class ConfirmComponent implements OnInit {
                 valueWithIdList
             ).subscribe(
                 res => {
-                    this.servicesCount++;
-                    if (type == "customFields") this.tenKProgress.customFields.status = "completed";
+                    if (type == "customFields") {
+                        this.servicesCount++;
+                        this.tenKProgress.customFields.status = "completed";
+                    }
                 },
                 err => {
-                    this.servicesCount++;
-                    if (type == "customFields") this.handleError(err, "tenK", "customFields");
+                    if (type == "customFields") {
+                        this.servicesCount++;
+                        this.handleError(err, "tenK", "customFields");
+                    }
                     console.log(err)
                 }
             )
