@@ -22,3 +22,6 @@
         <i class="search icon"></i>Search Jobs and Change Rate Cards
     </a>
 </div>
+
+<div *ngIf="authService.allSynced != true && authService.allSynced != false"
+     class="ui active centered inline loader"></div>

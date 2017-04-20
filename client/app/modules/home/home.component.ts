@@ -16,10 +16,10 @@ export class HomeComponent implements OnInit {
 
     constructor(private commonService: CommonService,
                 private authService: AuthService) {
-        this.authService.updateIntegrationStatus()
     }
 
     ngOnInit() {
+        this.authService.updateIntegrationStatus()
     }
 
     onAuthenticated(event: any) {
