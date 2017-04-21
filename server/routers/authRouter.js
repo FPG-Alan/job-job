@@ -53,13 +53,19 @@ authRouter.get("/box", function (req, res) {
     // this is the auth callback URL which contains the token/code in the query
     if (req.query.code && req.query.state && boxSdk) {
         boxSdk.getTokensAuthorizationCodeGrant(req.query.code, null, function (err, tokenInfo) {
-            if (err) res.redirect('/');
+            if (err) {
+                console.log(err);
+                return res.status(500).send(err);
+            }
 
             if (tokenInfo) {
                 Token.findOne(
                     {userId: req.query.state, provider: "box"},
                     function (err, token) {
-                        if (err) res.redirect('/');
+                        if (err) {
+                            console.log(err);
+                            return res.status(500).send(err);
+                        }
 
                         var newToken = {};
                         if (!token) { // token object doesn't exist; making a new one
@@ -74,12 +80,19 @@ authRouter.get("/box", function (req, res) {
                         }
 
                         newToken.save(function (err, token) {
-                            if (err) res.redirect('/');
+                            if (err) {
+                                console.log(err);
+                                return res.status(500).send(err);
+                            }
 
                             User.findOne({userId: req.query.state}, function (err, user) {
                                 if (user) {
                                     user.boxAuthenticated = true;
                                     user.save(function (err, user) {
+                                        if (err) {
+                                            console.log(err);
+                                            return res.status(500).send(err);
+                                        }
                                         // SUCCESS at last
                                         res.sendFile(path.join(__dirname + '/../views/success.html'));
                                     });
@@ -114,21 +127,31 @@ authRouter.get("/trello", function (req, res) {
                 }
 
                 newToken.save(function (err, token) {
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).send(err);
+                    }
                     User.findOne({userId: req.query.userId}, function (err, user) {
                         if (user) {
                             user.trelloAuthenticated = true;
                             user.save(function (err, user) {
+                                if (err) {
+                                    console.log(err);
+                                    return res.status(500).send(err);
+                                }
+
                                 res.sendFile(path.join(__dirname + '/../views/success.html'));
                             });
                         } else {
-                            res.sendFile(path.join(__dirname + '/../views/success.html'));
+                            console.log(err);
+                            return res.status(500).send(err);
                         }
                     });
                 });
             });
         }
     } else {
-        res.sendFile(path.join(__dirname + '/../views/success.html'));
+        return res.status(500).send({header: "No ID query found"});
     }
 });
 
@@ -147,6 +170,7 @@ authRouter.get("/slack", function (req, res) {
             .end(function (response) {
                 if (response.status !== 200 || response.body.error) {
                     console.log(response.body);
+                    res.status(response.status).send(response.body.error);
                 } else {
                     Token.findOne({userId: req.query.state, provider: "slack"}, function (err, token) {
                         var newToken = {};
@@ -187,8 +211,7 @@ authRouter.put("/auth-status", function (req, res) {
     var id = req.body.userId;
     User.findOne({userId: id}, function (err, user) {
         if (err) {
-            res.status(500).send({header: 'Couldn\'t find your user data'});
-            return;
+            return res.status(500).send({header: 'Couldn\'t find your user data'});
         }
         Promise.all([boxAuthed(id), trelloAuthed(id), slackAuthed(id)])
             .done(function (results) {
@@ -197,8 +220,8 @@ authRouter.put("/auth-status", function (req, res) {
                     user.slackAuthenticated = results[2];
                     user.save(function (err, returnedUser) {
                         if (err) {
-                            res.status(500).send({header: 'Something failed while validating your authentication status'});
-                            return;
+                            return res.status(500)
+                                .send({header: 'Something failed while validating your authentication status'});
                         }
                         res.json(returnedUser);
                     });

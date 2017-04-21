@@ -72,9 +72,9 @@ boxIntegrationRouter.post("/", function (req, res) {
 });
 
 function handleBoxError(err, messageHeader, res) {
-    if (err.body) {
-        console.log(err.body);
-        switch (err.body.code) {
+    if (err.response) console.log(err.response.body || "");
+    if (err.response && err.response.body) {
+        switch (err.response.body.code) {
             case "access_denied_insufficient_permissions":
                 res.status(401).send({
                     header: messageHeader,
@@ -86,11 +86,13 @@ function handleBoxError(err, messageHeader, res) {
                     header: messageHeader,
                     message: "Item name invalid. Should not contain special characters like '\\' or '\/'"
                 });
+                break;
             case "item_name_too_long":
                 res.status(400).send({
                     header: messageHeader,
                     message: "Item name too long. The max length for item names is 255 characters."
                 });
+                break;
             default:
                 res.status(500).send({
                     header: messageHeader,
