@@ -14,7 +14,8 @@ declare var $;
 export class ClientsComponent implements OnInit {
 
     clients: Client[] = [];
-    editClients: boolean[] = [];
+    editingClients: boolean[] = [];
+    editingClientCodes: boolean[] = [];
     role: string;
 
     constructor(private apiService: ApiService,
@@ -32,7 +33,8 @@ export class ClientsComponent implements OnInit {
                 res => {
                     this.clients = res;
                     for (let c of this.clients) {
-                        this.editClients.push(false)
+                        this.editingClients.push(false);
+                        this.editingClientCodes.push(false);
                     }
                 },
                 err => console.log(err)
@@ -62,6 +64,9 @@ export class ClientsComponent implements OnInit {
     editClient(index: number, newName: string) {
         // check if admin
         if (this.role == "admin" && this.clients[index]) {
+            if (this.clients[index].name === newName) {
+                return;
+            }
             this.apiService.editClient(this.clients[index].name, newName)
                 .subscribe(
                     res => {
@@ -75,6 +80,29 @@ export class ClientsComponent implements OnInit {
                     err => this.commonService.handleError(err)
                 )
         }
-        this.editClients[index] = false;
+        this.editingClients[index] = false;
+    }
+
+
+    editClientCode(index: number, newCode: string) {
+        // check if admin
+        if (this.role == "admin" && this.clients[index]) {
+            if (this.clients[index].shortCode === newCode) {
+                return;
+            }
+            this.apiService.editClientCode(this.clients[index].name, newCode)
+                .subscribe(
+                    res => {
+                        this.clients[index] = res;
+                        this.commonService.notifyMessage(
+                            "success",
+                            "Sweet!",
+                            "Client name changed"
+                        );
+                    },
+                    err => this.commonService.handleError(err)
+                )
+        }
+        this.editingClientCodes[index] = false;
     }
 }

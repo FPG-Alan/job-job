@@ -31,20 +31,37 @@
         <tbody>
         <tr *ngFor="let c of clients; let i = index">
             <td>
-                <a *ngIf="!editClients[i]"
-                   (click)="editClients[i]=true">{{c?.name}}</a>
-                <div *ngIf="editClients[i]" class="ui input">
-                    <input value="{{c?.name}}" #input>
-                    <div class="ui negative button" (click)="editClients[i]=false">
-                        Cancel
-                    </div>
-                    <div class="ui positive button" (click)="editClient(i,input.value)">
-                        Save
+                <div *ngIf="role != 'admin'">{{c.name}}</div>
+                <div *ngIf="role == 'admin'">
+                    <a *ngIf="!editingClients[i]"
+                       (click)="editingClients[i]=true; editingClientCodes[i]=false">{{c?.name}}</a>
+                    <div *ngIf="editingClients[i]" class="ui input">
+                        <input value="{{c?.name}}" #nameInput>
+                        <div class="ui negative button" (click)="editingClients[i]=false">
+                            Cancel
+                        </div>
+                        <div class="ui positive button" (click)="editClient(i,nameInput.value)">
+                            Save
+                        </div>
                     </div>
                 </div>
             </td>
-            <!-- TODO: short code editor -->
-            <td>{{c?.shortCode}}</td>
+            <td>
+                <div *ngIf="role != 'admin'">{{c.shortCode}}</div>
+                <div *ngIf="role == 'admin'">
+                    <a *ngIf="!editingClientCodes[i]"
+                       (click)="editingClientCodes[i]=true; editingClients[i]=false">{{c?.shortCode}}</a>
+                    <div *ngIf="editingClientCodes[i]" class="ui input">
+                        <input value="{{c?.shortCode}}" #codeInput>
+                        <div class="ui negative button" (click)="editingClientCodes[i]=false">
+                            Cancel
+                        </div>
+                        <div class="ui positive button" (click)="editClientCode(i,codeInput.value)">
+                            Save
+                        </div>
+                    </div>
+                </div>
+            </td>
             <td>
                 <div class="ui list">
                     <div class="item"

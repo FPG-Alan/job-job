@@ -79,7 +79,19 @@ export class ApiService {
         let headers = new Headers({"Content-Type": "application/json"});
         let options = new RequestOptions({headers: headers});
 
-        return this.authHttp.put("/client", body, options)
+        return this.authHttp.put("/client/name", body, options)
+            .map(res => <Client> res.json());
+    }
+
+    editClientCode(clientName: string, newCode: string): Observable<Client> {
+        let body = {
+            client: clientName,
+            newCode: newCode
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.put("/client/code", body, options)
             .map(res => <Client> res.json());
     }
 

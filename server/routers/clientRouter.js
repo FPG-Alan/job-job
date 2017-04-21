@@ -104,7 +104,6 @@ clientRouter.post("/", function (req, res) {
     })
 });
 
-
 clientRouter.post("/brand", function (req, res) {
     Client.findOne({name: req.body.client}, function (err, client) {
         if (client) {
@@ -136,8 +135,7 @@ clientRouter.post("/brand", function (req, res) {
     })
 });
 
-
-clientRouter.put("/", function (req, res) {
+clientRouter.put("/name", function (req, res) {
     if (!req.body.client || !req.body.newName) {
         res.status(500).send({header: 'Need to specify old and new client name'});
         return;
@@ -148,6 +146,29 @@ clientRouter.put("/", function (req, res) {
             client.save(function(err, client){
                 if (err) {
                     res.status(500).send({header: 'Couldn\'t save new client name'});
+                    return;
+                }
+                res.json(client);
+            })
+        } else {
+            res.status(500).send({header: 'Error finding client'});
+        }
+    })
+});
+
+clientRouter.put("/code", function (req, res) {
+    if (!req.body.client || !req.body.newCode) {
+        res.status(500).send({header: 'Need to specify both client name and new code'});
+        return;
+    }
+    Client.findOne({name: req.body.client}, function (err, client) {
+        if (client) {
+            client.shortCode = req.body.newCode;
+            client.save(function(err, client){
+                if (err) {
+                    console.log(err);
+                    res.status(500).send({header: 'Couldn\'t save new client code'});
+                    return
                 }
                 res.json(client);
             })
