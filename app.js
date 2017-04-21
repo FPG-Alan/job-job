@@ -48,22 +48,18 @@ app.use("/node_modules", express.static(__dirname + "../node_modules"));
 app.use("/", express.static(__dirname + "/dist"));
 
 // Serve HTML files
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
     res.sendFile(__dirname + "/index.html");
 });
 
 // Error handling
 app.use(function handleError(err, req, res, next) {
     if (401 == err.status) { // unauthorized
-        console.log("error: 401 Unauthorized");
         res.redirect('/');
-        return;
     } else {
         console.error(err.stack);
 
-        res.status(500).send({
-            header: "Server error"
-        });
+        res.redirect('/');
     }
 });
 
