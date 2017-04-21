@@ -85,7 +85,7 @@ clientRouter.get("/count-by-year", function (req, res) {
     });
 });
 
-clientRouter.post("/", function (req, res) {
+clientRouter.post("/", requireRole("admin"), function (req, res) {
     Client.findOne({name: req.body.name}, function (err, client) {
         if (client) {
             res.status(500).send({

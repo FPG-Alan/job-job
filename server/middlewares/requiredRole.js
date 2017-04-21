@@ -5,10 +5,12 @@ module.exports = function requireRole(role) {
         var appMetadata = req.user.app_metadata || {};
         var roles = appMetadata.roles || [];
 
-        if (roles.indexOf(role) == -1) {
+        if (roles.indexOf(role) != -1) {
             next();
         } else {
-            return res.sendStatus(401);
+            return res.status(401).send({
+                header: "This service is Admin-only"
+            });
         }
     }
 };
