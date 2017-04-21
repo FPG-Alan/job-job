@@ -39,11 +39,8 @@ boxIntegrationRouter.post("/", function (req, res) {
 
                     box.folders.getItems(parentFolderId, {fields: "name,type,url"}, function (err, data) {
                         if (err) {
-                            console.log(err);
-                            res.status(500).send({
-                                header: "Something failed during folder items retrieval",
-                                message: "You might have insufficient permissions"
-                            });
+                            var header = "Something failed during folder items retrieval";
+                            return handleBoxError(err, header, res);
                         }
                         // find folder if it exists
                         if (data && data.total_count > 0) {
@@ -59,11 +56,8 @@ boxIntegrationRouter.post("/", function (req, res) {
                             // create folder if found none
                             box.folders.create(parentFolderId, req.body.folderName, function (err, folder) {
                                 if (err) {
-                                    console.log(err);
-                                    res.status(500).send({
-                                        header: "Couldn't create folder",
-                                        message: "You might have insufficient permissions"
-                                    });
+                                    var header = "Couldn't create folder";
+                                    return handleBoxError(err, header, res);
                                 } else {
                                     res.json(folder);
                                     console.log("Created new Box folder:", req.body.folderName)
@@ -76,5 +70,40 @@ boxIntegrationRouter.post("/", function (req, res) {
         }
     });
 });
+
+function handleBoxError(err, messageHeader, res) {
+    if (err.body) {
+        console.log(err.body);
+        switch (err.body.code) {
+            case "access_denied_insufficient_permissions":
+                res.status(401).send({
+                    header: messageHeader,
+                    message: "You do not have sufficient permissions"
+                });
+                break;
+            case "item_name_invalid":
+                res.status(400).send({
+                    header: messageHeader,
+                    message: "Item name invalid. Should not contain special characters like '\\' or '\/'"
+                });
+            case "item_name_too_long":
+                res.status(400).send({
+                    header: messageHeader,
+                    message: "Item name too long. The max length for item names is 255 characters."
+                });
+            default:
+                res.status(500).send({
+                    header: messageHeader,
+                    message: "You might have insufficient permissions"
+                });
+                break;
+        }
+    } else {
+        res.status(500).send({
+            header: messageHeader,
+            message: "You might have insufficient permissions"
+        });
+    }
+}
 
 module.exports = boxIntegrationRouter;
