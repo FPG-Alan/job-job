@@ -40,7 +40,7 @@
              [class.success]="!commonService.isEmptyString(job?.client?.name)"
              [class.error]="commonService.isEmptyString(job?.client?.name) && (client.dirty || client.touched)">
             <label>Client
-                (can't find it?
+                <span *ngIf="role == 'admin'">(can't find it?
                 <a id="new-client-popup" class="popup-trigger"
                    (click)="addNewClient()"><i class="add icon"></i>add new</a>
                 <div class="ui small modal" id="new-client-modal">
@@ -52,7 +52,7 @@
                         </app-new-client>
                     </div>
                 </div>
-                )
+                )</span>
             </label>
             <select required class="ui search dropdown selection"
                     [(ngModel)]="job.client"

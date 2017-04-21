@@ -1,6 +1,7 @@
 var express = require('express');
 var unirest = require('unirest');
 var clientRouter = express.Router();
+var requireRole = require("../middlewares/requiredRole");
 
 var Client = require("../models/client");
 
@@ -135,7 +136,7 @@ clientRouter.post("/brand", function (req, res) {
     })
 });
 
-clientRouter.put("/name", function (req, res) {
+clientRouter.put("/name", requireRole("admin"), function (req, res) {
     if (!req.body.client || !req.body.newName) {
         res.status(500).send({header: 'Need to specify old and new client name'});
         return;
@@ -143,7 +144,7 @@ clientRouter.put("/name", function (req, res) {
     Client.findOne({name: req.body.client}, function (err, client) {
         if (client) {
             client.name = req.body.newName;
-            client.save(function(err, client){
+            client.save(function (err, client) {
                 if (err) {
                     res.status(500).send({header: 'Couldn\'t save new client name'});
                     return;
@@ -156,7 +157,7 @@ clientRouter.put("/name", function (req, res) {
     })
 });
 
-clientRouter.put("/code", function (req, res) {
+clientRouter.put("/code", requireRole("admin"), function (req, res) {
     if (!req.body.client || !req.body.newCode) {
         res.status(500).send({header: 'Need to specify both client name and new code'});
         return;
@@ -164,7 +165,7 @@ clientRouter.put("/code", function (req, res) {
     Client.findOne({name: req.body.client}, function (err, client) {
         if (client) {
             client.shortCode = req.body.newCode;
-            client.save(function(err, client){
+            client.save(function (err, client) {
                 if (err) {
                     console.log(err);
                     res.status(500).send({header: 'Couldn\'t save new client code'});

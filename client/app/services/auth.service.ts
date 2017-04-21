@@ -58,7 +58,7 @@ export class AuthService {
     public authenticated() {
         // check if there's an unexpired JWT
         // this searches for an item in localStorage with key == 'id_token'
-        return tokenNotExpired() && this.profile;
+        return tokenNotExpired('id_token') && this.profile;
     };
 
     public logout() {

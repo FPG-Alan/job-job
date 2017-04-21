@@ -34,6 +34,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // user data and settings
     userId: string = "";
+    role: string;
     settings = {
         "steve": true
     };
@@ -67,8 +68,11 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 private commonService: CommonService,
                 private apiService: ApiService,
                 private authService: AuthService) {
-        this.authService.getAuthProfile();
-        this.userId = this.authService.profile.user_id;
+        let profile = this.authService.profile;
+        if (profile.app_metadata && profile.app_metadata.roles) {
+            this.userId = this.authService.profile.user_id;
+            this.role = profile.app_metadata.roles[0];
+        }
 
         if (localStorage.getItem("settings")) {
             this.settings = JSON.parse(localStorage.getItem("settings"))
@@ -86,7 +90,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
             lastResort: "right center"
         });
 
-            this.resetModels();
+        this.resetModels();
         this.apiService.getAllClients()
             .subscribe(
                 res => this.clients = res,

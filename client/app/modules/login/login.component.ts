@@ -17,7 +17,12 @@ export class LoginComponent implements OnInit {
 
     // configure Auth0
     options = {
-        auth: {redirect: false},
+        auth: {
+            redirect: false,
+            params: {
+                scope: "openid email user_metadata app_metadata"
+            }
+        },
         autoclose: true
     };
     lock = new Auth0Lock('1CD38zBzoOUTvLzrWlredXlx0Q1IRJNJ', 'davefpg.auth0.com', this.options);
