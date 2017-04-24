@@ -56,7 +56,7 @@
             </label>
             <select required class="ui search dropdown selection"
                     [(ngModel)]="job.client"
-                    (ngModelChange)="submitted = false; onClientChange()"
+                    (ngModelChange)="unsaved = true; onClientChange()"
                     name="client"
                     #client="ngModel">
                 <option value="" disabled>(select client)</option>
@@ -88,7 +88,7 @@
             </label>
             <select class="ui search dropdown selection"
                     [(ngModel)]="job.brand"
-                    (ngModelChange)="submitted = false; onBrandChange()"
+                    (ngModelChange)="unsaved = true; onBrandChange()"
                     name="brand">
                 <option value=" ">(no brand)</option>
                 <option *ngFor="let b of job?.client?.brands; let i = index"
@@ -108,7 +108,7 @@
                autofocus
                required
                [(ngModel)]="job.name"
-               (ngModelChange)="submitted = false; onJobNameChange();"
+               (ngModelChange)="unsaved = true; onJobNameChange();"
                name="name"
                #name="ngModel">
     </div>
@@ -122,7 +122,7 @@
             <input type="date"
                    required
                    [(ngModel)]="job.startDate"
-                   (ngModelChange)="submitted = false; onDateChange('start', $event);"
+                   (ngModelChange)="unsaved = true; onDateChange('start', $event);"
                    name="startDate"
                    #startDate="ngModel">
         </div>
@@ -133,7 +133,7 @@
             <input type="date"
                    required
                    [(ngModel)]="job.endDate"
-                   (ngModelChange)="submitted = false; onDateChange('end', $event)"
+                   (ngModelChange)="unsaved = true; onDateChange('end', $event)"
                    name="endDate"
                    #endDate="ngModel">
         </div>

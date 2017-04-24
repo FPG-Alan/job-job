@@ -1,7 +1,14 @@
 import "rxjs/add/operator/filter";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
-import {Router, NavigationStart, NavigationEnd, ActivatedRoute} from "@angular/router";
+import {
+    Router,
+    NavigationStart,
+    NavigationEnd,
+    ActivatedRoute,
+    NavigationCancel,
+    NavigationError
+} from "@angular/router";
 import {Component, ViewChild} from "@angular/core";
 import {AuthService} from "./services/auth.service";
 import {SlimLoadingBarService} from "ng2-slim-loading-bar";
@@ -29,11 +36,11 @@ export class AppComponent {
         this.router.events
             .filter(event => event instanceof NavigationStart)
             .subscribe(() => {
-                // show the progress bar
-                if (this.authService.authenticated()) {
-                    this.startLoading();
-                }
-            });
+                if (this.authService.authenticated()) this.startLoading()
+            }); // show the progress bar
+        this.router.events
+            .filter(event => (event instanceof NavigationCancel || event instanceof NavigationError))
+            .subscribe(() => this.resetLoading()); // cancel progress bar
         this.router.events
             .filter(event => event instanceof NavigationEnd)
             .map(() => {
@@ -95,5 +102,9 @@ export class AppComponent {
 
     completeLoading() {
         this.slimLoadingBarService.complete();
+    }
+
+    resetLoading() {
+        this.slimLoadingBarService.reset();
     }
 }

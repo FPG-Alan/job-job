@@ -81,12 +81,7 @@ export class ConfirmComponent implements OnInit {
     constructor(private commonService: CommonService,
                 private apiService: ApiService) {
         window.onbeforeunload = () => {
-            if (!this.finished) {
-                let message = "Are you sure you want to invoke Divine Intervention and leave the page, " +
-                    "even though it will have various consequences?";
-                if (confirm(message)) return true;
-                else return false;
-            }
+            return this.canDeactivate();
         }
     }
 
@@ -132,6 +127,15 @@ export class ConfirmComponent implements OnInit {
                     this.onJobCreateFailed.emit(true);
                 }
             );
+    }
+
+    canDeactivate() {
+        if (!this.finished) {
+            let message = "Are you sure you want to invoke Divine Intervention and leave the page, " +
+                "even though it will have various consequences?";
+            return window.confirm(message);
+        }
+        return true;
     }
 
     startIntegrations() {

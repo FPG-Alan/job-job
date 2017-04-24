@@ -62,6 +62,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     slackChannelName = "";
     usingFinalName = true;
 
+    unsaved = false;
     submitted = false;
 
     constructor(private router: Router,
@@ -107,6 +108,16 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         $("#new-client-modal").remove();
     }
 
+    canDeactivate() {
+        if (this.confirmComponent) {
+            return this.confirmComponent.canDeactivate();
+        } else {
+            if (this.unsaved){
+                return window.confirm("You have unsaved changes. Are you sure?")
+            }
+            return true;
+        }
+    }
 
     /*********
      * STEVE *
