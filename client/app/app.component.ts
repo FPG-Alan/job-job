@@ -1,11 +1,12 @@
 import "rxjs/add/operator/filter";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/mergeMap";
+import {Router, NavigationStart, NavigationEnd, ActivatedRoute} from "@angular/router";
 import {Component, ViewChild} from "@angular/core";
 import {AuthService} from "./services/auth.service";
-import {Router, NavigationEnd, ActivatedRoute} from "@angular/router";
-import {Title} from "@angular/platform-browser";
+import {SlimLoadingBarService} from "ng2-slim-loading-bar";
 import {BreadcrumbComponent} from "./components/breadcrumb/breadcrumb.component";
+import {Title} from "@angular/platform-browser";
 
 declare var $;
 
@@ -22,13 +23,24 @@ export class AppComponent {
     constructor(private authService: AuthService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
-                private titleService: Title) {
-        // Dynamic Page Titles - Code by Todd Motto
+                private titleService: Title,
+                private slimLoadingBarService: SlimLoadingBarService) {
+        // we only start displaying the progress bar after some async action was started by the router
+        this.router.events
+            .filter(event => event instanceof NavigationStart)
+            .subscribe(() => {
+                // show the progress bar
+                if (this.authService.authenticated()) {
+                    this.startLoading();
+                }
+            });
         this.router.events
             .filter(event => event instanceof NavigationEnd)
             .map(() => {
+                // hide the progress bar
+                this.completeLoading();
+
                 if (this.authService.authenticated()) {
-                    // set breadcrumbs
                     let root: ActivatedRoute = this.activatedRoute.root;
                     this.breadcrumbComponent.breadcrumbs =
                         this.breadcrumbComponent.getBreadcrumbs(root, "", []);
@@ -42,7 +54,7 @@ export class AppComponent {
             .filter(route => route.outlet === 'primary')
             .mergeMap(route => route.data)
             .subscribe((event) => this.titleService.setTitle(
-                event['title'] + " | Job Job"));
+                event['title'] + " | Job Job")); // Dynamic Page Titles - Code by Todd Motto
 
         // Semantic UI Modules
         $('.ui.dropdown').dropdown();
@@ -65,5 +77,23 @@ export class AppComponent {
             .sidebar({context: $('app-root')})
             .sidebar('setting', 'transition', 'overlay')
             .sidebar("toggle");
+    }
+
+
+    /********************
+     * SLIM LOADING BAR *
+     ********************/
+    startLoading() {
+        this.slimLoadingBarService.start(() => {
+            console.log('Loading complete');
+        });
+    }
+
+    stopLoading() {
+        this.slimLoadingBarService.stop();
+    }
+
+    completeLoading() {
+        this.slimLoadingBarService.complete();
     }
 }

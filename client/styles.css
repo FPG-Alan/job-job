@@ -20,6 +20,12 @@ a:hover {
 .ui.basic.segment {
   padding: 0 !important; }
 
+/********************
+ * Slim Loading Bar *
+ ********************/
+.slim-loading-bar {
+  top: 43px; }
+
 /******************
  * Success Fields *
  ******************/

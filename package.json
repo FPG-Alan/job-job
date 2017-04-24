@@ -40,6 +40,7 @@
     "express-jwt": "^5.1.0",
     "jquery": "^3.1.1",
     "mongoose": "^4.6.5",
+    "ng2-slim-loading-bar": "^4.0.0",
     "promise": "^7.1.1",
     "rxjs": "^5.2.0",
     "ts-helpers": "^1.1.1",

@@ -54,6 +54,9 @@
 
 
 <div [class.pusher]="authService.authenticated()">
+    <ng2-slim-loading-bar *ngIf="authService.authenticated()"
+                          [color]="'#FCCB43'" [height]="'3px'">
+    </ng2-slim-loading-bar>
     <app-breadcrumb
             *ngIf="authService.authenticated()"
             #breadcrumb>

@@ -48,7 +48,7 @@ app.use("/node_modules", express.static(__dirname + "../node_modules"));
 app.use("/", express.static(__dirname + "/dist"));
 
 // Serve HTML files
-app.get('/*', function (req, res) {
+app.get('/', function (req, res) {
     res.sendFile(__dirname + "/index.html");
 });
 
@@ -57,8 +57,6 @@ app.use(function handleError(err, req, res, next) {
     if (401 == err.status) { // unauthorized
         res.redirect('/');
     } else {
-        console.error(err.stack);
-
         res.redirect('/');
     }
 });

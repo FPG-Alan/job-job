@@ -6,6 +6,7 @@ import {AuthHttp, AuthConfig} from "angular2-jwt";
 import {AppComponent} from "./app.component";
 import {BreadcrumbComponent} from "./components/breadcrumb/breadcrumb.component";
 import {routing, appRoutingProviders} from "./app.routing";
+import {SlimLoadingBarModule} from 'ng2-slim-loading-bar';
 import {LoginModule} from "./modules/login/login.module";
 import {HomeModule} from "./modules/home/home.module";
 import {SettingsModule} from "./modules/settings/settings.module";
@@ -23,6 +24,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
         BrowserModule,
         FormsModule,
         HttpModule,
+        SlimLoadingBarModule,
         LoginModule,
         HomeModule,
         SettingsModule,
