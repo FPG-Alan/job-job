@@ -213,6 +213,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         this.finalName.result += !this.commonService.isEmptyString(this.finalName.formattedName)
             ? "_" + this.finalName.formattedName
             : "";
+        // remove bad characters
+        this.finalName.result = this.finalName.result.replace(/(\/|\\)/g, "");
     }
 
     onJobNameChange() {
@@ -224,7 +226,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.finalName.formattedName += words[w];
             }
         }
-        this.finalName.formattedName = this.finalName.formattedName.replace(/(\/|\\)/g, "");
         this.updateFinalName();
     }
 
