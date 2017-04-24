@@ -38,6 +38,7 @@
                     [(ngModel)]="producerFilterInput"
                     name="producerFilterInput"
                     #producerFilter="ngModel">
+                <option value=" ">(default)</option>
                 <option *ngFor="let p of producers"
                         [value]="p">{{p}}
                 </option>
