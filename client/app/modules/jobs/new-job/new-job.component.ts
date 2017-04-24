@@ -224,6 +224,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.finalName.formattedName += words[w];
             }
         }
+        this.finalName.formattedName = this.finalName.formattedName.replace(/(\/|\\)/g, "");
         this.updateFinalName();
     }
 
