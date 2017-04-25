@@ -75,6 +75,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
             this.role = profile.app_metadata.roles[0];
         }
 
+        // use localStorage settings if present, else use own
         if (localStorage.getItem("settings")) {
             this.settings = JSON.parse(localStorage.getItem("settings"))
         } else {
@@ -112,7 +113,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.confirmComponent) {
             return this.confirmComponent.canDeactivate();
         } else {
-            if (this.unsaved){
+            if (this.unsaved) {
                 return window.confirm("You have unsaved changes. Are you sure?")
             }
             return true;
@@ -133,8 +134,16 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onSteveStop(event: any) {
-        this.settings.steve = false;
-        localStorage.setItem("settings", JSON.stringify(this.settings));
+        // to make sure other settings are not overwritten, get first
+        let localSettings = JSON.parse(localStorage.getItem("settings"));
+        if (localSettings) {
+            localSettings.steve = false;
+        } else {
+            // new localStorage settings
+            this.settings.steve = false;
+            localSettings = this.settings;
+        }
+        localStorage.setItem("settings", JSON.stringify(localSettings));
     }
 
 
