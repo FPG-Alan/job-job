@@ -81,7 +81,12 @@ export class ConfirmComponent implements OnInit {
     constructor(private commonService: CommonService,
                 private apiService: ApiService) {
         window.onbeforeunload = () => {
-            return this.canDeactivate();
+            if (!this.finished) {
+                // newer browsers rmoved custom message on before unload
+                return "Are you sure you want to invoke Divine Intervention and leave the page, " +
+                    "even though it will have various consequences?";
+            }
+            return null
         }
     }
 
@@ -127,6 +132,10 @@ export class ConfirmComponent implements OnInit {
                     this.onJobCreateFailed.emit(true);
                 }
             );
+    }
+
+    ngOnDestroy() {
+        window.onbeforeunload = null;
     }
 
     canDeactivate() {

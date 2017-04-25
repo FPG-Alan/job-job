@@ -19,6 +19,9 @@ a:hover { cursor: pointer; }
  ********************/
 .slim-loading-bar {
     top: 44px;
+    .slim-loading-bar-progress {
+        box-shadow: none;
+    }
 }
 
 /******************

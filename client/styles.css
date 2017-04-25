@@ -25,6 +25,8 @@ a:hover {
  ********************/
 .slim-loading-bar {
   top: 44px; }
+  .slim-loading-bar .slim-loading-bar-progress {
+    box-shadow: none; }
 
 /******************
  * Success Fields *
