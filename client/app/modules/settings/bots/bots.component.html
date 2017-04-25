@@ -3,12 +3,12 @@
     </thead>
     <tbody>
     <tr>
-        <td><img class="ui logo image" src="assets/steve.jpg"></td>
+        <td><img class="ui rounded bordered logo image" src="assets/steve.jpg"></td>
         <td>
             <h4 class="ui header">
                 Stevebot
                 <div class="sub header">
-                    Embodiment of instruction and annoyance
+                    Embodiment of tutelage and annoyance
                 </div>
             </h4>
         </td>
@@ -19,6 +19,25 @@
             <a class="ui positive button"
                *ngIf="botSettings.steve"
                (click)="toggleLocalSettings('steve')">Enabled</a>
+        </td>
+    </tr>
+    <tr>
+        <td><img class="ui rounded bordered logo image" src="assets/david.png"></td>
+        <td>
+            <h4 class="ui header">
+                David
+                <div class="sub header">
+                    Embodiment of subtlety and evanescence (Changes applied only after page refresh)
+                </div>
+            </h4>
+        </td>
+        <td class="right aligned">
+            <a class="ui button"
+               *ngIf="!botSettings.david"
+               (click)="toggleLocalSettings('david')">Disabled</a>
+            <a class="ui positive button"
+               *ngIf="botSettings.david"
+               (click)="toggleLocalSettings('david')">Enabled</a>
         </td>
     </tr>
     </tbody>

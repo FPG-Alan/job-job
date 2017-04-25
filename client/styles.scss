@@ -21,8 +21,13 @@ a:hover { cursor: pointer; }
     top: 44px;
     .slim-loading-bar-progress {
         box-shadow: none;
-        position: relative;
         transition: width 0.5s ease-in-out, opacity .5s ease;
+    }
+}
+
+ng2-slim-loading-bar.david {
+    .slim-loading-bar-progress {
+        position: relative;
     }
     .slim-loading-bar-progress:after {
         background-image: url(/assets/david21x21.png);
@@ -42,6 +47,7 @@ a:hover { cursor: pointer; }
         transition: left .3s ease;
     }
 }
+
 
 /******************
  * Success Fields *

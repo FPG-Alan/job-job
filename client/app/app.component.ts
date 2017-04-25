@@ -27,6 +27,10 @@ export class AppComponent {
     @ViewChild('breadcrumb')
     private breadcrumbComponent: BreadcrumbComponent;
 
+    settings = {
+        "david": true
+    };
+
     constructor(private authService: AuthService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -63,6 +67,14 @@ export class AppComponent {
             .subscribe((event) => this.titleService.setTitle(
                 event['title'] + " | Job Job")); // Dynamic Page Titles - Code by Todd Motto
 
+
+        // Loader
+        // use localStorage settings if present, else use own and set
+        if (localStorage.getItem("settings")) {
+            this.settings = JSON.parse(localStorage.getItem("settings"))
+        } else {
+            localStorage.setItem("settings", JSON.stringify(this.settings));
+        }
 
         // Semantic UI Modules
         $('.ui.dropdown').dropdown();

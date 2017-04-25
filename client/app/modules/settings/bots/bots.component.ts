@@ -9,7 +9,8 @@ export class BotsComponent implements OnInit {
 
     // default settings
     botSettings = {
-        "steve": true
+        "steve": true,
+        "david": true
     };
 
     constructor() {

@@ -54,7 +54,8 @@
 
 
 <ng2-slim-loading-bar *ngIf="authService.authenticated()"
-                      [color]="'#FCCB43'" [height]="'3px'">
+                      [color]="'#FCCB43'" [height]="'3px'"
+                      [ngClass]="{'david': settings.david}">
 </ng2-slim-loading-bar>
 
 <div [class.pusher]="authService.authenticated()">
