@@ -63,6 +63,7 @@ export class AppComponent {
             .subscribe((event) => this.titleService.setTitle(
                 event['title'] + " | Job Job")); // Dynamic Page Titles - Code by Todd Motto
 
+
         // Semantic UI Modules
         $('.ui.dropdown').dropdown();
         $('.ui.modal').modal();
