@@ -21,6 +21,25 @@ a:hover { cursor: pointer; }
     top: 44px;
     .slim-loading-bar-progress {
         box-shadow: none;
+        position: relative;
+        transition: width 0.5s ease-in-out, opacity .5s ease;
+    }
+    .slim-loading-bar-progress:after {
+        background-image: url(/assets/david21x21.png);
+        background-repeat: no-repeat;
+        background-size: initial;
+        position: absolute;
+        display: block;
+        content: '' !important;
+        opacity: 1;
+        z-index: 2;
+        width: 1.5rem;
+        height: 2rem;
+        top: -1rem;
+        right: -1rem;
+        -webkit-transform: none;
+        transform: none;
+        transition: left .3s ease;
     }
 }
 

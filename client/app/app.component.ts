@@ -94,6 +94,7 @@ export class AppComponent {
         this.slimLoadingBarService.start(() => {
             console.log('Loading complete');
         });
+        this.slimLoadingBarService.progress = 50;
     }
 
     stopLoading() {
