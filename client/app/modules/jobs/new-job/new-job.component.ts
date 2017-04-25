@@ -337,7 +337,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onRateUpdateFailed(err: any) {
-        this.confirmComponent.handleError(err, "tenK", "rateCard")
+        this.confirmComponent.handleError(err, "tenK", "rateCard");
+        this.confirmComponent.tenKProgress.rateCard.status = "failed"
     }
 
 
