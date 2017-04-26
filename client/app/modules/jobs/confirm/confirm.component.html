@@ -17,10 +17,10 @@
     </div>
     <div class="ui warning message" *ngIf="hasError">
         While some tasks failed, the completed ones are already applied.
-        There's no feature to automagically fix them yet.<br>
+        There's no feature to automagically fix them yet (except for Rate Card).<br>
         SOLUTION: If you opt to try creating a new job again,
-        you might need to delete the new 10,000ft project to prevent throwing off
-        the <strong>job number generator</strong>. In the case that you have created
+        you might need to <strong>delete the new 10,000ft project</strong> to prevent throwing off
+        the job number generator. In the case that you have created a Trello board, delete it to avoid duplicates.
     </div>
     <h3 class="ui center aligned small header">
             <span *ngIf="confirmInfo.tenKUrl">
