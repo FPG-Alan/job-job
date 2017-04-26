@@ -242,8 +242,9 @@
                     </button>
                     <div class="or"></div>
                     <button type="submit" class="ui positive button"
-                            [disabled]="!form.form.valid || submitted
-                            || commonService.isEmptyString(rateCardSelectorComponent.selectedTemplate)">
+                            [disabled]="!form.form.valid
+                            || commonService.isEmptyString(rateCardSelectorComponent.selectedTemplate)
+                            || job.serviceType == '' || serviceTypes == null">
                         <i class="checkmark icon"></i>Submit
                     </button>
                 </div>
