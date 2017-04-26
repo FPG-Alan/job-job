@@ -208,16 +208,24 @@
                        style="margin-bottom:2px"
                        (focus)="commonService.isEmptyString(job.name) ? null :
                             steveBotComponent.sayOnce(['Bee tee dubs, those name suggestions are clickable.'],'slackChannel')">
-                <span *ngIf="!commonService.isEmptyString(job.name)">suggestions:</span>
-                <div class="ui black pointing label button"
-                     *ngIf="!commonService.isEmptyString(job.name)"
-                     (click)="onSlackChannelNameSelected('noVowels')">
-                    {{finalName.result | slackChannelName:"noVowels"}}
-                </div>
-                <div class="ui black pointing label button"
-                     *ngIf="!commonService.isEmptyString(job.name)"
-                     (click)="onSlackChannelNameSelected('abruptCut')">
-                    {{finalName.result | slackChannelName:"abruptCut"}}
+                <div *ngIf="!commonService.isEmptyString(job.name)" style="margin-top: 5px">
+                    <span>Suggestions:</span>
+                    <div id="slack-name-suggestion">
+                        <div class="item">
+                            <div class="ui black label button"
+                                 *ngIf="!commonService.isEmptyString(job.name)"
+                                 (click)="onSlackChannelNameSelected('noVowels')">
+                                {{finalName.result | slackChannelName:"noVowels"}}
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="ui black label button"
+                                 *ngIf="!commonService.isEmptyString(job.name)"
+                                 (click)="onSlackChannelNameSelected('abruptCut')">
+                                {{finalName.result | slackChannelName:"abruptCut"}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

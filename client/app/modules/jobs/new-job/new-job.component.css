@@ -1,3 +1,6 @@
+/*
+ * General
+ */
 .ui.form .inline.fields .field {
   margin-bottom: 5px !important; }
 
@@ -15,18 +18,24 @@ app-rate-card-selector {
 @media screen and (min-width: 767px) {
   app-rate-card-selector {
     width: 50%; } }
-#confirm-new-job .ui.loader:after {
-  border-color: #767676 transparent transparent !important; }
+#slack-name-suggestion {
+  display: inline-block;
+  vertical-align: top; }
+  #slack-name-suggestion .item {
+    margin-bottom: 5px; }
 
+/*
+ * Bottom Nav aka Generated Title Nav
+ */
 input[readonly]:focus {
   border: 1px solid rgba(34, 36, 38, 0.15) !important; }
+
+#confirm-new-job .ui.loader:after {
+  border-color: #767676 transparent transparent !important; }
 
 @media only screen and (max-width: 767px) {
   #confirm-new-job .content > .description {
     padding: 0 !important; } }
-/*
- * Bottom Nav aka Generated Title Nav
- */
 #generated-title-nav {
   margin: 0;
   padding-top: 10px;
