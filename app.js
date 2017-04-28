@@ -8,10 +8,9 @@ var express = require("express"),
     app = express(),
     jwt = require('express-jwt'),
     authenticate = jwt({
-        secret: new Buffer(process.env.AUTH0_CLIENT_SECRET, 'base64'),
+        secret: process.env.AUTH0_CLIENT_SECRET,
         audience: process.env.AUTH0_CLIENT_ID
-    });
-
+    }); // since december 2016 Auth0 no longer stores client Secret with Base64 encoding
 
 // Settings
 app.use(bodyParser.urlencoded({extended: false})); // parse application/x-www-form-urlencoded
@@ -55,7 +54,8 @@ app.get('/', function (req, res) {
 // Error handling
 app.use(function handleError(err, req, res, next) {
     if (401 == err.status) { // unauthorized
-        res.redirect('/');
+        console.log(err)
+        res.status(401).send({"header": "Unauthorized"});
     } else {
         console.log(err);
         res.redirect('/');
