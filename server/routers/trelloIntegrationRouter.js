@@ -6,7 +6,7 @@ var trelloIntegrationRouter = express.Router();
 
 var Token = require("../models/token");
 var apiUrl = process.env.TRELLO_API_URL;
-var apiKey = process.env.TRELLO_KEY_DEV;
+var apiKey = process.env.TRELLO_KEY;
 var siteTemplateBoardId = process.env.TRELLO_SITE_TEMPLATE_ID;
 var bannerTemplateBoardId = process.env.TRELLO_BANNER_TEMPLATE_ID;
 
