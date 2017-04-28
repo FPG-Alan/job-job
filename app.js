@@ -57,6 +57,7 @@ app.use(function handleError(err, req, res, next) {
     if (401 == err.status) { // unauthorized
         res.redirect('/');
     } else {
+        console.log(err);
         res.redirect('/');
     }
 });
