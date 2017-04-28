@@ -16,7 +16,7 @@ userRouter.get("/", function (req, res) {
 userRouter.post("/", function (req, res) {
     User.findOne({userId: req.body.userId}, function (err, user) {
         if (user) {
-            console.log(user)
+            console.log(user);
             res.json(user);
         } else {
             var newUser = new User({
@@ -29,6 +29,7 @@ userRouter.post("/", function (req, res) {
             });
             newUser.save(function (err, newUser) {
                 if (newUser) {
+                    console.log("Created New User with Email:", req.body.email);
                     res.json(newUser);
                 } else {
                     res.status(500).send({header: 'Couldn\'t find or create user with this email'});
