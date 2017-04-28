@@ -5,11 +5,11 @@ var User = require("../models/user");
 
 userRouter.get("/", function (req, res) {
     User.findOne({userId: req.query.id}, function (err, user) {
-        if (err) {
-            res.status(500).send({header: 'Couldn\'t find your user data'});
-            return
+        if (user) {
+            return res.json(user);
+        } else {
+            return res.status(500).send({header: 'Couldn\'t find your user data'});
         }
-        res.json(user);
     });
 });
 

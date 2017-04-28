@@ -10,11 +10,11 @@ var tenKApiKeys = require("../integrations/tenKFtSetup");
 
 clientRouter.get("/all", function (req, res) {
     Client.find({}, function (err, clients) {
-        if (err) {
-            res.status(500).send({header: 'Couldn\'t retrieve all clients!'});
-            return;
+        if (clients) {
+            return res.json(clients);
+        } else {
+            return res.status(500).send({header: 'Couldn\'t retrieve all clients!'});
         }
-        res.json(clients);
     });
 });
 
