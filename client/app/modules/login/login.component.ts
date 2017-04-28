@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
         },
         autoclose: true
     };
-    lock = new Auth0Lock('1CD38zBzoOUTvLzrWlredXlx0Q1IRJNJ', 'davefpg.auth0.com', this.options);
+    lock = new Auth0Lock('BmfEv2P1nNMOxyUDANG5o5Akf_4QOuvY', 'fpg.auth0.com', this.options);
 
     constructor(private router: Router,
                 private commonService: CommonService,
