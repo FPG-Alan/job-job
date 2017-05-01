@@ -70,8 +70,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                 private apiService: ApiService,
                 private authService: AuthService) {
         let profile = this.authService.profile;
+        this.userId = this.authService.profile.user_id;
+
         if (profile.app_metadata && profile.app_metadata.roles) {
-            this.userId = this.authService.profile.user_id;
             this.role = profile.app_metadata.roles[0];
         }
 
