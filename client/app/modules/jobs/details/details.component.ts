@@ -48,11 +48,11 @@ export class DetailsComponent implements OnInit {
                     switch (environment) {
                         case 'localhost':
                             this.tenKUrl =
-                                "https://vnext.10000ft.com/viewproject?id=" + res.id;
+                                "https://vnext.10000ft.com/viewproject?id=" + this.job.id;
                             break;
                         default:
                             this.tenKUrl =
-                                "https://app.10000ft.com/viewproject?id=" + res.id;
+                                "https://app.10000ft.com/viewproject?id=" + this.job.id;
                     }
                 },
                 err => this.commonService.handleError(err)
