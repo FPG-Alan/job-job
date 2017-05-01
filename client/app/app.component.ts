@@ -65,7 +65,7 @@ export class AppComponent {
             .filter(route => route.outlet === 'primary')
             .mergeMap(route => route.data)
             .subscribe((event) => this.titleService.setTitle(
-                event['title'] + " | Job Job")); // Dynamic Page Titles - Code by Todd Motto
+                event['title'] + " | Job\"s\" The Buidler")); // Dynamic Page Titles - Code by Todd Motto
 
 
         // Loader
