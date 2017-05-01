@@ -99,8 +99,17 @@ export class ConfirmComponent implements OnInit {
                     // rate cards
                     this.requestRateCardChange(res);
                     this.newJob = res;
-                    this.confirmInfo.tenKUrl =
-                        "https://vnext.10000ft.com/viewproject?id=" + res.id;
+                    // set URL based on environments
+                    let environment = window.location.hostname;
+                    switch (environment) {
+                        case 'localhost':
+                            this.confirmInfo.tenKUrl =
+                                "https://vnext.10000ft.com/viewproject?id=" + res.id;
+                            break;
+                        default:
+                            this.confirmInfo.tenKUrl =
+                                "https://app.10000ft.com/viewproject?id=" + res.id;
+                    }
                     // custom values
                     let importantCustomValues = [{
                         name: "Brand",
