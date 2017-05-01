@@ -85,8 +85,9 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        $(".ui.checkbox").checkbox();
+        // dropdown
         $(".ui.search.dropdown.selection").dropdown();
+
         $(".popup-trigger").popup({
             on: "click",
             closable: false,
@@ -121,19 +122,22 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    /*********
-     * STEVE *
-     *********/
     ngAfterViewInit() {
-        $("#client-select-field .dropdown").dropdown("setting", "onShow", () => {
-            this.steveBotComponent.sayOnce(
-                ["Try typing in dropdowns." +
-                " This experience saves you the near-infinite scrolling time."],
-                "client"
-            );
+        $("#client-select-field .dropdown.selection").dropdown({
+            onShow: () => {
+                this.steveBotComponent.sayOnce(
+                    ["Try typing in dropdowns." +
+                    " This experience saves you the near-infinite scrolling time."],
+                    "client"
+                )
+            },
+            selectOnKeydown: false
         });
     }
 
+    /*********
+     * STEVE *
+     *********/
     onSteveStop(event: any) {
         // to make sure other settings are not overwritten, get first
         let localSettings = JSON.parse(localStorage.getItem("settings"));
@@ -152,22 +156,29 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
      * TWO-WAY BINDING *
      *******************/
     /* JOB NUMBER */
+    private getClientProjectCountRequest;
+
     getClientProjectCount() {
+        if (this.getClientProjectCountRequest) {
+            this.getClientProjectCountRequest.unsubscribe();
+            this.generating = false;
+        }
         if (this.usingFinalName && !this.commonService.isEmptyString(this.job.client.name)) {
             this.generating = true;
-            this.apiService
-                .getClientProjectCount(
-                    this.job.client.name,
-                    new Date(this.job.startDate.toString()).getFullYear().toString())
-                .subscribe(
-                    res => {
-                        console.log(res);
-                        this.finalName.projectCount = res.formattedCount;
-                        this.updateFinalName();
-                        this.generating = false;
-                    },
-                    err => this.commonService.handleError(err)
-                );
+            this.getClientProjectCountRequest =
+                this.apiService
+                    .getClientProjectCount(
+                        this.job.client.name,
+                        new Date(this.job.startDate.toString()).getFullYear().toString())
+                    .subscribe(
+                        res => {
+                            console.log(res);
+                            this.finalName.projectCount = res.formattedCount;
+                            this.updateFinalName();
+                            this.generating = false;
+                        },
+                        err => this.commonService.handleError(err)
+                    );
         }
     }
 
