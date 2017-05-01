@@ -288,22 +288,39 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onDateChange(isStartEnd: string, strDate: string) {
         if (!this.commonService.isEmptyString(strDate)) {
+            let currentStartDate = new Date(this.job.startDate.toString());
+            let currentEndDate = new Date(this.job.endDate.toString());
+            let newDate = new Date(strDate);
+
             if (isStartEnd === "start") {
                 this.job.startDate = strDate;
-                this.job.endDate = new Date(strDate) > new Date(this.job.endDate.toString())
+                // update endDate if new start date exceeds current end date
+                this.job.endDate = newDate > currentEndDate
                     ? strDate
                     : this.job.endDate;
+                // only get client proj count if start year is different
+                // (prevents spamming server)
+                if (currentStartDate.getFullYear().toString()
+                    != newDate.getFullYear().toString()) {
+                    this.getClientProjectCount();
+                }
             } else if (isStartEnd === "end") {
                 this.job.endDate = strDate;
-                this.job.startDate = new Date(strDate) < new Date(this.job.startDate.toString())
+                // update startDate if new end date is before current start date
+                this.job.startDate = newDate < currentStartDate
                     ? strDate
                     : this.job.startDate;
+                // only get client proj count if start year change is triggered
+                // (prevents spamming server)
+                if (currentStartDate.getFullYear().toString() != newDate.getFullYear().toString()
+                    && newDate < currentStartDate) {
+                    this.getClientProjectCount();
+                }
             }
             // get the last 2 digits
             this.finalName.startYear =
                 new Date(this.job.startDate.toString())
                     .getFullYear().toString().substr(2, 2);
-            this.getClientProjectCount();
             this.updateFinalName();
         }
     }
