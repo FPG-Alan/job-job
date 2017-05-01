@@ -24,10 +24,7 @@ clientRouter.get("/count-by-year", function (req, res) {
         return;
     }
     Client.findOne({name: req.query.client}, function (err, client) {
-        if (err) {
-            console.log(err);
-            res.status(500).send({header: 'Couldn\'t find client!'});
-        } else {
+        if (client) {
             unirest.get(tenKApiKeys.apiUrl + "projects?from=" + req.query.year + "-01-01"
                 + " with_archived=true&per_page=100000")
                 .headers({
@@ -65,6 +62,7 @@ clientRouter.get("/count-by-year", function (req, res) {
                         return b - a
                     });
 
+                    console.log(codes);
                     var greatestCode = codes[0];
                     if (!greatestCode) {
                         formattedCount = "000";
@@ -81,6 +79,9 @@ clientRouter.get("/count-by-year", function (req, res) {
                         formattedCount: formattedCount
                     });
                 });
+        } else {
+            console.log("Couldn\'t find client!");
+            res.status(500).send({header: 'Couldn\'t find client!'});
         }
     });
 });

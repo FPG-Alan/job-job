@@ -55,7 +55,8 @@ export class ApiService {
     }
 
     getClientProjectCount(clientName: string, year: string) {
-        return this.authHttp.get("/client/count-by-year?client=" + clientName + "&year=" + year)
+        let encodedClient = encodeURIComponent(clientName);
+        return this.authHttp.get("/client/count-by-year?client=" + encodedClient + "&year=" + year)
             .map(res => res.json())
     }
 
