@@ -15,6 +15,7 @@ export class DetailsComponent implements OnInit {
     private rateCardSelectorComponent: RateCardSelectorComponent;
 
     job: any;
+    tenKUrl: string = "N/A";
     selectingRateCard: boolean = false;
     rateCardProcessingState = "disabled";
     customFields: any;
@@ -39,7 +40,21 @@ export class DetailsComponent implements OnInit {
         this.route.params
             .switchMap((params: Params) => this.apiService.getJobById(+params['id']))
             .subscribe(
-                job => this.job = job,
+                job => {
+                    this.job = job;
+
+                    // set URL based on environments
+                    let environment = window.location.hostname;
+                    switch (environment) {
+                        case 'localhost':
+                            this.tenKUrl =
+                                "https://vnext.10000ft.com/viewproject?id=" + res.id;
+                            break;
+                        default:
+                            this.tenKUrl =
+                                "https://app.10000ft.com/viewproject?id=" + res.id;
+                    }
+                },
                 err => this.commonService.handleError(err)
             );
         this.getCustomFields();
