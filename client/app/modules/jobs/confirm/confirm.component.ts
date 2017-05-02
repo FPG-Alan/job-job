@@ -86,7 +86,7 @@ export class ConfirmComponent implements OnInit {
                 return "Are you sure you want to invoke Divine Intervention and leave the page, " +
                     "even though it will have various consequences?";
             }
-            return null
+            return null;
         }
     }
 
@@ -99,6 +99,8 @@ export class ConfirmComponent implements OnInit {
                     // rate cards
                     this.requestRateCardChange(res);
                     this.newJob = res;
+
+
                     // set URL based on environments
                     let environment = window.location.hostname;
                     switch (environment) {
@@ -110,6 +112,7 @@ export class ConfirmComponent implements OnInit {
                             this.confirmInfo.tenKUrl =
                                 "https://app.10000ft.com/viewproject?id=" + res.id;
                     }
+
                     // custom values
                     let importantCustomValues = [{
                         name: "Brand",
@@ -122,8 +125,15 @@ export class ConfirmComponent implements OnInit {
                         value: this.job.serviceType
                     }];
                     this.createCustomFieldValues(importantCustomValues, "customFields");
-                    // start integrations
-                    this.startIntegrations();
+                    
+                    // FPG Admin doesn't need to use integrations/micro-services
+                    if (this.job.client.name && this.job.client.name.toLowerCase() == "fpg admin") {
+                        // skip 3 integrations
+                        this.servicesCount += 3;
+                    } else {
+                        // start integrations
+                        this.startIntegrations();
+                    }
 
                     let timeInterval = setInterval(() => {
                         if (this.servicesCount >= this.maxServicesCount) {
