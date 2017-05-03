@@ -11,6 +11,7 @@ declare var $;
 })
 export class RateCardSelectorComponent implements OnInit {
 
+    @Output() onTemplateRetrieveFailed = new EventEmitter<boolean>();
     @Output() onRateUpdated = new EventEmitter<string>();
     @Output() onRateUpdateFailed = new EventEmitter<any>();
     @Input() newJob: any = null;
@@ -28,8 +29,20 @@ export class RateCardSelectorComponent implements OnInit {
         this.apiService
             .getJobsByClient("1-FPG-REFERENCE")
             .subscribe(
-                res => this.templateCards = res,
-                err => this.commonService.handleError(err)
+                res => {
+                    this.templateCards = res;
+                    if (this.templateCards.length == 0) {
+                        this.onTemplateRetrieveFailed.emit(true);
+                    }
+                },
+                err => {
+                    this.commonService.handleError({
+                        header: "Failed to retrieve rate card templates",
+                        message: "Please click the refresh button (if applicable) " +
+                        "or manually reload this page"
+                    });
+                    this.onTemplateRetrieveFailed.emit(true);
+                }
             );
     }
 

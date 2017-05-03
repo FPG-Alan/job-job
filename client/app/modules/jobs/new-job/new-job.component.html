@@ -1,6 +1,13 @@
-<h1 [class.hidden]="submitted">
-    Create New Job
-</h1>
+<div class="ui clearing basic segment">
+    <h1 [class.hidden]="submitted" style="margin-bottom: 0">
+        Create New Job
+    </h1>
+    <a class="ui right floated button"
+       *ngIf="retrieveRemoteDataFailed"
+       (click)="refreshData()">
+        <i class="refresh icon" style="margin: 0"></i>
+    </a>
+</div>
 
 <form #form="ngForm" class="ui form" id="new-job-form"
       (ngSubmit)="onSubmit(form)"
@@ -171,6 +178,7 @@
 
         <!--Rate Card Selector-->
         <app-rate-card-selector
+                (onTemplateRetrieveFailed)="retrieveRemoteDataFailed = $event"
                 (onRateUpdated)="onRateUpdated($event)"
                 (onRateUpdateFailed)="onRateUpdateFailed($event)"
                 #rateCardSelector>

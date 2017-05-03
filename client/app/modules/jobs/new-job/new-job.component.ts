@@ -40,6 +40,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     generating = false; // for loader to appear on the Generated Name field
 
+    retrieveRemoteDataFailed: boolean = false;
     clients: Client[] = [];
     producers: string[] = [];
     serviceTypes = [
@@ -95,11 +96,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.resetModels();
-        this.apiService.getAllClients()
-            .subscribe(
-                res => this.clients = res,
-                err => this.commonService.handleError(err)
-            );
+        this.getClients();
         this.getCustomFields();
     }
 
@@ -109,6 +106,13 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         $("#confirm-reset-job").remove();
         $("#new-client-modal").modal("hide");
         $("#new-client-modal").remove();
+    }
+
+    refreshData() {
+        this.retrieveRemoteDataFailed = false;
+        this.getClients();
+        this.getCustomFields();
+        this.rateCardSelectorComponent.ngOnInit();
     }
 
     canDeactivate() {
@@ -376,6 +380,17 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     /*****************
      * CUSTOM FIELDS *
      *****************/
+    private getClients() {
+        this.apiService.getAllClients()
+            .subscribe(
+                res => this.clients = res,
+                err => {
+                    this.commonService.handleError(err);
+                    this.retrieveRemoteDataFailed = true;
+                }
+            );
+    }
+
     private getCustomFields() {
         this.apiService.getCustomFields()
             .subscribe(
@@ -388,7 +403,10 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                         }
                     }
                 },
-                err => this.commonService.handleError(err)
+                err => {
+                    this.commonService.handleError(err);
+                    this.retrieveRemoteDataFailed = true;
+                }
             )
     }
 
