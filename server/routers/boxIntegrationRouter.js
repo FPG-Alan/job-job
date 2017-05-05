@@ -1,6 +1,7 @@
 var express = require('express');
 var dotenv = process.env.NODE_ENV == "production"
     ? null : require('dotenv').config();
+var unorm = require('unorm');
 var boxIntegrationRouter = express.Router();
 
 var Token = require("../models/token");
@@ -46,8 +47,10 @@ boxIntegrationRouter.post("/", function (req, res) {
                         if (data && data.total_count > 0) {
                             for (var i = 0; i < data.total_count; i++) {
                                 var currItem = data.entries[i];
-                                if (currItem.type == "folder" && currItem.name == req.body.folderName) {
-                                    console.log("Folder ", req.body.folderName, "found");
+                                if (!currItem.name || !req.body.folderName) break;
+
+                                if (currItem.type == "folder" && unorm.nfd(currItem.name) == unorm.nfd(req.body.folderName)) {
+                                    console.log("Folder", currItem.name, "found");
                                     sameNameFound = true;
                                     res.json(currItem);
                                     return;
@@ -74,7 +77,7 @@ boxIntegrationRouter.post("/", function (req, res) {
 });
 
 function handleBoxError(err, messageHeader, res) {
-    if (err.response) console.log(err.response.body || "");
+    if (err.response) console.log("Error creating Box folder", err.response.body || "");
     if (err.response && err.response.body) {
         switch (err.response.body.code) {
             case "access_denied_insufficient_permissions":
@@ -93,6 +96,12 @@ function handleBoxError(err, messageHeader, res) {
                 res.status(400).send({
                     header: messageHeader,
                     message: "Item name too long. The max length for item names is 255 characters."
+                });
+                break;
+            case "item_name_in_use":
+                res.status(409).send({
+                    header: messageHeader,
+                    message: "Item with the same name already exists"
                 });
                 break;
             default:

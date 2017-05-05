@@ -46,6 +46,7 @@
     "ts-helpers": "^1.1.1",
     "typescript": "^2.2.1",
     "unirest": "^0.5.1",
+    "unorm": "^1.4.1",
     "zone.js": "^0.7.7"
   },
   "devDependencies": {

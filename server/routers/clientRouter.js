@@ -1,5 +1,6 @@
 var express = require('express');
 var unirest = require('unirest');
+var unorm = require('unorm');
 var clientRouter = express.Router();
 var requireRole = require("../middlewares/requiredRole");
 
@@ -39,7 +40,7 @@ clientRouter.get("/count-by-year", function (req, res) {
                     projects = projects.filter(function (proj) {
                         var year = new Date(proj.starts_at).getFullYear();
                         if (!isBlank(proj.client) && !isBlank(client.name)) {
-                            return proj.client.toLowerCase() == client.name.toLowerCase()
+                            return unorm.nfd(proj.client.toLowerCase()) == unorm.nfd(client.name.toLowerCase())
                                 && year == req.query.year;
                         }
                         return false;
