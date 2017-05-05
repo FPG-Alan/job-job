@@ -47,8 +47,10 @@ boxIntegrationRouter.post("/", function (req, res) {
                             for (var i = 0; i < data.total_count; i++) {
                                 var currItem = data.entries[i];
                                 if (currItem.type == "folder" && currItem.name == req.body.folderName) {
+                                    console.log("Folder ", req.body.folderName, "found");
                                     sameNameFound = true;
                                     res.json(currItem);
+                                    return;
                                 }
                             }
                         }
