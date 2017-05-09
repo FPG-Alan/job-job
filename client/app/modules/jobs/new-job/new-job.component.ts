@@ -149,11 +149,11 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     onSteveStop(event: any) {
         // to make sure other settings are not overwritten, get first
         let localSettings = JSON.parse(localStorage.getItem("settings"));
+        this.settings.steve = false;
         if (localSettings) {
             localSettings.steve = false;
         } else {
             // new localStorage settings
-            this.settings.steve = false;
             localSettings = this.settings;
         }
         localStorage.setItem("settings", JSON.stringify(localSettings));
