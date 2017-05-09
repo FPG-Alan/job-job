@@ -4,6 +4,7 @@ var dotenv = process.env.NODE_ENV == "production"
 var unorm = require('unorm');
 var Promise = require('promise');
 var boxIntegrationRouter = express.Router();
+var requireRole = require("../middlewares/requiredRole");
 
 var Token = require("../models/token");
 var Template = require("../models/template");
@@ -30,7 +31,7 @@ boxIntegrationRouter.get("/template", function (req, res) {
     });
 });
 
-boxIntegrationRouter.post("/template", function (req, res) {
+boxIntegrationRouter.post("/template", requireRole("admin"), function (req, res) {
     if (!req.body.id || !req.body.name) {
         return res.status(500).send({
             header: 'Couldn\'t create new Box template',
