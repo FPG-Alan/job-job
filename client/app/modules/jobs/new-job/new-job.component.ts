@@ -79,7 +79,11 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // use localStorage settings if present, else use own
         if (localStorage.getItem("settings")) {
-            this.settings = JSON.parse(localStorage.getItem("settings"))
+            this.settings = JSON.parse(localStorage.getItem("settings"));
+            if (this.settings.steve == null) {
+                this.settings.steve = true;
+                localStorage.setItem("settings", JSON.stringify(this.settings));
+            }
         } else {
             localStorage.setItem("settings", JSON.stringify(this.settings));
         }
