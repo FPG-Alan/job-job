@@ -2,6 +2,7 @@ var express = require('express');
 var dotenv = process.env.NODE_ENV == "production"
     ? null : require('dotenv').config();
 var unorm = require('unorm');
+var Promise = require('promise');
 var boxIntegrationRouter = express.Router();
 
 var Token = require("../models/token");
@@ -75,6 +76,60 @@ boxIntegrationRouter.post("/", function (req, res) {
         }
     });
 });
+
+
+boxIntegrationRouter.post("/copy", function (req, res) {
+    Token.findOne({userId: req.body.userId, provider: "box"}, function (err, token) {
+        if (err || !token || !token.tokenInfo) {
+            res.status(500).send(invalidTokenError);
+        } else {
+            sdk.getTokensRefreshGrant(token.tokenInfo.refreshToken, function (err, newTokenInfo) {
+                if (err || !newTokenInfo || !newTokenInfo.accessToken) {
+                    res.status(500).send(invalidTokenError);
+                } else {
+                    // store refreshed token
+                    token.tokenInfo = newTokenInfo;
+                    token.save();
+
+                    var box = sdk.getBasicClient(newTokenInfo.accessToken);
+                    box.folders.getItems(req.body.sourceId, {fields: "name,type,url"}, function (err, data) {
+                        if (err) {
+                            var header = "Something failed during folder items retrieval";
+                            return handleBoxError(err, header, res);
+                        }
+                        // copy each child folder from the template folder
+                        if (data && data.total_count > 0) {
+                            var promises = data.entries.map(function (folder) {
+                                return copyFolder(folder.id, req.body.destinationId, box)
+                            });
+                            Promise.all(promises)
+                                .done(function (results) {
+                                    res.json(results);
+                                }, function (err) {
+                                    console.log(err);
+                                    res.status(500).send({header: "Failed to copy all folders from template"})
+                                })
+                        } else {
+                            res.json({})
+                        }
+                    })
+                }
+            });
+        }
+    });
+});
+
+function copyFolder(sourceId, destinationId, boxSdk) {
+    return new Promise(function (resolve, reject) {
+        boxSdk.folders.copy(sourceId, destinationId, function (err, data) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
+}
 
 function handleBoxError(err, messageHeader, res) {
     if (err.response) console.log("Error creating Box folder", err.response.body || "");
