@@ -107,7 +107,8 @@ boxIntegrationRouter.post("/copy", function (req, res) {
                                     res.json(results);
                                 }, function (err) {
                                     console.log(err);
-                                    res.status(500).send({header: "Failed to copy all folders from template"})
+                                    var header = "Failed to copy all folders from template";
+                                    return handleBoxError(err, header, res);
                                 })
                         } else {
                             res.json({})
@@ -125,7 +126,7 @@ function copyFolder(sourceId, destinationId, boxSdk) {
             if (err) {
                 reject(err);
             } else {
-                resolve(data);
+                resolve(data.name);
             }
         });
     });

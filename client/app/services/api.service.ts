@@ -213,6 +213,19 @@ export class ApiService {
             .map(res => res.json());
     }
 
+    copyBoxFolders(userId: string, sourceId: string, destinationId: string) {
+        let body = {
+            userId: userId,
+            sourceId: sourceId,
+            destinationId: destinationId
+        }
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/box/copy", body, options)
+            .map(res => res.json());
+    }
+
     /**********************
      * TRELLO INTEGRATION *
      **********************/
