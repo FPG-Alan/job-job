@@ -200,6 +200,23 @@ export class ApiService {
     /*******************
      * BOX INTEGRATION *
      *******************/
+    getFolderTemplates() {
+        return this.authHttp.get("/box/template")
+            .map(res => res.json());
+    }
+
+    createNewFolderTemplate(templateId: string, templateName: string) {
+        let body = {
+            id: templateId,
+            name: templateName
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/box/template", body, options)
+            .map(res => res.json());
+    }
+
     createNewFolder(userId: string, folderName: any, parentFolderId: string) {
         let body = {
             userId: userId,
