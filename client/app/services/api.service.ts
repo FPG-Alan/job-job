@@ -230,7 +230,7 @@ export class ApiService {
             .map(res => res.json());
     }
 
-    copyBoxFolders(userId: string, sourceId: string, destinationId: string) {
+    copyFolders(userId: string, sourceId: string, destinationId: string) {
         let body = {
             userId: userId,
             sourceId: sourceId,

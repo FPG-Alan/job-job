@@ -22,6 +22,7 @@ export class ConfirmComponent implements OnInit {
 
     @Output() onJobCreated = new EventEmitter<Job>();
     @Output() onJobCreateFailed = new EventEmitter<boolean>();
+    @Output() onBoxFolderCreated = new EventEmitter<any>();
     @Output() onFinished = new EventEmitter<boolean>();
     @Output() onClickCheckItOut = new EventEmitter<boolean>();
     private finished: boolean = false;
@@ -47,6 +48,10 @@ export class ConfirmComponent implements OnInit {
             details: "Working..."
         },
         job: {
+            status: "disabled",
+            details: "Working..."
+        },
+        copyTemplate: {
             status: "disabled",
             details: "Working..."
         }
@@ -100,7 +105,6 @@ export class ConfirmComponent implements OnInit {
                     this.requestRateCardChange(res);
                     this.newJob = res;
 
-
                     // set URL based on environments
                     let environment = window.location.hostname;
                     switch (environment) {
@@ -125,6 +129,7 @@ export class ConfirmComponent implements OnInit {
                         value: this.job.serviceType
                     }];
                     this.createCustomFieldValues(importantCustomValues, "customFields");
+                    this.tenKProgress.customFields.status = "active";
                     
                     // FPG Admin doesn't need to use integrations/micro-services
                     if (this.job.client.name && this.job.client.name.toLowerCase() == "fpg admin") {
@@ -291,7 +296,6 @@ export class ConfirmComponent implements OnInit {
                 folderName = this.usingFinalName ? this.finalName.result : this.job.name;
                 nextType = "confirm";
             } else {
-                this.servicesCount++;
                 return;
             }
 
@@ -308,6 +312,7 @@ export class ConfirmComponent implements OnInit {
                                     value: this.confirmInfo.boxUrl
                                 }];
                                 this.createCustomFieldValues(fieldValues, null);
+                                this.onBoxFolderCreated.emit(res);
                             }
                             if (this.boxProgress[type]) this.boxProgress[type].status = "completed";
                             let parentId = res.id;

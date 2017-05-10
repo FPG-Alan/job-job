@@ -13,8 +13,11 @@ export class BoxTemplateSelectorComponent implements OnInit, OnDestroy {
 
 
     @Output() onTemplateRetrieveFailed = new EventEmitter<boolean>();
+    @Output() onTemplateCopied = new EventEmitter<string>();
+    @Output() onTemplateCopyFailed = new EventEmitter<boolean>();
+    @Input() userId: string = "";
     @Input() userRole: string = "";
-    @Input() newJob: any = null;
+    newFolder: any = null;
     selectedTemplate: any = null;
     templateFolders: any[] = [];
 
@@ -80,12 +83,15 @@ export class BoxTemplateSelectorComponent implements OnInit, OnDestroy {
         }
     }
 
-    onFolderChanged() {
-
-    }
-
     copyFolder() {
-
+        if (this.newFolder && this.selectedTemplate) {
+            this.apiService
+                .copyFolders(this.userId, this.selectedTemplate.id, this.newFolder.id)
+                .subscribe(
+                    res => this.onTemplateCopied.emit("completed"),
+                    err => this.onTemplateCopyFailed.emit(err)
+                )
+        }
     }
 }
 

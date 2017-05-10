@@ -191,6 +191,9 @@
     <div class="two fields">
         <app-box-template-selector
                 (onTemplateRetrieveFailed)="retrieveRemoteDataFailed = $event"
+                (onTemplateCopied)="onBoxTemplateCopied($event)"
+                (onTemplateCopyFailed)="onBoxTemplateCopyFailed($event)"
+                [userId]="userId"
                 [userRole]="role"
                 #boxTemplateSelector>
         </app-box-template-selector>
@@ -298,6 +301,7 @@
         [usingFinalName]="usingFinalName"
         (onJobCreated)="onJobCreated($event)"
         (onJobCreateFailed)="submitted = false"
+        (onBoxFolderCreated)="onBoxFolderCreated($event)"
         (onFinished)="onFinished($event)"
         (onClickCheckItOut)="checkItOut($event)"
         #confirm>

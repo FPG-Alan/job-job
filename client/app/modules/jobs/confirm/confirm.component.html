@@ -151,6 +151,25 @@
                             </div>
                         </div>
                     </div>
+                    <div class="item">
+                        <i class="big icon"
+                           [ngClass]="{'disabled': boxProgress?.copyTemplate?.status == 'disabled',
+                           'active pulse': boxProgress?.copyTemplate?.status == 'active',
+                           'copy': boxProgress?.copyTemplate?.status != 'completed' && boxProgress?.job?.status != 'failed',
+                           'green checkmark': boxProgress?.copyTemplate?.status == 'completed',
+                           'red remove': boxProgress?.copyTemplate?.status == 'failed'}"></i>
+                        <div class="content">
+                            <div class="header">Copy Template</div>
+                            <div class="description"
+                                 *ngIf="boxProgress?.copyTemplate?.status != 'completed'">
+                                {{boxProgress?.copyTemplate?.details}}
+                            </div>
+                            <div class="description"
+                                 *ngIf="boxProgress?.copyTemplate?.status == 'completed'">
+                                Completed
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

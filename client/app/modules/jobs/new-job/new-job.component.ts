@@ -7,6 +7,7 @@ import {CommonService} from "../../../services/common.service";
 import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
 import {NewClientComponent} from "../../clients/new-client/new-client.component";
+import {BoxTemplateSelectorComponent} from "../box-template-selector/box-template-selector.component";
 import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
 import {ConfirmComponent} from "../confirm/confirm.component";
 import {SteveBotComponent} from "../../steve-bot/steve-bot.component";
@@ -25,6 +26,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('newClient')
     private newClientComponent: NewClientComponent;
+    @ViewChild('boxTemplateSelector')
+    private boxTemplateSelectorComponent: BoxTemplateSelectorComponent;
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
     @ViewChild('confirm')
@@ -355,9 +358,13 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    /********************
+     * AFTER SUBMISSION *
+     ********************/
     onJobCreated(newJob: any) {
         this.rateCardSelectorComponent.newJob = newJob;
         this.rateCardSelectorComponent.updateBillRates();
+        this.confirmComponent.tenKProgress.rateCard.status = "active";
     }
 
     onRateUpdated(processingState: string) {
@@ -366,6 +373,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.rateCardSelectorComponent.selectedTemplate
             && !this.commonService.isEmptyString(
                 this.rateCardSelectorComponent.selectedTemplate.name)) { // prevent undefined
+
             let fieldValues = [{
                 name: "Rate Card",
                 value: this.rateCardSelectorComponent.selectedTemplate.name
@@ -375,10 +383,31 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onRateUpdateFailed(err: any) {
+        this.confirmComponent.servicesCount++;
         this.confirmComponent.handleError(err, "tenK", "rateCard");
-        this.confirmComponent.tenKProgress.rateCard.status = "failed"
+        this.confirmComponent.tenKProgress.rateCard.status = "failed";
     }
 
+    onBoxFolderCreated(newFolder: any) {
+        if (this.boxTemplateSelectorComponent.selectedTemplate != " ") {
+            this.boxTemplateSelectorComponent.newFolder = newFolder;
+            this.boxTemplateSelectorComponent.copyFolder();
+            this.confirmComponent.boxProgress.copyTemplate.status = "active";
+        } else {
+            this.confirmComponent.servicesCount++;
+        }
+    }
+
+    onBoxTemplateCopied(processingState: string) {
+        this.confirmComponent.servicesCount++;
+        this.confirmComponent.boxProgress.copyTemplate.status = processingState;
+    }
+
+    onBoxTemplateCopyFailed(err: any) {
+        this.confirmComponent.servicesCount++;
+        this.confirmComponent.handleError(err, "tenK", "rateCard");
+        this.confirmComponent.boxProgress.copyTemplate.status = "failed";
+    }
 
     /*****************
      * CUSTOM FIELDS *

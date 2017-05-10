@@ -14,7 +14,7 @@ export class RateCardSelectorComponent implements OnInit {
     @Output() onTemplateRetrieveFailed = new EventEmitter<boolean>();
     @Output() onRateUpdated = new EventEmitter<string>();
     @Output() onRateUpdateFailed = new EventEmitter<any>();
-    @Input() newJob: any = null;
+    @Input() newJob: any = null; // input is being passed in on Details page
     newJobDefaultRates: any[] = [];
     selectedTemplate: any = null;
     templateCards: any[] = [];

@@ -38,7 +38,6 @@
     </label>
     <select required class="ui fluid search dropdown selection"
             [(ngModel)]="selectedTemplate"
-            (ngModelChange)="onFolderChanged()"
             #boxTemplate="ngModel">
         <option value=" ">(don't use a template)</option>
         <option *ngFor="let t of templateFolders"
