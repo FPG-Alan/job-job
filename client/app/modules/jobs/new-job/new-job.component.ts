@@ -97,7 +97,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         $(".ui.search.dropdown.selection").dropdown();
         $(".popup-trigger").popup({
             on: "click",
-            closable: false,
             lastResort: "right center"
         });
 

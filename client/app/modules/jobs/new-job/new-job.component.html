@@ -85,9 +85,9 @@
                         <div class="ui input">
                           <input type="text" placeholder="(enter new brand)" #newBrandInput>
                         </div>
+                        <div class="ui button" (click)="addNewBrand('')">Cancel</div>
                         <div class="ui positive button"
                              (click)="addNewBrand(newBrandInput.value); newBrandInput.value = ''">Save</div>
-                        <div class="ui button" (click)="addNewBrand('')">Cancel</div>
                     </div>
                     )
                 </span>
