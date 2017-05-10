@@ -15,6 +15,7 @@ var rootFolder =
     process.env.NODE_ENV == "production" ? boxKeys.prod.rootFolder
         : process.env.NODE_ENV == "development" ? boxKeys.dev.rootFolder
         : null;
+var templateFolder = process.env.BOX_TEMPLATE_FOLDER;
 var sdk = require("../integrations/boxSetup");
 var invalidTokenError = {
     header: "Token is invalid or expired",
@@ -51,7 +52,6 @@ boxIntegrationRouter.post("/template", requireRole("admin"), function (req, res)
                 name: req.body.name
             });
             newTemplate.save(function (err, t) {
-
                 if (err) {
                     console.log(err);
                     res.status(500).send({header: 'Couldn\'t save new template'});
@@ -136,7 +136,7 @@ boxIntegrationRouter.post("/copy", function (req, res) {
                     token.save();
 
                     var box = sdk.getBasicClient(newTokenInfo.accessToken);
-                    box.folders.getItems(req.body.sourceId, {fields: "name,type,url"}, function (err, data) {
+                    box.folders.getItems(templateFolder, {fields: "name,type,url"}, function (err, data) {
                         if (err) {
                             var header = "Something failed during folder items retrieval";
                             return handleBoxError(err, header, res);
