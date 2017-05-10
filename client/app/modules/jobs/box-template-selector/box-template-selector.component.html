@@ -1,0 +1,50 @@
+<div id="box-template-select-field" class="required field">
+    <label>
+        Box Folder Template
+        <span *ngIf="userRole == 'admin'">(can't find it?
+            <a id="new-box-template-popup" class="popup-trigger"
+               (click)="openModal()"><i class="add icon"></i>add new</a>
+            <div class="ui small modal" id="new-box-template-modal">
+                <div class="header">Add New Box Template</div>
+                <div class="content">
+                    <form #form="ngForm" class="ui form">
+                        <div class="required field">
+                            <label>Template Name</label>
+                            <input type="text" required #newTemplateNameInput>
+                        </div>
+                        <div class="required field">
+                            <label>Template ID</label>
+                            <input type="text" require #newTemplateIdInput>
+                        </div>
+                        <div class="ui clearing divider"></div>
+                        <div class="ui grid">
+                        <div class="row">
+                            <div class="column">
+                                <div class="ui large right floated buttons">
+                                    <div class="ui positive button"
+                                         (click)="addNewTemplate(newTemplateIdInput.value, newTemplateNameInput.value);
+                                          newTemplateIdInput.value = ''; newTemplateNameInput.value = ''">Save</div>
+                                    <div class="or"></div>
+                                    <div class="ui button" (click)="addNewTemplate('', '')">Cancel</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+            )
+        </span>
+    </label>
+    <select required class="ui fluid search dropdown selection"
+            [(ngModel)]="selectedTemplate"
+            (ngModelChange)="onFolderChanged()"
+            #boxTemplate="ngModel">
+        <option value=" ">(don't use a template)</option>
+        <option *ngFor="let t of templateFolders"
+                [ngValue]="t">{{t?.name}}
+        </option>
+    </select>
+</div>
+
+

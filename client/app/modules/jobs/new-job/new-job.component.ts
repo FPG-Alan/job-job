@@ -92,7 +92,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit() {
         // dropdown
         $(".ui.search.dropdown.selection").dropdown();
-
         $(".popup-trigger").popup({
             on: "click",
             closable: false,

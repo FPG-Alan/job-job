@@ -47,14 +47,18 @@ boxIntegrationRouter.post("/template", requireRole("admin"), function (req, res)
         } else {
             var newTemplate = new Template({
                 id: req.body.id,
+                provider: "box",
                 name: req.body.name
             });
             newTemplate.save(function (err, t) {
+
                 if (err) {
+                    console.log(err);
                     res.status(500).send({header: 'Couldn\'t save new template'});
+                } else {
+                    console.log("Added new Template: " + t.name);
+                    res.json(t);
                 }
-                console.log("Added new Template: " + t.name);
-                res.json(t);
             });
         }
     })

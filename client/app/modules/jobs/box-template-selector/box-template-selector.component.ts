@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, Output, EventEmitter} from "@angular/core";
+import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from "@angular/core";
 import {ApiService} from "../../../services/api.service";
 import {CommonService} from "../../../services/common.service";
 
@@ -9,10 +9,11 @@ declare var $;
     templateUrl: './box-template-selector.component.html',
     styleUrls: ['./box-template-selector.component.scss']
 })
-export class BoxTemplateSelectorComponent implements OnInit {
+export class BoxTemplateSelectorComponent implements OnInit, OnDestroy {
 
 
     @Output() onTemplateRetrieveFailed = new EventEmitter<boolean>();
+    @Input() userRole: string = "";
     @Input() newJob: any = null;
     selectedTemplate: any = null;
     templateFolders: any[] = [];
@@ -23,15 +24,13 @@ export class BoxTemplateSelectorComponent implements OnInit {
 
     ngOnInit() {
         $(".ui.selection.dropdown").dropdown();
+
         this.apiService.getFolderTemplates()
             .subscribe(
                 res => {
                     this.templateFolders = res;
-                    if (this.templateFolders.length == 0) {
-                        this.onTemplateRetrieveFailed.emit(true);
-                    }
                 },
-                err=> {
+                err => {
                     this.commonService.handleError({
                         header: "Failed to retrieve Box folder templates",
                         message: "Please click the refresh button (if applicable) " +
@@ -42,11 +41,51 @@ export class BoxTemplateSelectorComponent implements OnInit {
             );
     }
 
-    onFolderChanged(){
+
+    ngOnDestroy() {
+        // avoid duplicate modals
+        $("#new-box-template-modal").modal("hide");
+        $("#new-box-template-modal").remove();
+    }
+
+    openModal() {
+        $("#new-box-template-modal")
+            .modal("setting", "closable", false)
+            .modal("show");
+    }
+
+    addNewTemplate(templateId, templateName) {
+        if (!this.commonService.isEmptyString(templateId)
+            && !this.commonService.isEmptyString(templateName)) {
+            this.apiService
+                .createNewFolderTemplate(templateId, templateName)
+                .subscribe(
+                    res => {
+                        console.log(res);
+                        this.templateFolders.push(res);
+                        this.selectedTemplate = res;
+                        $("#box-template-select-field div.text")[0].innerText = res.name;
+                        this.commonService.notifyMessage(
+                            "success",
+                            "Sweet!",
+                            "Added a new Box template: "
+                            + "\"" + this.selectedTemplate.name + "\""
+                        );
+                        $("#new-box-template-modal").modal("hide");
+                    },
+                    err => this.commonService.handleError(err)
+                )
+        } else {
+            $("#new-box-template-modal").modal("hide");
+        }
+    }
+
+    onFolderChanged() {
 
     }
 
-    copyFolder(){
+    copyFolder() {
 
     }
 }
+

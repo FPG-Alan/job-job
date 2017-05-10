@@ -1,5 +1,7 @@
 <div class="ui clearing basic segment">
-    <h1 [class.hidden]="submitted" style="margin-bottom: 0">
+    <h1 [class.hidden]="submitted"
+        class="ui left floated header"
+        style="margin-bottom: 0">
         Create New Job
     </h1>
     <a class="ui right floated button"
@@ -185,8 +187,18 @@
         </app-rate-card-selector>
     </div>
 
-    <!--Service Type-->
+
     <div class="two fields">
+        <app-box-template-selector
+                (onTemplateRetrieveFailed)="retrieveRemoteDataFailed = $event"
+                [userRole]="role"
+                #boxTemplateSelector>
+        </app-box-template-selector>
+    </div>
+
+
+    <div class="two fields">
+        <!--Service Type-->
         <div class="required grouped field"
              [class.success]="job.serviceType != '' && serviceTypes != null">
             <label>Trello Board Type</label>
