@@ -200,22 +200,8 @@ export class ApiService {
     /*******************
      * BOX INTEGRATION *
      *******************/
-    getFolderTemplates() {
-        return this.authHttp.get("/box/template")
-            .map(res => res.json());
-    }
 
-    createNewFolderTemplate(templateId: string, templateName: string) {
-        let body = {
-            id: templateId,
-            name: templateName
-        };
-        let headers = new Headers({"Content-Type": "application/json"});
-        let options = new RequestOptions({headers: headers});
 
-        return this.authHttp.post("/box/template", body, options)
-            .map(res => res.json());
-    }
 
     createNewFolder(userId: string, folderName: any, parentFolderId: string) {
         let body = {
@@ -230,10 +216,9 @@ export class ApiService {
             .map(res => res.json());
     }
 
-    copyFolders(userId: string, sourceId: string, destinationId: string) {
+    copyFolders(userId: string, destinationId: string) {
         let body = {
             userId: userId,
-            sourceId: sourceId,
             destinationId: destinationId
         };
         let headers = new Headers({"Content-Type": "application/json"});
@@ -246,6 +231,23 @@ export class ApiService {
     /**********************
      * TRELLO INTEGRATION *
      **********************/
+    getBoardTemplates() {
+        return this.authHttp.get("/trello/template")
+            .map(res => res.json());
+    }
+
+    createNewBoardTemplate(templateId: string, templateName: string) {
+        let body = {
+            id: templateId,
+            name: templateName
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/trello/template", body, options)
+            .map(res => res.json());
+    }
+
     copyBoard(userId: string, boardName: string, serviceType: string) {
         let body = {
             userId: userId,

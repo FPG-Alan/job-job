@@ -5,12 +5,11 @@ import {CommonService} from "../../../services/common.service";
 declare var $;
 
 @Component({
-    selector: 'app-box-template-selector',
-    templateUrl: './box-template-selector.component.html',
-    styleUrls: ['./box-template-selector.component.scss']
+    selector: 'app-trello-template-selector',
+    templateUrl: 'trello-template-selector.component.html',
+    styleUrls: ['trello-template-selector.component.scss']
 })
-export class BoxTemplateSelectorComponent implements OnInit, OnDestroy {
-
+export class TrelloTemplateSelectorComponent implements OnInit, OnDestroy {
 
     @Output() onTemplateRetrieveFailed = new EventEmitter<boolean>();
     @Output() onTemplateCopied = new EventEmitter<string>();
@@ -35,7 +34,7 @@ export class BoxTemplateSelectorComponent implements OnInit, OnDestroy {
                 },
                 err => {
                     this.commonService.handleError({
-                        header: "Failed to retrieve Box folder templates",
+                        header: "Failed to retrieve Trello board templates",
                         message: "Please click the refresh button (if applicable) " +
                         "or manually reload this page"
                     });
@@ -47,12 +46,12 @@ export class BoxTemplateSelectorComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         // avoid duplicate modals
-        $("#new-box-template-modal").modal("hide");
-        $("#new-box-template-modal").remove();
+        $("#new-trello-template-modal").modal("hide");
+        $("#new-trello-template-modal").remove();
     }
 
     openModal() {
-        $("#new-box-template-modal")
+        $("#new-trello-template-modal")
             .modal("setting", "closable", false)
             .modal("show");
     }
@@ -61,25 +60,25 @@ export class BoxTemplateSelectorComponent implements OnInit, OnDestroy {
         if (!this.commonService.isEmptyString(templateId)
             && !this.commonService.isEmptyString(templateName)) {
             this.apiService
-                .createNewFolderTemplate(templateId, templateName)
+                .createNewBoardTemplate(templateId, templateName)
                 .subscribe(
                     res => {
                         console.log(res);
                         this.templateFolders.push(res);
                         this.selectedTemplate = res;
-                        $("#box-template-select-field div.text")[0].innerText = res.name;
+                        $("#trello-template-select-field div.text")[0].innerText = res.name;
                         this.commonService.notifyMessage(
                             "success",
                             "Sweet!",
-                            "Added a new Box template: "
+                            "Added a new Trello template: "
                             + "\"" + this.selectedTemplate.name + "\""
                         );
-                        $("#new-box-template-modal").modal("hide");
+                        $("#new-trello-template-modal").modal("hide");
                     },
                     err => this.commonService.handleError(err)
                 )
         } else {
-            $("#new-box-template-modal").modal("hide");
+            $("#new-trello-template-modal").modal("hide");
         }
     }
 
