@@ -81,16 +81,5 @@ export class TrelloTemplateSelectorComponent implements OnInit, OnDestroy {
             $("#new-trello-template-modal").modal("hide");
         }
     }
-
-    copyFolder() {
-        if (this.newFolder && this.selectedTemplate) {
-            this.apiService
-                .copyFolders(this.userId, this.selectedTemplate.id, this.newFolder.id)
-                .subscribe(
-                    res => this.onTemplateCopied.emit("completed"),
-                    err => this.onTemplateCopyFailed.emit(err)
-                )
-        }
-    }
 }
 
