@@ -189,64 +189,46 @@
 
 
     <div class="two fields">
-        <app-box-template-selector
-                (onTemplateRetrieveFailed)="retrieveRemoteDataFailed = $event"
-                (onTemplateCopied)="onBoxTemplateCopied($event)"
-                (onTemplateCopyFailed)="onBoxTemplateCopyFailed($event)"
-                [userId]="userId"
-                [userRole]="role"
-                #boxTemplateSelector>
-        </app-box-template-selector>
     </div>
 
 
     <div class="two fields">
         <!--Service Type-->
-        <div class="required grouped field"
-             [class.success]="job.serviceType != '' && serviceTypes != null">
-            <label>Trello Board Type</label>
-            <div class="field">
-                <div class="radio" *ngFor="let serviceType of serviceTypes">
-                    <label>
-                        <input type="radio"
-                               name="type" [(ngModel)]="job.serviceType"
-                               [value]="serviceType.value"
-                               (focus)="steveBotComponent.sayOnce([
-                               'Trello Board type also determines the Service Type field on 10,000ft. If it\'s not provided,' +
-                               ' you should fill in the field on 10k\' manually.'])">
-                        {{serviceType.display}}
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="grouped field">
-            <div class="field">
-                <label>Slack Channel Name (leave blank to opt out)</label>
-                <input type="text"
-                       placeholder="(~21 characters, only a-z, 0-9, hyphens, underscores)"
-                       [(ngModel)]="slackChannelName"
-                       name="slackChannel"
-                       #slackChannel="ngModel"
-                       maxlength="21"
-                       style="margin-bottom:2px"
-                       (focus)="commonService.isEmptyString(job.name) ? null :
+        <app-trello-template-selector
+                (onTemplateRetrieveFailed)="retrieveRemoteDataFailed = $event"
+                (onTemplateCopied)="onBoxTemplateCopied($event)"
+                (onTemplateCopyFailed)="onTrelloTemplateCopyFailed($event)"
+                [userId]="userId"
+                [userRole]="role"
+                #trelloTemplateSelector>
+        </app-trello-template-selector>
+
+        <div class="field">
+            <label>Slack Channel Name (leave blank to opt out)</label>
+            <input type="text"
+                   placeholder="(~21 characters, only a-z, 0-9, hyphens, underscores)"
+                   [(ngModel)]="slackChannelName"
+                   name="slackChannel"
+                   #slackChannel="ngModel"
+                   maxlength="21"
+                   style="margin-bottom:2px"
+                   (focus)="commonService.isEmptyString(job.name) ? null :
                             steveBotComponent.sayOnce(['Bee tee dubs, those name suggestions are clickable.'],'slackChannel')">
-                <div *ngIf="!commonService.isEmptyString(job.name)" style="margin-top: 5px">
-                    <span>Suggestions:</span>
-                    <div id="slack-name-suggestion">
-                        <div class="item">
-                            <div class="ui black label button"
-                                 *ngIf="!commonService.isEmptyString(job.name)"
-                                 (click)="onSlackChannelNameSelected('noVowels')">
-                                {{finalName.result | slackChannelName:"noVowels"}}
-                            </div>
+            <div *ngIf="!commonService.isEmptyString(job.name)" style="margin-top: 5px">
+                <span>Suggestions:</span>
+                <div id="slack-name-suggestion">
+                    <div class="item">
+                        <div class="ui black label button"
+                             *ngIf="!commonService.isEmptyString(job.name)"
+                             (click)="onSlackChannelNameSelected('noVowels')">
+                            {{finalName.result | slackChannelName:"noVowels"}}
                         </div>
-                        <div class="item">
-                            <div class="ui black label button"
-                                 *ngIf="!commonService.isEmptyString(job.name)"
-                                 (click)="onSlackChannelNameSelected('abruptCut')">
-                                {{finalName.result | slackChannelName:"abruptCut"}}
-                            </div>
+                    </div>
+                    <div class="item">
+                        <div class="ui black label button"
+                             *ngIf="!commonService.isEmptyString(job.name)"
+                             (click)="onSlackChannelNameSelected('abruptCut')">
+                            {{finalName.result | slackChannelName:"abruptCut"}}
                         </div>
                     </div>
                 </div>
@@ -266,8 +248,7 @@
                     <div class="or"></div>
                     <button type="submit" class="ui positive button"
                             [disabled]="!form.form.valid
-                            || commonService.isEmptyString(rateCardSelectorComponent.selectedTemplate)
-                            || job.serviceType == '' || serviceTypes == null">
+                            || commonService.isEmptyString(rateCardSelectorComponent.selectedTemplate)">
                         <i class="checkmark icon"></i>Submit
                     </button>
                 </div>
@@ -297,6 +278,8 @@
         [customFields]="customFields"
         [job]="job"
         [finalName]="finalName"
+        [copyingBoxFolder]="true"
+        [trelloTemplateId]="trelloTemplateSelectorComponent?.selectedTemplate?.id"
         [slackChannelName]="slackChannelName"
         [usingFinalName]="usingFinalName"
         (onJobCreated)="onJobCreated($event)"

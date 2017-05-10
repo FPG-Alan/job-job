@@ -346,9 +346,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     onSubmit(form: NgForm) {
         if (form.valid
             && !this.submitted
-            && !this.commonService.isEmptyString(this.rateCardSelectorComponent.selectedTemplate)
-            && this.job.serviceType != ''
-            && this.serviceTypes != null) {
+            && !this.commonService.isEmptyString(this.rateCardSelectorComponent.selectedTemplate)) {
             // compile what everything that hasn't been updated yet
             this.job.code = "" + this.finalName.clientCode + this.finalName.startYear + this.finalName.projectCount;
 

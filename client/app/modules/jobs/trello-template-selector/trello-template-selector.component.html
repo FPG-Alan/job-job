@@ -21,11 +21,11 @@
                         <div class="row">
                             <div class="column">
                                 <div class="ui large right floated buttons">
+                                    <div class="ui button" (click)="addNewTemplate('', '')">Cancel</div>
+                                    <div class="or"></div>
                                     <div class="ui positive button"
                                          (click)="addNewTemplate(newTemplateIdInput.value, newTemplateNameInput.value);
-                                          newTemplateIdInput.value = ''; newTemplateNameInput.value = ''">Save</div>
-                                    <div class="or"></div>
-                                    <div class="ui button" (click)="addNewTemplate('', '')">Cancel</div>
+                                         newTemplateIdInput.value = ''; newTemplateNameInput.value = ''">Save</div>
                                 </div>
                             </div>
                         </div>

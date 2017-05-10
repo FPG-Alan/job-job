@@ -16,7 +16,6 @@ export class TrelloTemplateSelectorComponent implements OnInit, OnDestroy {
     @Output() onTemplateCopyFailed = new EventEmitter<boolean>();
     @Input() userId: string = "";
     @Input() userRole: string = "";
-    newFolder: any = null;
     selectedTemplate: any = null;
     templateFolders: any[] = [];
 
@@ -27,7 +26,7 @@ export class TrelloTemplateSelectorComponent implements OnInit, OnDestroy {
     ngOnInit() {
         $(".ui.selection.dropdown").dropdown();
 
-        this.apiService.getFolderTemplates()
+        this.apiService.getBoardTemplates()
             .subscribe(
                 res => {
                     this.templateFolders = res;

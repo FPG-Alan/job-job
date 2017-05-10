@@ -17,8 +17,9 @@ export class ConfirmComponent implements OnInit {
 
     @Input() job: Job;
     @Input() finalName;
-    @Input() slackChannelName: string;
     @Input() copyingBoxFolder: boolean = true;
+    @Input() trelloTemplateId: string;
+    @Input() slackChannelName: string;
     @Input() usingFinalName: boolean;
 
     @Output() onJobCreated = new EventEmitter<Job>();
@@ -176,8 +177,8 @@ export class ConfirmComponent implements OnInit {
         // Box
         this.createNewFolder(null, "client");
         // Trello
-        if (!this.commonService.isEmptyString(this.job.serviceType)) {
-            this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.job.serviceType);
+        if (!this.commonService.isEmptyString(this.trelloTemplateId)) {
+            this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.trelloTemplateId);
         } else { this.servicesCount++; }
         // Slack
         if (!this.commonService.isEmptyString(this.slackChannelName)) {
@@ -354,9 +355,9 @@ export class ConfirmComponent implements OnInit {
     /**********************
      * TRELLO INTEGRATION *
      **********************/
-    copyBoard(boardName, serviceType) {
+    copyBoard(boardName, sourceId) {
         this.trelloProgress.board.status = "active";
-        this.apiService.copyBoard(this.userId, boardName, serviceType)
+        this.apiService.copyBoard(this.userId, boardName, sourceId)
             .subscribe(
                 res => {
                     this.servicesCount++;

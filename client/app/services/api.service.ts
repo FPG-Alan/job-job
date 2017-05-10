@@ -248,11 +248,11 @@ export class ApiService {
             .map(res => res.json());
     }
 
-    copyBoard(userId: string, boardName: string, serviceType: string) {
+    copyBoard(userId: string, boardName: string, sourceId: string) {
         let body = {
             userId: userId,
             boardName: boardName,
-            serviceType: serviceType
+            sourceId: sourceId
         };
         let headers = new Headers({"Content-Type": "application/json"});
         let options = new RequestOptions({headers: headers});
