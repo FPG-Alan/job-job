@@ -3,8 +3,10 @@ var unirest = require('unirest');
 var dotenv = process.env.NODE_ENV == "production"
     ? null : require('dotenv').config();
 var trelloIntegrationRouter = express.Router();
+var requireRole = require("../middlewares/requiredRole");
 
 var Token = require("../models/token");
+var Template = require("../models/template");
 var apiUrl = process.env.TRELLO_API_URL;
 var apiKey = process.env.TRELLO_KEY;
 var siteTemplateBoardId = process.env.TRELLO_SITE_TEMPLATE_ID;
@@ -53,5 +55,48 @@ trelloIntegrationRouter.post("/", function (req, res) {
         }
     });
 });
+
+trelloIntegrationRouter.get("/template", function (req, res) {
+    Template.find({}, function (err, templates) {
+        if (templates) {
+            return res.json(templates);
+        } else {
+            return res.status(500).send({header: 'Couldn\'t retrieve all Trello templates!'});
+        }
+    });
+});
+
+trelloIntegrationRouter.post("/template", requireRole("admin"), function (req, res) {
+    if (!req.body.id || !req.body.name) {
+        return res.status(500).send({
+            header: 'Couldn\'t create new Trello template',
+            message: 'Please specify board ID and name'
+        });
+    }
+    Template.findOne({id: req.body.id, provider: "trello"}, function (err, template) {
+        if (template) {
+            res.status(500).send({
+                header: 'Template already exists',
+                message: 'Please try a different ID'
+            });
+        } else {
+            var newTemplate = new Template({
+                id: req.body.id,
+                provider: "trello",
+                name: req.body.name
+            });
+            newTemplate.save(function (err, t) {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send({header: 'Couldn\'t save new template'});
+                } else {
+                    console.log("Added new Template: " + t.name);
+                    res.json(t);
+                }
+            });
+        }
+    })
+});
+
 
 module.exports = trelloIntegrationRouter;
