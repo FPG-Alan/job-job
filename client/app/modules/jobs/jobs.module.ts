@@ -3,7 +3,7 @@ import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {SharedModule} from "../shared/shared.module";
 import {routing} from "./jobs.routing";
-import {BoxTemplateSelectorModule} from "./box-template-selector/box-template-selector.module";
+import {TrelloTemplateSelectorModule} from "./trello-template-selector/trello-template-selector.module";
 import {RateCardSelectorModule} from "./rate-card-selector/rate-card-selector.module";
 import {JobsComponent} from "./jobs.component";
 import {DetailsComponent} from "./details/details.component";
@@ -17,7 +17,7 @@ import {SteveBotModule} from "../steve-bot/steve-bot.module";
         CommonModule,
         FormsModule,
         SharedModule.forRoot(),
-        BoxTemplateSelectorModule,
+        TrelloTemplateSelectorModule,
         RateCardSelectorModule,
         NewClientModule,
         SteveBotModule,

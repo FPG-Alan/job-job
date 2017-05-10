@@ -1,11 +1,11 @@
-<div id="box-template-select-field" class="required field">
+<div id="trello-template-select-field" class="required field">
     <label>
-        Box Folder Template
+        Trello Board Template
         <span *ngIf="userRole == 'admin'">(can't find it?
-            <a id="new-box-template-popup" class="popup-trigger"
+            <a id="new-trello-template-popup" class="popup-trigger"
                (click)="openModal()"><i class="add icon"></i>add new</a>
-            <div class="ui small modal" id="new-box-template-modal">
-                <div class="header">Add New Box Template</div>
+            <div class="ui small modal" id="new-trello-template-modal">
+                <div class="header">Add New Trello Template</div>
                 <div class="content">
                     <form #form="ngForm" class="ui form">
                         <div class="required field">
@@ -21,11 +21,11 @@
                         <div class="row">
                             <div class="column">
                                 <div class="ui large right floated buttons">
+                                    <div class="ui button" (click)="addNewTemplate('', '')">Cancel</div>
+                                    <div class="or"></div>
                                     <div class="ui positive button"
                                          (click)="addNewTemplate(newTemplateIdInput.value, newTemplateNameInput.value);
-                                          newTemplateIdInput.value = ''; newTemplateNameInput.value = ''">Save</div>
-                                    <div class="or"></div>
-                                    <div class="ui button" (click)="addNewTemplate('', '')">Cancel</div>
+                                         newTemplateIdInput.value = ''; newTemplateNameInput.value = ''">Save</div>
                                 </div>
                             </div>
                         </div>

@@ -13,7 +13,7 @@
     padding-bottom: 50px;
 }
 
-app-box-template-selector,
+app-trello-template-selector,
 app-rate-card-selector {
     width: 100%;
     padding-left: .5em;
@@ -21,7 +21,7 @@ app-rate-card-selector {
 }
 
 @media screen and (min-width: 767px) {
-    app-box-template-selector,
+    app-trello-template-selector,
     app-rate-card-selector {
         width: 50%;
     }
