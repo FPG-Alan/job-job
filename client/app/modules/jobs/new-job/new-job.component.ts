@@ -58,8 +58,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         brand: "",
         formattedName: ""
     };
-    slackChannelName = "";
     syncWithBoxApp = true;
+    slackChannelName = "";
     usingFinalName = true;
 
     unsaved = false;

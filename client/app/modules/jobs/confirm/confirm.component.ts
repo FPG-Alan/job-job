@@ -17,7 +17,7 @@ export class ConfirmComponent implements OnInit {
 
     @Input() job: Job;
     @Input() finalName;
-    @Input() syncWithBoxApp: boolean = true;
+    @Input() syncWithBoxApp: boolean;
     @Input() trelloTemplateId: string;
     @Input() slackChannelName: string;
     @Input() usingFinalName: boolean;
