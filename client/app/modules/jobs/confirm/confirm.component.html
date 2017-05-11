@@ -57,7 +57,7 @@
                            'green checkmark': tenKProgress?.project?.status == 'completed',
                            'red remove': tenKProgress?.project?.status == 'failed'}"></i>
                         <div class="content">
-                            <div class="header">Project</div>
+                            <div class="header">Create new Project</div>
                             <div class="description"
                                  *ngIf="tenKProgress?.project?.status != 'completed'">
                                 {{tenKProgress?.project?.details}}
@@ -76,7 +76,7 @@
                            'green checkmark': tenKProgress?.customFields?.status == 'completed',
                            'red remove': tenKProgress?.customFields?.status == 'failed'}"></i>
                         <div class="content">
-                            <div class="header">Custom Fields</div>
+                            <div class="header">Apply important Custom Fields</div>
                             <div class="description"
                                  *ngIf="tenKProgress?.customFields?.status != 'completed'">
                                 {{tenKProgress?.customFields?.details}}
@@ -121,7 +121,7 @@
                            'green checkmark': boxProgress?.client?.status == 'completed',
                            'red remove': boxProgress?.client?.status == 'failed'}"></i>
                         <div class="content">
-                            <div class="header">Client</div>
+                            <div class="header">Create or find Client folder</div>
                             <div class="description"
                                  *ngIf="boxProgress?.client?.status != 'completed'">
                                 {{boxProgress?.client?.details}}
@@ -140,7 +140,7 @@
                            'green checkmark': boxProgress?.job?.status == 'completed',
                            'red remove': boxProgress?.job?.status == 'failed'}"></i>
                         <div class="content">
-                            <div class="header">Job</div>
+                            <div class="header">Create new Job folder</div>
                             <div class="description"
                                  *ngIf="boxProgress?.job?.status != 'completed'">
                                 {{boxProgress?.job?.details}}
@@ -155,17 +155,36 @@
                         <i class="big icon"
                            [ngClass]="{'disabled': boxProgress?.copyTemplate?.status == 'disabled',
                            'active pulse': boxProgress?.copyTemplate?.status == 'active',
-                           'copy': boxProgress?.copyTemplate?.status != 'completed' && boxProgress?.job?.status != 'failed',
+                           'copy': boxProgress?.copyTemplate?.status != 'completed' && boxProgress?.copyTemplate?.status != 'failed',
                            'green checkmark': boxProgress?.copyTemplate?.status == 'completed',
                            'red remove': boxProgress?.copyTemplate?.status == 'failed'}"></i>
                         <div class="content">
-                            <div class="header">Copy Template</div>
+                            <div class="header">Copy folders from Project Template</div>
                             <div class="description"
                                  *ngIf="boxProgress?.copyTemplate?.status != 'completed'">
                                 {{boxProgress?.copyTemplate?.details}}
                             </div>
                             <div class="description"
                                  *ngIf="boxProgress?.copyTemplate?.status == 'completed'">
+                                Completed
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="big icon"
+                           [ngClass]="{'disabled': boxProgress?.sync?.status == 'disabled',
+                           'active pulse': boxProgress?.sync?.status == 'active',
+                           'refresh': boxProgress?.sync?.status != 'completed' && boxProgress?.sync?.status != 'failed',
+                           'green checkmark': boxProgress?.sync?.status == 'completed',
+                           'red remove': boxProgress?.sync?.status == 'failed'}"></i>
+                        <div class="content">
+                            <div class="header">Sync new folders with Desktop App</div>
+                            <div class="description"
+                                 *ngIf="boxProgress?.sync?.status != 'completed'">
+                                {{boxProgress?.sync?.details}}
+                            </div>
+                            <div class="description"
+                                 *ngIf="boxProgress?.sync?.status == 'completed'">
                                 Completed
                             </div>
                         </div>
@@ -184,7 +203,7 @@
                            'green checkmark': trelloProgress?.board?.status == 'completed',
                            'red remove': trelloProgress?.board?.status == 'failed'}"></i>
                         <div class="content">
-                            <div class="header">Board</div>
+                            <div class="header">Create Board from a template</div>
                             <div class="description"
                                  *ngIf="trelloProgress?.board?.status != 'completed'">
                                 {{trelloProgress?.board?.details}}
@@ -209,7 +228,7 @@
                            'green checkmark': slackProgress?.channel?.status == 'completed',
                            'red remove': slackProgress?.channel?.status == 'failed'}"></i>
                         <div class="content">
-                            <div class="header">Channel</div>
+                            <div class="header">Create new Channel</div>
                             <div class="description"
                                  *ngIf="slackProgress?.channel?.status != 'completed'">
                                 {{slackProgress?.channel?.details}}

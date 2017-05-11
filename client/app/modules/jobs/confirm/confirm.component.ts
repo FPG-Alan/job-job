@@ -17,7 +17,6 @@ export class ConfirmComponent implements OnInit {
 
     @Input() job: Job;
     @Input() finalName;
-    @Input() copyingBoxFolder: boolean = true;
     @Input() trelloTemplateId: string;
     @Input() slackChannelName: string;
     @Input() usingFinalName: boolean;
@@ -54,6 +53,10 @@ export class ConfirmComponent implements OnInit {
             details: "Working..."
         },
         copyTemplate: {
+            status: "disabled",
+            details: "Working..."
+        },
+        sync: {
             status: "disabled",
             details: "Working..."
         }
@@ -330,26 +333,25 @@ export class ConfirmComponent implements OnInit {
         }
     }
 
-
     copyFolders(newFolder: string) {
-        if (this.copyingBoxFolder) {
-            this.boxProgress.copyTemplate.status = "active";
-            this.apiService
-                .copyFolders(this.userId, newFolder)
-                .subscribe(
-                    res => {
-                        console.log(res);
-                        this.servicesCount++;
-                        this.boxProgress.copyTemplate.status = "completed";
-                    },
-                    err => {
-                        this.servicesCount++;
-                        this.handleError(err, "box", "copyTemplate")
-                    }
-                )
-        } else {
-            this.servicesCount++;
-        }
+        this.boxProgress.copyTemplate.status = "active";
+        this.apiService
+            .copyFolders(this.userId, newFolder)
+            .subscribe(
+                res => {
+                    console.log(res);
+                    this.servicesCount++;
+                    this.boxProgress.copyTemplate.status = "completed";
+                },
+                err => {
+                    this.servicesCount++;
+                    this.handleError(err, "box", "copyTemplate")
+                }
+            );
+    }
+
+    syncFolder(newFolder: string) {
+
     }
 
     /**********************

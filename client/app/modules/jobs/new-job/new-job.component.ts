@@ -46,11 +46,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     retrieveRemoteDataFailed: boolean = false;
     clients: Client[] = [];
     producers: string[] = [];
-    serviceTypes = [
-        {value: 'Site', display: 'Site Template'},
-        {value: 'Banner', display: 'Banner Template'},
-        {value: ' ', display: 'None (Manually Create on Trello)'}
-    ];
     customFields: any;
 
     // passable data to children
@@ -64,6 +59,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         formattedName: ""
     };
     slackChannelName = "";
+    syncWithBoxApp = true;
     usingFinalName = true;
 
     unsaved = false;

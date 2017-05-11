@@ -160,6 +160,19 @@
 
 
     <br><br>
+    <!--Box Folder Sync-->
+    <div class="field">
+        <div class="ui segment">
+            <div class="ui toggle checkbox"
+                 [ngClass]="{'checked': syncWithBoxApp}"
+                 (click)="syncWithBoxApp = !syncWithBoxApp">
+                <input [attr.checked]="syncWithBoxApp? 'checked' : null"
+                       type="checkbox" tabindex="0" class="hidden">
+                <label>Sync new folder with my desktop <strong>Box App</strong></label>
+            </div>
+        </div>
+    </div>
+
     <div class="two fields">
         <!--Producer-->
         <div id="producer-select-field" class="required field"
@@ -187,13 +200,8 @@
         </app-rate-card-selector>
     </div>
 
-
     <div class="two fields">
-    </div>
-
-
-    <div class="two fields">
-        <!--Service Type-->
+        <!--Trello Board Template-->
         <app-trello-template-selector
                 (onTemplateRetrieveFailed)="retrieveRemoteDataFailed = $event"
                 (onTemplateCopied)="onBoxTemplateCopied($event)"
@@ -203,6 +211,7 @@
                 #trelloTemplateSelector>
         </app-trello-template-selector>
 
+        <!--Slack Channel Name-->
         <div class="field">
             <label>Slack Channel Name (leave blank to opt out)</label>
             <input type="text"
@@ -237,13 +246,14 @@
     </div>
 
 
+    <!--Form Buttons-->
     <div class="ui divider"></div>
     <div class="ui grid">
         <div class="row">
             <div class="column">
                 <div class="ui large right floated buttons">
                     <button type="button" class="ui negative button"
-                            (click)="confirmResetModels()"><i class="refresh icon"></i>Clear
+                            (click)="confirmResetModels()"><i class="erase icon"></i>Clear
                     </button>
                     <div class="or"></div>
                     <button type="submit" class="ui positive button"
@@ -278,7 +288,6 @@
         [customFields]="customFields"
         [job]="job"
         [finalName]="finalName"
-        [copyingBoxFolder]="true"
         [trelloTemplateId]="trelloTemplateSelectorComponent?.selectedTemplate?.id"
         [slackChannelName]="slackChannelName"
         [usingFinalName]="usingFinalName"
