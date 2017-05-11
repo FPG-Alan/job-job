@@ -213,14 +213,55 @@ export class ApiService {
             .map(res => res.json());
     }
 
+    copyFolders(userId: string, destinationId: string) {
+        let body = {
+            userId: userId,
+            destinationId: destinationId
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/box/copy", body, options)
+            .map(res => res.json());
+    }
+
+    syncFolder(userId: string, folderId: string) {
+        let body = {
+            userId: userId,
+            folder: folderId
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.put("/box/sync", body, options)
+            .map(res => res.json());
+    }
+
     /**********************
      * TRELLO INTEGRATION *
      **********************/
-    copyBoard(userId: string, boardName: string, serviceType: string) {
+    getBoardTemplates() {
+        return this.authHttp.get("/trello/template")
+            .map(res => res.json());
+    }
+
+    createNewBoardTemplate(templateId: string, templateName: string) {
+        let body = {
+            id: templateId,
+            name: templateName
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.post("/trello/template", body, options)
+            .map(res => res.json());
+    }
+
+    copyBoard(userId: string, boardName: string, sourceId: string) {
         let body = {
             userId: userId,
             boardName: boardName,
-            serviceType: serviceType
+            sourceId: sourceId
         };
         let headers = new Headers({"Content-Type": "application/json"});
         let options = new RequestOptions({headers: headers});

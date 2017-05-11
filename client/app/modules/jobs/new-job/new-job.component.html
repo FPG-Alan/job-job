@@ -1,5 +1,7 @@
 <div class="ui clearing basic segment">
-    <h1 [class.hidden]="submitted" style="margin-bottom: 0">
+    <h1 [class.hidden]="submitted"
+        class="ui left floated header"
+        style="margin-bottom: 0">
         Create New Job
     </h1>
     <a class="ui right floated button"
@@ -83,9 +85,9 @@
                         <div class="ui input">
                           <input type="text" placeholder="(enter new brand)" #newBrandInput>
                         </div>
+                        <div class="ui button" (click)="addNewBrand('')">Cancel</div>
                         <div class="ui positive button"
                              (click)="addNewBrand(newBrandInput.value); newBrandInput.value = ''">Save</div>
-                        <div class="ui button" (click)="addNewBrand('')">Cancel</div>
                     </div>
                     )
                 </span>
@@ -158,6 +160,19 @@
 
 
     <br><br>
+    <!--Box Folder Sync-->
+    <div class="field">
+        <div class="ui segment">
+            <div class="ui toggle checkbox"
+                 [ngClass]="{'checked': syncWithBoxApp}"
+                 (click)="syncWithBoxApp = !syncWithBoxApp">
+                <input [attr.checked]="syncWithBoxApp? 'checked' : null"
+                       type="checkbox" tabindex="0" class="hidden">
+                <label>Sync new folder with my desktop <strong>Box App</strong></label>
+            </div>
+        </div>
+    </div>
+
     <div class="two fields">
         <!--Producer-->
         <div id="producer-select-field" class="required field"
@@ -185,53 +200,44 @@
         </app-rate-card-selector>
     </div>
 
-    <!--Service Type-->
     <div class="two fields">
-        <div class="required grouped field"
-             [class.success]="job.serviceType != '' && serviceTypes != null">
-            <label>Trello Board Type</label>
-            <div class="field">
-                <div class="radio" *ngFor="let serviceType of serviceTypes">
-                    <label>
-                        <input type="radio"
-                               name="type" [(ngModel)]="job.serviceType"
-                               [value]="serviceType.value"
-                               (focus)="steveBotComponent.sayOnce([
-                               'Trello Board type also determines the Service Type field on 10,000ft. If it\'s not provided,' +
-                               ' you should fill in the field on 10k\' manually.'])">
-                        {{serviceType.display}}
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="grouped field">
-            <div class="field">
-                <label>Slack Channel Name (leave blank to opt out)</label>
-                <input type="text"
-                       placeholder="(~21 characters, only a-z, 0-9, hyphens, underscores)"
-                       [(ngModel)]="slackChannelName"
-                       name="slackChannel"
-                       #slackChannel="ngModel"
-                       maxlength="21"
-                       style="margin-bottom:2px"
-                       (focus)="commonService.isEmptyString(job.name) ? null :
+        <!--Trello Board Template-->
+        <app-trello-template-selector
+                (onTemplateRetrieveFailed)="retrieveRemoteDataFailed = $event"
+                (onTemplateCopied)="onBoxTemplateCopied($event)"
+                (onTemplateCopyFailed)="onTrelloTemplateCopyFailed($event)"
+                [userId]="userId"
+                [userRole]="role"
+                #trelloTemplateSelector>
+        </app-trello-template-selector>
+
+        <!--Slack Channel Name-->
+        <div class="field">
+            <label>Slack Channel Name (leave blank to opt out)</label>
+            <input type="text"
+                   placeholder="(~21 characters, only a-z, 0-9, hyphens, underscores)"
+                   [(ngModel)]="slackChannelName"
+                   name="slackChannel"
+                   #slackChannel="ngModel"
+                   maxlength="21"
+                   style="margin-bottom:2px"
+                   (focus)="commonService.isEmptyString(job.name) ? null :
                             steveBotComponent.sayOnce(['Bee tee dubs, those name suggestions are clickable.'],'slackChannel')">
-                <div *ngIf="!commonService.isEmptyString(job.name)" style="margin-top: 5px">
-                    <span>Suggestions:</span>
-                    <div id="slack-name-suggestion">
-                        <div class="item">
-                            <div class="ui black label button"
-                                 *ngIf="!commonService.isEmptyString(job.name)"
-                                 (click)="onSlackChannelNameSelected('noVowels')">
-                                {{finalName.result | slackChannelName:"noVowels"}}
-                            </div>
+            <div *ngIf="!commonService.isEmptyString(job.name)" style="margin-top: 5px">
+                <span>Suggestions:</span>
+                <div id="slack-name-suggestion">
+                    <div class="item">
+                        <div class="ui black label button"
+                             *ngIf="!commonService.isEmptyString(job.name)"
+                             (click)="onSlackChannelNameSelected('noVowels')">
+                            {{finalName.result | slackChannelName:"noVowels"}}
                         </div>
-                        <div class="item">
-                            <div class="ui black label button"
-                                 *ngIf="!commonService.isEmptyString(job.name)"
-                                 (click)="onSlackChannelNameSelected('abruptCut')">
-                                {{finalName.result | slackChannelName:"abruptCut"}}
-                            </div>
+                    </div>
+                    <div class="item">
+                        <div class="ui black label button"
+                             *ngIf="!commonService.isEmptyString(job.name)"
+                             (click)="onSlackChannelNameSelected('abruptCut')">
+                            {{finalName.result | slackChannelName:"abruptCut"}}
                         </div>
                     </div>
                 </div>
@@ -240,19 +246,19 @@
     </div>
 
 
+    <!--Form Buttons-->
     <div class="ui divider"></div>
     <div class="ui grid">
         <div class="row">
             <div class="column">
                 <div class="ui large right floated buttons">
                     <button type="button" class="ui negative button"
-                            (click)="confirmResetModels()"><i class="refresh icon"></i>Clear
+                            (click)="confirmResetModels()"><i class="erase icon"></i>Clear
                     </button>
                     <div class="or"></div>
                     <button type="submit" class="ui positive button"
                             [disabled]="!form.form.valid
-                            || commonService.isEmptyString(rateCardSelectorComponent.selectedTemplate)
-                            || job.serviceType == '' || serviceTypes == null">
+                            || commonService.isEmptyString(rateCardSelectorComponent.selectedTemplate)">
                         <i class="checkmark icon"></i>Submit
                     </button>
                 </div>
@@ -282,10 +288,12 @@
         [customFields]="customFields"
         [job]="job"
         [finalName]="finalName"
+        [trelloTemplateId]="trelloTemplateSelectorComponent?.selectedTemplate?.id"
         [slackChannelName]="slackChannelName"
         [usingFinalName]="usingFinalName"
         (onJobCreated)="onJobCreated($event)"
         (onJobCreateFailed)="submitted = false"
+        (onBoxFolderCreated)="onBoxFolderCreated($event)"
         (onFinished)="onFinished($event)"
         (onClickCheckItOut)="checkItOut($event)"
         #confirm>

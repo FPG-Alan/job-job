@@ -7,6 +7,7 @@ import {CommonService} from "../../../services/common.service";
 import {ApiService} from "../../../services/api.service";
 import {DatePipe} from "@angular/common";
 import {NewClientComponent} from "../../clients/new-client/new-client.component";
+import {TrelloTemplateSelectorComponent} from "../trello-template-selector/trello-template-selector.component";
 import {RateCardSelectorComponent} from "../rate-card-selector/rate-card-selector.component";
 import {ConfirmComponent} from "../confirm/confirm.component";
 import {SteveBotComponent} from "../../steve-bot/steve-bot.component";
@@ -25,6 +26,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('newClient')
     private newClientComponent: NewClientComponent;
+    @ViewChild('trelloTemplateSelector')
+    private trelloTemplateSelectorComponent: TrelloTemplateSelectorComponent;
     @ViewChild('rateCardSelector')
     private rateCardSelectorComponent: RateCardSelectorComponent;
     @ViewChild('confirm')
@@ -43,11 +46,6 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     retrieveRemoteDataFailed: boolean = false;
     clients: Client[] = [];
     producers: string[] = [];
-    serviceTypes = [
-        {value: 'Site', display: 'Site Template'},
-        {value: 'Banner', display: 'Banner Template'},
-        {value: ' ', display: 'None (Manually Create on Trello)'}
-    ];
     customFields: any;
 
     // passable data to children
@@ -61,6 +59,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         formattedName: ""
     };
     slackChannelName = "";
+    syncWithBoxApp = true;
     usingFinalName = true;
 
     unsaved = false;
@@ -92,10 +91,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit() {
         // dropdown
         $(".ui.search.dropdown.selection").dropdown();
-
         $(".popup-trigger").popup({
             on: "click",
-            closable: false,
             lastResort: "right center"
         });
 
@@ -345,9 +342,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     onSubmit(form: NgForm) {
         if (form.valid
             && !this.submitted
-            && !this.commonService.isEmptyString(this.rateCardSelectorComponent.selectedTemplate)
-            && this.job.serviceType != ''
-            && this.serviceTypes != null) {
+            && !this.commonService.isEmptyString(this.rateCardSelectorComponent.selectedTemplate)) {
             // compile what everything that hasn't been updated yet
             this.job.code = "" + this.finalName.clientCode + this.finalName.startYear + this.finalName.projectCount;
 
@@ -356,9 +351,13 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    /********************
+     * AFTER SUBMISSION *
+     ********************/
     onJobCreated(newJob: any) {
         this.rateCardSelectorComponent.newJob = newJob;
         this.rateCardSelectorComponent.updateBillRates();
+        this.confirmComponent.tenKProgress.rateCard.status = "active";
     }
 
     onRateUpdated(processingState: string) {
@@ -367,6 +366,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.rateCardSelectorComponent.selectedTemplate
             && !this.commonService.isEmptyString(
                 this.rateCardSelectorComponent.selectedTemplate.name)) { // prevent undefined
+
             let fieldValues = [{
                 name: "Rate Card",
                 value: this.rateCardSelectorComponent.selectedTemplate.name
@@ -376,10 +376,10 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onRateUpdateFailed(err: any) {
+        this.confirmComponent.servicesCount++;
         this.confirmComponent.handleError(err, "tenK", "rateCard");
-        this.confirmComponent.tenKProgress.rateCard.status = "failed"
+        this.confirmComponent.tenKProgress.rateCard.status = "failed";
     }
-
 
     /*****************
      * CUSTOM FIELDS *

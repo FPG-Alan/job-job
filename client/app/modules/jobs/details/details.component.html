@@ -58,16 +58,16 @@
             <div class="row">
                 <div class="column">
                     <div class="ui right floated buttons">
-                        <div class="ui negative button" (click)="selectingRateCard = false">
-                            <i class="remove icon"></i>
-                            Cancel
-                        </div>
-                        <div class="or"></div>
                         <div class="ui positive button"
                              [class.loading]="rateCardProcessingState == 'loading'"
                              (click)="rateCardProcessingState = 'loading'; rateCardSelectorComponent.updateBillRates();">
                             <i class="checkmark icon"></i>
                             Submit
+                        </div>
+                        <div class="or"></div>
+                        <div class="ui negative button" (click)="selectingRateCard = false">
+                            <i class="remove icon"></i>
+                            Cancel
                         </div>
                     </div>
                 </div>

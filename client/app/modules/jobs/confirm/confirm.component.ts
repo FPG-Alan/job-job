@@ -17,11 +17,14 @@ export class ConfirmComponent implements OnInit {
 
     @Input() job: Job;
     @Input() finalName;
+    @Input() syncWithBoxApp: boolean = true;
+    @Input() trelloTemplateId: string;
     @Input() slackChannelName: string;
     @Input() usingFinalName: boolean;
 
     @Output() onJobCreated = new EventEmitter<Job>();
     @Output() onJobCreateFailed = new EventEmitter<boolean>();
+    @Output() onBoxFolderCreated = new EventEmitter<any>();
     @Output() onFinished = new EventEmitter<boolean>();
     @Output() onClickCheckItOut = new EventEmitter<boolean>();
     private finished: boolean = false;
@@ -47,6 +50,14 @@ export class ConfirmComponent implements OnInit {
             details: "Working..."
         },
         job: {
+            status: "disabled",
+            details: "Working..."
+        },
+        copyTemplate: {
+            status: "disabled",
+            details: "Working..."
+        },
+        sync: {
             status: "disabled",
             details: "Working..."
         }
@@ -100,7 +111,6 @@ export class ConfirmComponent implements OnInit {
                     this.requestRateCardChange(res);
                     this.newJob = res;
 
-
                     // set URL based on environments
                     let environment = window.location.hostname;
                     switch (environment) {
@@ -125,7 +135,8 @@ export class ConfirmComponent implements OnInit {
                         value: this.job.serviceType
                     }];
                     this.createCustomFieldValues(importantCustomValues, "customFields");
-                    
+                    this.tenKProgress.customFields.status = "active";
+
                     // FPG Admin doesn't need to use integrations/micro-services
                     if (this.job.client.name && this.job.client.name.toLowerCase() == "fpg admin") {
                         // skip 3 integrations
@@ -170,8 +181,8 @@ export class ConfirmComponent implements OnInit {
         // Box
         this.createNewFolder(null, "client");
         // Trello
-        if (!this.commonService.isEmptyString(this.job.serviceType)) {
-            this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.job.serviceType);
+        if (!this.commonService.isEmptyString(this.trelloTemplateId)) {
+            this.copyBoard(this.usingFinalName ? this.finalName.result : this.job.name, this.trelloTemplateId);
         } else { this.servicesCount++; }
         // Slack
         if (!this.commonService.isEmptyString(this.slackChannelName)) {
@@ -291,7 +302,6 @@ export class ConfirmComponent implements OnInit {
                 folderName = this.usingFinalName ? this.finalName.result : this.job.name;
                 nextType = "confirm";
             } else {
-                this.servicesCount++;
                 return;
             }
 
@@ -308,6 +318,7 @@ export class ConfirmComponent implements OnInit {
                                     value: this.confirmInfo.boxUrl
                                 }];
                                 this.createCustomFieldValues(fieldValues, null);
+                                this.copyFolders(res.id);
                             }
                             if (this.boxProgress[type]) this.boxProgress[type].status = "completed";
                             let parentId = res.id;
@@ -323,12 +334,51 @@ export class ConfirmComponent implements OnInit {
         }
     }
 
+    copyFolders(newFolder: string) {
+        this.boxProgress.copyTemplate.status = "active";
+        this.apiService
+            .copyFolders(this.userId, newFolder)
+            .subscribe(
+                res => {
+                    console.log(res);
+                    this.boxProgress.copyTemplate.status = "completed";
+                    if (this.syncWithBoxApp) {
+                        this.syncFolder(newFolder);
+                    } else {
+                        this.servicesCount++;
+                    }
+                },
+                err => {
+                    this.servicesCount++;
+                    this.handleError(err, "box", "copyTemplate")
+                }
+            );
+    }
+
+    syncFolder(newFolder: string) {
+        if (this.syncWithBoxApp && newFolder) {
+            this.boxProgress.sync.status = "active";
+            this.apiService
+                .syncFolder(this.userId, newFolder)
+                .subscribe(
+                    res => {
+                        console.log(res);
+                        this.servicesCount++;
+                        this.boxProgress.sync.status = "completed";
+                    }, err => {
+                        this.servicesCount++;
+                        this.handleError(err, "box", "sync")
+                    }
+                )
+        }
+    }
+
     /**********************
      * TRELLO INTEGRATION *
      **********************/
-    copyBoard(boardName, serviceType) {
+    copyBoard(boardName, sourceId) {
         this.trelloProgress.board.status = "active";
-        this.apiService.copyBoard(this.userId, boardName, serviceType)
+        this.apiService.copyBoard(this.userId, boardName, sourceId)
             .subscribe(
                 res => {
                     this.servicesCount++;
