@@ -106,7 +106,6 @@ boxIntegrationRouter.post("/copy", function (req, res) {
                                 .done(function (results) {
                                     res.json(results);
                                 }, function (err) {
-                                    console.log(err);
                                     var header = "Failed to copy all folders from template";
                                     return handleBoxError(err, header, res);
                                 })
@@ -114,6 +113,40 @@ boxIntegrationRouter.post("/copy", function (req, res) {
                             res.json({})
                         }
                     })
+                }
+            });
+        }
+    });
+});
+
+boxIntegrationRouter.put("/sync", function (req, res) {
+    if (!req.body.userId || !req.body.folder){
+        return res.status(500).send({
+            header: "Failed to sync folders",
+            message: "Missing user ID or folder ID"
+        });
+    }
+    Token.findOne({userId: req.body.userId, provider: "box"}, function (err, token) {
+        if (err || !token || !token.tokenInfo) {
+            res.status(500).send(invalidTokenError);
+        } else {
+            sdk.getTokensRefreshGrant(token.tokenInfo.refreshToken, function (err, newTokenInfo) {
+                if (err || !newTokenInfo || !newTokenInfo.accessToken) {
+                    res.status(500).send(invalidTokenError);
+                } else {
+                    // store refreshed token
+                    token.tokenInfo = newTokenInfo;
+                    token.save();
+
+                    var box = sdk.getBasicClient(newTokenInfo.accessToken);
+                    box.folders.update(req.body.folder, {sync_state: "synced"}, function (err, folder) {
+                        if (err) {
+                            var header = "Failed to sync folders";
+                            return handleBoxError(err, header, res);
+                        } else {
+                            res.json(folder);
+                        }
+                    });
                 }
             });
         }

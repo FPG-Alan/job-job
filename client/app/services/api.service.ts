@@ -200,9 +200,6 @@ export class ApiService {
     /*******************
      * BOX INTEGRATION *
      *******************/
-
-
-
     createNewFolder(userId: string, folderName: any, parentFolderId: string) {
         let body = {
             userId: userId,
@@ -225,6 +222,18 @@ export class ApiService {
         let options = new RequestOptions({headers: headers});
 
         return this.authHttp.post("/box/copy", body, options)
+            .map(res => res.json());
+    }
+
+    syncFolder(userId: string, folderId: string) {
+        let body = {
+            userId: userId,
+            folder: folderId
+        };
+        let headers = new Headers({"Content-Type": "application/json"});
+        let options = new RequestOptions({headers: headers});
+
+        return this.authHttp.put("/box/sync", body, options)
             .map(res => res.json());
     }
 

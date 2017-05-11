@@ -17,6 +17,7 @@ export class ConfirmComponent implements OnInit {
 
     @Input() job: Job;
     @Input() finalName;
+    @Input() syncWithBoxApp: boolean = true;
     @Input() trelloTemplateId: string;
     @Input() slackChannelName: string;
     @Input() usingFinalName: boolean;
@@ -340,8 +341,12 @@ export class ConfirmComponent implements OnInit {
             .subscribe(
                 res => {
                     console.log(res);
-                    this.servicesCount++;
                     this.boxProgress.copyTemplate.status = "completed";
+                    if (this.syncWithBoxApp) {
+                        this.syncFolder(newFolder);
+                    } else {
+                        this.servicesCount++;
+                    }
                 },
                 err => {
                     this.servicesCount++;
@@ -351,7 +356,21 @@ export class ConfirmComponent implements OnInit {
     }
 
     syncFolder(newFolder: string) {
-
+        if (this.syncWithBoxApp && newFolder) {
+            this.boxProgress.sync.status = "active";
+            this.apiService
+                .syncFolder(this.userId, newFolder)
+                .subscribe(
+                    res => {
+                        console.log(res);
+                        this.servicesCount++;
+                        this.boxProgress.sync.status = "completed";
+                    }, err => {
+                        this.servicesCount++;
+                        this.handleError(err, "box", "sync")
+                    }
+                )
+        }
     }
 
     /**********************
