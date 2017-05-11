@@ -56,13 +56,6 @@ Run `ng generate component component-name` to generate a new component. You can 
 ## Build
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
-## Running unit tests [UNUSED]
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests [UNUSED]
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
 ## Deploying 
 Development platform is Heroku. 
 
@@ -71,16 +64,12 @@ To get more help on the `angular-cli` use `ng --help` or go check out the [Angul
 
 
 ## Maintenance Notes
-- To add **Trello board templates** (requires Chrome or a browser where you can see the network requests)
-  - navigate to the board on a browser
-  - open to Inspector
-  - click Network (then refresh the page if the network request list is empty)
-  - find a request that looks like https://trello.com/1/boards/*boardID*
-  - copy *boardID*, then paste in to the .env file (example TRELLO_BANNER_TEMPLATE_ID=*boardId*)
-  - in server/routers/trelloIntegrationRouter.js
-    - add something like `var *service*TemplateBoardId = process.env.TRELLO_*service*_TEMPLATE_ID;` (using process.env protects our secret variables)
-    - in `trelloIntegrationRouter.post("/")`, find the code that assigns `idBoardSource`
-    - add `req.body.serviceType == "*service*" ? *service*TemplateBoardId` before `: null`
-  - in client/app/modules/jobs/new-job/new-job.component.ts
-    - find the `serviceTypes` attribute/property of the component
-    - add to the list `{value: '*service*', display: '*what you want to render as radio choice*'}`
+- To add **Trello board templates** (requires admin access)
+  - navigate to a template board on your browser
+  - type ".json" after the URL (e.g. https://trello.com/b/0Rldf1OT/fpg-ny-tech-job-s-the-builder.json
+  - find "id" (e.g. "581900d33f0838a3be9abb1c")
+  - grab the ID and the name use that in JTB's [New Job page](https://jtb-fpg.herokuapp.com/#/jobs/new)
+- To change **Box project template** (requires Heroku access)
+  - grab the ID of the folder in its URL 
+  - replace the current BOX_TEMPLATE_FOLDER value with the new ID
+  
