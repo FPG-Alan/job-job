@@ -46,6 +46,7 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
     retrieveRemoteDataFailed: boolean = false;
     clients: Client[] = [];
     producers: string[] = [];
+    serviceTypes: string[] = [];
     customFields: any;
 
     // passable data to children
@@ -403,7 +404,8 @@ export class NewJobComponent implements OnInit, OnDestroy, AfterViewInit {
                     for (let field of this.customFields) {
                         if (field.name == "Producer") {
                             this.producers = field.options;
-                            break;
+                        } else if (field.name == "Type") {
+                            this.serviceTypes = field.options;
                         }
                     }
                 },

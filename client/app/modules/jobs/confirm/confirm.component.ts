@@ -1,4 +1,5 @@
 import {Component, OnInit, EventEmitter, Output, Input} from "@angular/core";
+import {DomSanitizer} from "@angular/platform-browser";
 import {Response} from "@angular/http";
 import {Observable} from "rxjs";
 import {ApiService} from "../../../services/api.service";
@@ -85,12 +86,14 @@ export class ConfirmComponent implements OnInit {
     private confirmInfo = {
         tenKUrl: null,
         boxUrl: null,
-        trelloUrl: null
+        trelloUrl: null,
+        slackUrl: null
     };
 
 
     constructor(private commonService: CommonService,
-                private apiService: ApiService) {
+                private apiService: ApiService,
+                private sanitizer: DomSanitizer) {
         window.onbeforeunload = () => {
             if (!this.finished) {
                 // newer browsers rmoved custom message on before unload
@@ -175,6 +178,10 @@ export class ConfirmComponent implements OnInit {
             return window.confirm(message);
         }
         return true;
+    }
+
+    sanitize(url:string){
+        return this.sanitizer.bypassSecurityTrustUrl(url);
     }
 
     startIntegrations() {
@@ -409,6 +416,7 @@ export class ConfirmComponent implements OnInit {
                 res => {
                     this.servicesCount++;
                     this.slackProgress.channel.status = "completed";
+                    this.confirmInfo.slackUrl = "slack://channel?team=T02T5CM5V&id=" + res.channel.id;
                 },
                 err => {
                     this.servicesCount++;

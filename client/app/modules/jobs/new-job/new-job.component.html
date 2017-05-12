@@ -201,6 +201,23 @@
     </div>
 
     <div class="two fields">
+        <!--Service Type-->
+        <div id="service-type-select-field" class="required field"
+             [class.success]="!commonService.isEmptyString(job?.serviceType)"
+             [class.error]="commonService.isEmptyString(job?.serviceType) && (serviceType.dirty || serviceType.touched)">
+            <label>Service Type</label>
+            <select required class="ui search dropdown selection"
+                    [(ngModel)]="job.serviceType"
+                    name="serviceType"
+                    #serviceType="ngModel">
+                <option value="">(select type)</option>
+                <option *ngFor="let t of serviceTypes; let i = index"
+                        [ngValue]="t">
+                    {{t}}
+                </option>
+            </select>
+        </div>
+
         <!--Trello Board Template-->
         <app-trello-template-selector
                 (onTemplateRetrieveFailed)="retrieveRemoteDataFailed = $event"
@@ -210,35 +227,35 @@
                 [userRole]="role"
                 #trelloTemplateSelector>
         </app-trello-template-selector>
+    </div>
 
-        <!--Slack Channel Name-->
-        <div class="field">
-            <label>Slack Channel Name (leave blank to opt out)</label>
-            <input type="text"
-                   placeholder="(~21 characters, only a-z, 0-9, hyphens, underscores)"
-                   [(ngModel)]="slackChannelName"
-                   name="slackChannel"
-                   #slackChannel="ngModel"
-                   maxlength="21"
-                   style="margin-bottom:2px"
-                   (focus)="commonService.isEmptyString(job.name) ? null :
-                            steveBotComponent.sayOnce(['Bee tee dubs, those name suggestions are clickable.'],'slackChannel')">
-            <div *ngIf="!commonService.isEmptyString(job.name)" style="margin-top: 5px">
-                <span>Suggestions:</span>
-                <div id="slack-name-suggestion">
-                    <div class="item">
-                        <div class="ui black label button"
-                             *ngIf="!commonService.isEmptyString(job.name)"
-                             (click)="onSlackChannelNameSelected('noVowels')">
-                            {{finalName.result | slackChannelName:"noVowels"}}
-                        </div>
+    <!--Slack Channel Name-->
+    <div class="field">
+        <label>Slack Channel Name (leave blank to opt out)</label>
+        <input type="text"
+               placeholder="(~21 characters, only a-z, 0-9, hyphens, underscores)"
+               [(ngModel)]="slackChannelName"
+               name="slackChannel"
+               #slackChannel="ngModel"
+               maxlength="21"
+               style="margin-bottom:2px"
+               (focus)="commonService.isEmptyString(job.name) ? null :
+                                steveBotComponent.sayOnce(['Bee tee dubs, those name suggestions are clickable.'],'slackChannel')">
+        <div *ngIf="!commonService.isEmptyString(job.name)" style="margin-top: 5px">
+            <span>Suggestions:</span>
+            <div id="slack-name-suggestion">
+                <div class="item">
+                    <div class="ui black label button"
+                         *ngIf="!commonService.isEmptyString(job.name)"
+                         (click)="onSlackChannelNameSelected('noVowels')">
+                        {{finalName.result | slackChannelName:"noVowels"}}
                     </div>
-                    <div class="item">
-                        <div class="ui black label button"
-                             *ngIf="!commonService.isEmptyString(job.name)"
-                             (click)="onSlackChannelNameSelected('abruptCut')">
-                            {{finalName.result | slackChannelName:"abruptCut"}}
-                        </div>
+                </div>
+                <div class="item">
+                    <div class="ui black label button"
+                         *ngIf="!commonService.isEmptyString(job.name)"
+                         (click)="onSlackChannelNameSelected('abruptCut')">
+                        {{finalName.result | slackChannelName:"abruptCut"}}
                     </div>
                 </div>
             </div>

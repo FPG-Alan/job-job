@@ -23,24 +23,30 @@
         the job number generator. In the case that you have created a Trello board, delete it to avoid duplicates.
     </div>
     <h3 class="ui center aligned small header">
-            <span *ngIf="confirmInfo.tenKUrl">
-                10,000ft Project URL:
-                <a target="_blank" href="{{confirmInfo.tenKUrl}}">
-                    {{confirmInfo.tenKUrl | characterLimit: 35}}
-                </a>
-            </span><br *ngIf="confirmInfo.tenKUrl ">
+        <span *ngIf="confirmInfo.tenKUrl">
+            10,000ft Project URL:
+            <a target="_blank" href="{{confirmInfo.tenKUrl}}">
+                {{confirmInfo.tenKUrl | characterLimit: 35}}
+            </a>
+        </span><br *ngIf="confirmInfo.tenKUrl ">
         <span *ngIf="confirmInfo.boxUrl">
-                Box Folder URL:
-                <a target="_blank" href="{{confirmInfo.boxUrl}}">
-                    {{confirmInfo.boxUrl | characterLimit: 35}}
-                </a>
-            </span><br *ngIf="confirmInfo.boxUrl">
+            Box Folder URL:
+            <a target="_blank" href="{{confirmInfo.boxUrl}}">
+                {{confirmInfo.boxUrl | characterLimit: 35}}
+            </a>
+        </span><br *ngIf="confirmInfo.boxUrl">
         <span *ngIf="confirmInfo.trelloUrl">
-                Trello Board URL:
-                <a target="_blank" href="{{confirmInfo.trelloUrl}}">
-                    {{confirmInfo.trelloUrl | characterLimit: 35}}
-                </a>
-            </span>
+            Trello Board URL:
+            <a target="_blank" href="{{confirmInfo.trelloUrl}}">
+                {{confirmInfo.trelloUrl | characterLimit: 35}}
+            </a>
+        </span>
+        <span *ngIf="confirmInfo.slackUrl">
+            Slack Channel URL:
+            <a [href]="sanitize(confirmInfo.slackUrl)">
+                Open in Slack
+            </a>
+        </span>
     </h3>
     <hr>
     <br>
@@ -170,10 +176,11 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="boxProgress?.sync?.status != 'disabled'"
+                    <div *ngIf="syncWithBoxApp"
                          class="item">
                         <i class="big icon"
-                           [ngClass]="{'active pulse': boxProgress?.sync?.status == 'active',
+                           [ngClass]="{'disabled': boxProgress?.sync?.status == 'disabled',
+                           'active pulse': boxProgress?.sync?.status == 'active',
                            'refresh': boxProgress?.sync?.status != 'completed' && boxProgress?.sync?.status != 'failed',
                            'green checkmark': boxProgress?.sync?.status == 'completed',
                            'red remove': boxProgress?.sync?.status == 'failed'}"></i>
